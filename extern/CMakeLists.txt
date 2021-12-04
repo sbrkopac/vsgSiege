@@ -1,6 +1,24 @@
 # used to automatically include and build dependencies
 include(FetchContent)
 
+# i'd rather stay on 3.11 than bumping to 3.14 just for this macro
+if(${CMAKE_VERSION} VERSION_LESS "3.14.0")
+	message("Adding FetchContent_MakeAvailable")
+	macro(FetchContent_MakeAvailable)
+		foreach(contentName IN ITEMS ${ARGV})
+			string(TOLOWER ${contentName} contentNameLower)
+			FetchContent_GetProperties(${contentName})
+			if(NOT ${contentNameLower}_POPULATED)
+				FetchContent_Populate(${contentName})
+				if(EXISTS ${${contentNameLower}_SOURCE_DIR}/CMakeLists.txt)
+					add_subdirectory(${${contentNameLower}_SOURCE_DIR}
+						${${contentNameLower}_BINARY_DIR})
+				endif()
+			endif()
+		endforeach()
+	endmacro()
+endif()
+
 FetchContent_Declare(
     minIni
     GIT_REPOSITORY https://github.com/compuphase/minIni.git

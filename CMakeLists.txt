@@ -31,6 +31,8 @@ if (SIEGE_BUILD_TEST_STATES)
     )
 endif()
 
+add_subdirectory(extern)
+
 set (SOURCES
     # config
     src/cfg/WritableConfig.cpp
@@ -67,7 +69,7 @@ set (SOURCES
 
 add_executable (vsg-siege src/main.cpp src/Game.cpp ${SOURCES})
 target_link_libraries (vsg-siege vsg::vsg)
-target_include_directories(vsg-siege PUBLIC src extern)
+target_include_directories(vsg-siege PUBLIC src ${EXTERN_INCLUDE_PATHS})
 
 if (SIEGE_BUILD_VSG_EXAMPLES)
     target_compile_definitions(vsg-siege PRIVATE SIEGE_VSG_EXAMPLES_ENABLED)

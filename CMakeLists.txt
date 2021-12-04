@@ -6,10 +6,14 @@ project(vsg-siege
     LANGUAGES CXX
 )
 
+option(BUILD_STATIC_LIBS "Build the static library" ON)
+
 # find the vsg
 find_package(vsg REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
+
+add_subdirectory(extern)
 
 set (SOURCES
     # config
@@ -50,7 +54,7 @@ set (SOURCES
 
 add_executable (vsg-siege src/main.cpp src/Game.cpp ${SOURCES})
 target_link_libraries (vsg-siege vsg::vsg)
-target_include_directories(vsg-siege PUBLIC src extern)
+target_include_directories(vsg-siege PUBLIC src ${EXTERN_INCLUDE_PATHS})
 
 if(MSVC)
     target_compile_options(vsg-siege PRIVATE "/MP")

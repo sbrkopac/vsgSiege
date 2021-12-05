@@ -195,7 +195,6 @@ namespace ehb
 
                     // Float UVs:
                     corner.texCoord = reader.read<vsg::vec2>();
-                    //corner.texCoord.y = 1 - corner.texCoord.y;
                 }
             }
             else if (chunk == "WCRN")
@@ -218,7 +217,7 @@ namespace ehb
                     wCorner.bone[2] = reader.read<uint8_t>();
                     wCorner.bone[3] = reader.read<uint8_t>();
 
-                    // TODO: handle potential differnces for version < 40
+                    // TODO: handle potential differences for version < 40
 
                     wCorner.normal = reader.read<vsg::vec3>();
 
@@ -228,7 +227,6 @@ namespace ehb
                     wCorner.color[3] = reader.read<uint8_t>();
 
                     wCorner.texCoord = reader.read<vsg::vec2>();
-                    //wCorner.texCoord.y = 1 - wCorner.texCoord.y;
 
                     /* TODO
                     // remove null bone/weights
@@ -244,7 +242,6 @@ namespace ehb
             }
             else if (chunk == "BVMP")
             {
-                log->info("Reading {}", chunk);
             }
             else if (chunk == "BTRI")
             {
@@ -329,11 +326,8 @@ namespace ehb
             }
             else if (chunk == "BEND")
             {
-                log->info("Reading {}", chunk);
             }
         }
-
-        int foo = 55;
 
         return Aspect::create(std::move(aspectImpl), options);
     };

@@ -17,14 +17,8 @@ namespace ehb
 {
     Aspect::Aspect(std::shared_ptr<Impl> impl, vsg::ref_ptr<const vsg::Options> options) : d(std::move(impl))
     {
-        auto log = spdlog::get("log");
-
-        log->debug("asp has {} sub meshes", d->subMeshes.size());
-
         for (const auto& mesh : d->subMeshes)
         {
-            log->debug("asp subMesh has {} textures", mesh.textureCount);
-
             uint32_t f = 0; // track which face the loader is loading across the sub mesh
             for (uint32_t i = 0; i < mesh.textureCount; ++i)
             {
@@ -65,12 +59,7 @@ namespace ehb
                 {
                     if (auto textureData = vsg::read_cast<vsg::Data>(d->textureNames[i], options))
                     {
-                        log->error("Texture loaded");
-
                         auto texture = vsg::DescriptorImage::create(vsg::Sampler::create(), textureData, 0, 0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
-
-                        //! NOTE: should we be accessing the first element of the vector?
-                        //! TODO: check with Robert about having to const_cast in loaders to get the pipeline layout
                         auto descriptorSet = vsg::DescriptorSet::create(layout->setLayouts[0], vsg::Descriptors{ texture });
                         auto bindDescriptorSets = vsg::BindDescriptorSets::create(VK_PIPELINE_BIND_POINT_GRAPHICS, const_cast<vsg::PipelineLayout*>(layout), 0, vsg::DescriptorSets{ descriptorSet });
 

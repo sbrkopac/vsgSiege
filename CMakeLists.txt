@@ -66,6 +66,7 @@ set (SOURCES
     # world
     src/world/WorldMapData.cpp
     src/world/SiegeNode.cpp
+    src/world/Aspect.cpp
 
     # vsg
     src/vsg/ReaderWriterRAW.cpp

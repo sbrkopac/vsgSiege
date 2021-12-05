@@ -23,6 +23,59 @@ namespace ehb
     {
         BinaryReader reader(stream);
 
+        FourCC chunk;
+        while (reader.readFourCC(chunk))
+        {
+            if (chunk == "BMSH")
+            {
+                log->info("Reading {}", chunk);
+            }
+            else if (chunk == "BONH")
+            {
+                log->info("Reading {}", chunk);
+            }
+            else if (chunk == "BSUB")
+            {
+                log->info("Reading {}", chunk);
+            }
+            else if (chunk == "BSMM")
+            {
+                log->info("Reading {}", chunk);
+            }
+            else if (chunk == "BSMM")
+            {
+                log->info("Reading {}", chunk);
+            }
+            else if (chunk == "BVTX")
+            {
+                log->info("Reading {}", chunk);
+            }
+            else if (chunk == "BCRN")
+            {
+                log->info("Reading {}", chunk);
+            }
+            else if (chunk == "WCRN")
+            {
+                log->info("Reading {}", chunk);
+            }
+            else if (chunk == "BVMP")
+            {
+                log->info("Reading {}", chunk);
+            }
+            else if (chunk == "BTRI")
+            {
+                log->info("Reading {}", chunk);
+            }
+            else if (chunk == "RPOS")
+            {
+                log->info("Reading {}", chunk);
+            }
+            else if (chunk == "BEND")
+            {
+                log->info("Reading {}", chunk);
+            }
+        }
+
         return {};
     };
 } // namespace ehb

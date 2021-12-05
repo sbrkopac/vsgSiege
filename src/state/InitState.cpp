@@ -160,8 +160,11 @@ namespace ehb
                 return;
             }
 #endif
+
+#if SIEGE_TEST_STATES_ENABLED
             // default to region test state if nothing passed to command line
             systems.gameStateMgr.request("RegionTestState");
+#endif
         }
     }
 

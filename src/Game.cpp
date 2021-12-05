@@ -1,12 +1,15 @@
 
 #include "Game.hpp"
 #include "cfg/WritableConfig.hpp"
-#include "state/FullMapTestState.hpp"
 #include "state/InitState.hpp"
-#include "state/ProfileLoadingState.hpp"
-#include "state/RegionStitchTestState.hpp"
-#include "state/RegionTestState.hpp"
-#include "state/SiegeNodeTestState.hpp"
+
+#ifdef SIEGE_TEST_STATES_ENABLED
+#include "state/test/FullMapTestState.hpp"
+#include "state/test/ProfileLoadingState.hpp"
+#include "state/test/RegionStitchTestState.hpp"
+#include "state/test/RegionTestState.hpp"
+#include "state/test/SiegeNodeTestState.hpp"
+#endif
 
 #ifdef SIEGE_VSG_EXAMPLES_ENABLED
 #include "state/vsgExamples/vsgExamplesDraw.hpp"
@@ -97,17 +100,19 @@ namespace ehb
 
     IGameState* Game::createGameState(const std::string& gameStateType, IGameStateMgr& gameStateMgr)
     {
+        if (gameStateType == "InitState") { return new InitState(systems); }
+
+#ifdef SIEGE_TEST_STATES_ENABLED
         if (gameStateType == "ProfileLoadingState") { return new ProfileLoadingState(systems); }
 
         if (gameStateType == "SiegeNodeTestState") { return new SiegeNodeTestState(systems); }
 
         if (gameStateType == "RegionTestState") { return new RegionTestState(systems); }
 
-        if (gameStateType == "InitState") { return new InitState(systems); }
-
         if (gameStateType == "FullMapTestState") { return new FullMapTestState(systems); }
 
         if (gameStateType == "RegionStitchTestState") { return new RegionStitchTestState(systems); }
+#endif
 
 #ifdef SIEGE_VSG_EXAMPLES_ENABLED
         if (gameStateType == "vsgExamplesDraw") { return new vsgExamplesDrawState(systems); }

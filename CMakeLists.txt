@@ -6,8 +6,9 @@ project(vsg-siege
     LANGUAGES CXX
 )
 
-# TODO: eventually this should be switched to off
+# TODO: eventually these should be switched to off
 OPTION (SIEGE_BUILD_VSG_EXAMPLES "Build mimicked vsgExamples - useful for PRs that don't require Dungeon Siege content" ON)
+OPTION (SIEGE_BUILD_TEST_STATES "Build test states" ON)
 
 # find the vsg
 find_package(vsg REQUIRED)
@@ -17,6 +18,16 @@ set(CMAKE_CXX_STANDARD 17)
 if (SIEGE_BUILD_VSG_EXAMPLES)
     set (SIEGE_VSG_EXAMPLES_SOURCES
         src/state/vsgExamples/vsgExamplesDraw.cpp
+    )
+endif()
+
+if (SIEGE_BUILD_TEST_STATES)
+    set (SIEGE_TEST_STATES_SOURCE
+        src/state/test/SiegeNodeTestState.cpp
+        src/state/test/RegionTestState.cpp
+        src/state/test/FullMapTestState.cpp
+        src/state/test/RegionStitchTestState.cpp
+        src/state/test/ProfileLoadingState.cpp
     )
 endif()
 
@@ -31,11 +42,7 @@ set (SOURCES
     # state
     src/state/GameStateMgr.cpp
     src/state/InitState.cpp
-    src/state/SiegeNodeTestState.cpp
-    src/state/RegionTestState.cpp
-    src/state/FullMapTestState.cpp
-    src/state/RegionStitchTestState.cpp
-    src/state/ProfileLoadingState.cpp
+    ${SIEGE_TEST_STATES_SOURCE}
     "${SIEGE_VSG_EXAMPLES_SOURCES}"
 
     # io
@@ -64,6 +71,10 @@ target_include_directories(vsg-siege PUBLIC src extern)
 
 if (SIEGE_BUILD_VSG_EXAMPLES)
     target_compile_definitions(vsg-siege PRIVATE SIEGE_VSG_EXAMPLES_ENABLED)
+endif()
+
+if (SIEGE_BUILD_TEST_STATES)
+    target_compile_definitions(vsg-siege PRIVATE SIEGE_TEST_STATES_ENABLED)
 endif()
 
 if(MSVC)

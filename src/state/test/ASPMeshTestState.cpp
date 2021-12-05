@@ -13,14 +13,20 @@ namespace ehb
 {
     void ASPMeshTestState::enter()
     {
-        log->info("Entered Test State");
+        log->info("{}", name());
 
         vsg::StateGroup& scene3d = *systems.scene3d;
         vsg::Options& options = *systems.options;
 
-        static std::string model("m_c_gah_fg_pos_a1");
+        // decorate the graph with the pipeline
+        // TODO: this should really be done somewhere else i think?
+        if (vsg::ref_ptr<vsg::BindGraphicsPipeline> pipeline(options.getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline")); pipeline) { scene3d.addChild(pipeline); }
+        else
+        {
+            log->critical("failed to find a graphics pipeline");
+        }
 
-        TimePoint start = Timer::now();
+        static std::string model("m_c_gah_fg_pos_a1");
 
         if (vsg::ref_ptr<vsg::Group> asp = vsg::read_cast<vsg::Group>(model, vsg::ref_ptr<vsg::Options>(&options)); asp != nullptr)
         {

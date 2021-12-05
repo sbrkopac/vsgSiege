@@ -308,60 +308,23 @@ namespace ehb
             else if (chunk == "RPOS")
             {
                 // version
-                const auto version = reader.read<uint32_t>();
-
-                // skip faceCount
                 reader.skipBytes(4);
 
-                auto& mesh = aspectImpl->subMeshes[currentSubMeshIndex];
+                // numBones
+                reader.skipBytes(4);
 
-                if (Aspect::Impl::versionOf(version) == 22)
-                {
-                    mesh.faceInfo.cornerSpan.resize(mesh.textureCount);
-                    for (uint32_t i = 0; i < mesh.textureCount; ++i)
-                    {
-                        mesh.faceInfo.cornerSpan[i] = reader.read<uint32_t>();
-                    }
+                aspectImpl->rposInfoAbI.resize(aspectImpl->boneInfos.size());
+                aspectImpl->rposInfoRel.resize(aspectImpl->boneInfos.size());
 
-                    mesh.faceInfo.cornerStart.resize(mesh.textureCount);
-                    mesh.faceInfo.cornerStart[0] = 0;
-                    for (uint32_t i = 0; i < mesh.textureCount - 1; ++i)
-                    {
-                        mesh.faceInfo.cornerStart[i] =
-                            mesh.faceInfo.cornerStart[i] + mesh.faceInfo.cornerSpan[i];
-                    }
-                }
-                else if (Aspect::Impl::versionOf(version) > 22)
+                for (uint32_t i = 0; i < aspectImpl->boneInfos.size(); i++)
                 {
-                    mesh.faceInfo.cornerStart.resize(mesh.textureCount);
-                    mesh.faceInfo.cornerSpan.resize(mesh.textureCount);
-                    for (uint32_t i = 0; i < mesh.textureCount; ++i)
-                    {
-                        mesh.faceInfo.cornerStart[i] = reader.read<uint32_t>();
-                        mesh.faceInfo.cornerSpan[i] = reader.read<uint32_t>();
-                    }
-                }
-                else
-                {
-                    mesh.faceInfo.cornerStart.resize(mesh.textureCount);
-                    mesh.faceInfo.cornerSpan.resize(mesh.textureCount);
-                    for (uint32_t i = 0; i < mesh.textureCount; ++i)
-                    {
-                        mesh.faceInfo.cornerStart[i] = 0;
-                        mesh.faceInfo.cornerSpan[i] = mesh.cornerCount;
-                    }
-                }
+                    Aspect::Impl::RPosInfo& abI = aspectImpl->rposInfoAbI[i];
+                    abI.rotation = reader.read<vsg::dquat>();
+                    abI.position = reader.read<vsg::vec3>();
 
-                mesh.faceInfo.cornerIndex.resize(mesh.faceCount);
-                for (uint32_t f = 0; f < mesh.faceCount; ++f)
-                {
-                    auto a = reader.read<uint32_t>();
-                    auto b = reader.read<uint32_t>();
-                    auto c = reader.read<uint32_t>();
-
-                    mesh.faceInfo.cornerIndex[f].index[0] = a;
-                    mesh.faceInfo.cornerIndex[f].index[1] = b;
-                    mesh.faceInfo.cornerIndex[f].index[2] = c;
+                    Aspect::Impl::RPosInfo& rel = aspectImpl->rposInfoRel[i];
+                    rel.rotation = reader.read<vsg::dquat>();
+                    rel.position = reader.read<vsg::vec3>();
                 }
             }
             else if (chunk == "BEND")
@@ -370,6 +333,8 @@ namespace ehb
             }
         }
 
-        return Aspect::create(std::move(aspectImpl));
+        int foo = 55;
+
+        return Aspect::create(std::move(aspectImpl), options);
     };
 } // namespace ehb

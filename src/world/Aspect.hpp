@@ -17,7 +17,8 @@ namespace ehb
 
     public:
 
-        explicit Aspect(std::shared_ptr<Impl> impl);
+        // have to do this for now as we need access to the options for texture loading
+        explicit Aspect(std::shared_ptr<Impl> impl, vsg::ref_ptr<const vsg::Options> options);
 
     protected:
 

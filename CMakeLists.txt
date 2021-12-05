@@ -68,7 +68,7 @@ set (SOURCES
 )
 
 add_executable (vsg-siege src/main.cpp src/Game.cpp ${SOURCES})
-target_link_libraries (vsg-siege vsg::vsg)
+target_link_libraries (vsg-siege PRIVATE vsg::vsg "$<$<CXX_COMPILER_ID:GNU>:stdc++fs;${XDGBASEDIR_LIBRARIES}>")
 target_include_directories(vsg-siege PUBLIC src ${EXTERN_INCLUDE_PATHS})
 
 if (SIEGE_BUILD_VSG_EXAMPLES)

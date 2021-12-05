@@ -9,6 +9,7 @@
 #include "state/test/RegionStitchTestState.hpp"
 #include "state/test/RegionTestState.hpp"
 #include "state/test/SiegeNodeTestState.hpp"
+#include "state/test/ASPMeshTestState.hpp"
 #endif
 
 #ifdef SIEGE_VSG_EXAMPLES_ENABLED
@@ -106,6 +107,8 @@ namespace ehb
         if (gameStateType == "ProfileLoadingState") { return new ProfileLoadingState(systems); }
 
         if (gameStateType == "SiegeNodeTestState") { return new SiegeNodeTestState(systems); }
+
+        if (gameStateType == "ASPMeshTestState") { return new ASPMeshTestState(systems); }
 
         if (gameStateType == "RegionTestState") { return new RegionTestState(systems); }
 

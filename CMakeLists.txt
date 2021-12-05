@@ -34,6 +34,7 @@ if (SIEGE_BUILD_TEST_STATES)
         src/state/test/FullMapTestState.cpp
         src/state/test/RegionStitchTestState.cpp
         src/state/test/ProfileLoadingState.cpp
+        src/state/test/ASPMeshTestState.cpp
     )
 endif()
 
@@ -65,10 +66,12 @@ set (SOURCES
     # world
     src/world/WorldMapData.cpp
     src/world/SiegeNode.cpp
+    src/world/Aspect.cpp
 
     # vsg
     src/vsg/ReaderWriterRAW.cpp
     src/vsg/ReaderWriterSNO.cpp
+    src/vsg/ReaderWriterASP.cpp
     src/vsg/ReaderWriterSiegeNodeList.cpp
     src/vsg/ReaderWriterRegion.cpp
 )

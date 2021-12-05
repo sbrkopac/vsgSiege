@@ -6,6 +6,7 @@
 #include "vsg/ReaderWriterRAW.hpp"
 #include "vsg/ReaderWriterRegion.hpp"
 #include "vsg/ReaderWriterSNO.hpp"
+#include "vsg/ReaderWriterASP.hpp"
 #include "vsg/ReaderWriterSiegeNodeList.hpp"
 
 #include <vsg/io/ObjectCache.h>
@@ -90,7 +91,7 @@ namespace ehb
             options->setObject("NamingKeyMap", &namingKeyMap);
             namingKeyMap.ref(); // this is a vsg::Object so it can be stored in options but I don't want to make it an actual ref pointer as there should only be 1 instance
 
-            options->readerWriters = { ReaderWriterRAW::create(fileSys), ReaderWriterSNO::create(fileSys), ReaderWriterSiegeNodeList::create(fileSys), ReaderWriterRegion::create(fileSys) };
+            options->readerWriters = { ReaderWriterRAW::create(fileSys), ReaderWriterSNO::create(fileSys), ReaderWriterASP::create(fileSys), ReaderWriterSiegeNodeList::create(fileSys), ReaderWriterRegion::create(fileSys) };
 
             options->objectCache = vsg::ObjectCache::create();
 

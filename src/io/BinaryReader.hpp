@@ -6,6 +6,9 @@
 #include <string>
 #include <vector>
 
+// TODO: refactor this to its own output header
+#include <spdlog/fmt/ostr.h>
+
 namespace ehb
 {
 
@@ -15,6 +18,10 @@ namespace ehb
     {
         uint8_t c0 = 0, c1 = 0, c2 = 0, c3 = 0;
     };
+
+    bool operator == (FourCC a, const char fccStr[]) noexcept;
+
+    std::ostream& operator << (std::ostream& s, const FourCC& fcc);
 
     class BinaryReader final
     {
@@ -32,6 +39,18 @@ namespace ehb
             T type;
             readBytes(&type, sizeof(T));
             return type;
+        }
+
+        bool readFourCC(FourCC& fourCC)
+        {
+            if (readPosition == data.size() || (readPosition + sizeof(FourCC) > data.size()))
+                return false;
+
+            const unsigned char* dataPtr = data.data() + readPosition;
+            std::memcpy(&fourCC, dataPtr, sizeof(FourCC));
+            readPosition += sizeof(FourCC);
+
+            return true;
         }
 
         std::string readString()

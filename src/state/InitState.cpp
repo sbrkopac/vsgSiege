@@ -81,20 +81,24 @@ namespace ehb
         NamingKeyMap& namingKeyMap = systems.namingKeyMap;
         auto options = systems.options;
 
-        fileSys.init(config);
-        namingKeyMap.init(fileSys);
+        // sanity check to stop errors from being thrown when using vsgExamples
+        if (!config.getString("bits", "").empty())
+        {
+            fileSys.init(config);
+            namingKeyMap.init(fileSys);
 
-        options->setObject("NamingKeyMap", &namingKeyMap);
-        namingKeyMap.ref(); // this is a vsg::Object so it can be stored in options but I don't want to make it an actual ref pointer as there should only be 1 instance
+            options->setObject("NamingKeyMap", &namingKeyMap);
+            namingKeyMap.ref(); // this is a vsg::Object so it can be stored in options but I don't want to make it an actual ref pointer as there should only be 1 instance
 
-        options->readerWriters = {ReaderWriterRAW::create(fileSys), ReaderWriterSNO::create(fileSys), ReaderWriterSiegeNodeList::create(fileSys), ReaderWriterRegion::create(fileSys)};
+            options->readerWriters = { ReaderWriterRAW::create(fileSys), ReaderWriterSNO::create(fileSys), ReaderWriterSiegeNodeList::create(fileSys), ReaderWriterRegion::create(fileSys) };
 
-        options->objectCache = vsg::ObjectCache::create();
+            options->objectCache = vsg::ObjectCache::create();
 
-        // options.paths is required internally for VSG as a check if it should actually use the findFileCallback
-        // TOOD: discuss with Robert is this is intended behavior
-        options->paths = {"/"};
-        options->findFileCallback = &findFileCallback;
+            // options.paths is required internally for VSG as a check if it should actually use the findFileCallback
+            // TOOD: discuss with Robert is this is intended behavior
+            options->paths = { "/" };
+            options->findFileCallback = &findFileCallback;
+        }
 
         // set up search paths and load shaders
         vsg::ref_ptr<vsg::ShaderStage> vertexShader = vsg::ShaderStage::create(VK_SHADER_STAGE_VERTEX_BIT, "main", vert_PushConstants);
@@ -147,6 +151,15 @@ namespace ehb
         }
         else
         {
+#if SIEGE_VSG_EXAMPLES_ENABLED
+            // Dungeon Siege content is unavailable so default to something the user can run
+            if (config.getString("bits", "").empty())
+            {
+                systems.gameStateMgr.request("vsgExamplesDraw");
+
+                return;
+            }
+#endif
             // default to region test state if nothing passed to command line
             systems.gameStateMgr.request("RegionTestState");
         }

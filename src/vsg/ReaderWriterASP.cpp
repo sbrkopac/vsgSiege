@@ -94,7 +94,6 @@ namespace ehb
                 }
 
                 aspectImpl->subMeshes.resize(aspectImpl->subMeshCount);
-
             }
             else if (chunk == "BONH")
             {

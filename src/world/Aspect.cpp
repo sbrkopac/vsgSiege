@@ -2,20 +2,21 @@
 #include "Aspect.hpp"
 #include "AspectImpl.hpp"
 
-#include <vsg/commands/Commands.h>
-#include <vsg/commands/DrawIndexed.h>
 #include <vsg/commands/BindIndexBuffer.h>
 #include <vsg/commands/BindVertexBuffers.h>
-#include <vsg/state/PipelineLayout.h>
+#include <vsg/commands/Commands.h>
+#include <vsg/commands/DrawIndexed.h>
+#include <vsg/io/read.h>
 #include <vsg/state/DescriptorImage.h>
 #include <vsg/state/DescriptorSet.h>
-#include <vsg/io/read.h>
+#include <vsg/state/PipelineLayout.h>
 
 #include <spdlog/spdlog.h>
 
 namespace ehb
 {
-    Aspect::Aspect(std::shared_ptr<Impl> impl, vsg::ref_ptr<const vsg::Options> options) : d(std::move(impl))
+    Aspect::Aspect(std::shared_ptr<Impl> impl, vsg::ref_ptr<const vsg::Options> options) :
+        d(std::move(impl))
     {
         for (const auto& mesh : d->subMeshes)
         {
@@ -28,7 +29,7 @@ namespace ehb
                 auto colors = vsg::vec4Array::create(mesh.cornerCount);
                 auto tcoords = vsg::vec2Array::create(mesh.cornerCount);
 
-                auto attributeArrays = vsg::DataList{ vertices, colors, tcoords };
+                auto attributeArrays = vsg::DataList{vertices, colors, tcoords};
 
                 for (uint32_t cornerCounter = 0; cornerCounter < mesh.cornerCount; ++cornerCounter)
                 {
@@ -39,7 +40,6 @@ namespace ehb
                     (*normals)[cornerCounter] = c.normal;
                     (*colors)[cornerCounter] = vsg::vec4(c.color[0], c.color[1], c.color[2], c.color[3]);
                     (*tcoords)[cornerCounter] = c.texCoord;
-
                 }
 
                 // each face is a triangle so faceSpan * 3
@@ -60,8 +60,8 @@ namespace ehb
                     if (auto textureData = vsg::read_cast<vsg::Data>(d->textureNames[i], options))
                     {
                         auto texture = vsg::DescriptorImage::create(vsg::Sampler::create(), textureData, 0, 0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
-                        auto descriptorSet = vsg::DescriptorSet::create(layout->setLayouts[0], vsg::Descriptors{ texture });
-                        auto bindDescriptorSets = vsg::BindDescriptorSets::create(VK_PIPELINE_BIND_POINT_GRAPHICS, const_cast<vsg::PipelineLayout*>(layout), 0, vsg::DescriptorSets{ descriptorSet });
+                        auto descriptorSet = vsg::DescriptorSet::create(layout->setLayouts[0], vsg::Descriptors{texture});
+                        auto bindDescriptorSets = vsg::BindDescriptorSets::create(VK_PIPELINE_BIND_POINT_GRAPHICS, const_cast<vsg::PipelineLayout*>(layout), 0, vsg::DescriptorSets{descriptorSet});
 
                         addChild(bindDescriptorSets);
                     }
@@ -75,4 +75,4 @@ namespace ehb
             }
         }
     }
-}
+} // namespace ehb

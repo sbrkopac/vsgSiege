@@ -59,19 +59,19 @@ namespace ehb
         // Indexes into the shared corner (vertex) array for a face triangle.
         struct TriIndex
         {
-            uint32_t index[3] = { 0, 0, 0 };
+            uint32_t index[3] = {0, 0, 0};
         };
 
         // A model vertex, which can be thought of as a "corner"...
         // "Corner" is the term used in the 3DMax export scripts.
         struct WCornerInfo
         {
-            vsg::vec3  pos{ 0, 0, 0 };
-            vsg::vec3  normal{ 0, 0, 0 };
-            vsg::dquat  weight{ 0, 0, 0, 1 };
-            vsg::vec2  texCoord{ 0, 0 };
-            uint8_t color[4] = { 0, 0, 0, 0 };
-            uint8_t bone[4] = { 0, 0, 0, 0 };
+            vsg::vec3 pos{0, 0, 0};
+            vsg::vec3 normal{0, 0, 0};
+            vsg::dquat weight{0, 0, 0, 1};
+            vsg::vec2 texCoord{0, 0};
+            uint8_t color[4] = {0, 0, 0, 0};
+            uint8_t bone[4] = {0, 0, 0, 0};
         };
 
         // A simpler model vertex (corner), without animation data.
@@ -79,10 +79,10 @@ namespace ehb
         struct CornerInfo
         {
             uint32_t vtxIndex = 0;
-            vsg::vec3  position{ 0, 0, 0 };
-            vsg::vec3  normal{ 0, 0, 0 };
-            vsg::vec2  texCoord{ 0, 0 };
-            uint8_t color[4] = { 0, 0, 0, 0};
+            vsg::vec3 position{0, 0, 0};
+            vsg::vec3 normal{0, 0, 0};
+            vsg::vec2 texCoord{0, 0};
+            uint8_t color[4] = {0, 0, 0, 0};
         };
 
         struct MatInfo
@@ -107,8 +107,8 @@ namespace ehb
 
         struct RPosInfo
         {
-            vsg::dquat rotation{ 0, 0, 0, 1 };
-            vsg::vec3 position{ 0, 0, 0 };
+            vsg::dquat rotation{0, 0, 0, 1};
+            vsg::vec3 position{0, 0, 0};
         };
 
         struct SubMesh
@@ -119,11 +119,11 @@ namespace ehb
             uint32_t faceCount = 0;
             uint32_t stitchCount = 0;
 
-            std::vector<MatInfo>     matInfo;   // BSMM
-            std::vector<vsg::vec3>        positions; // BVTX
-            std::vector<CornerInfo>  corners;   // BCRN
-            std::vector<WCornerInfo> wCorners;  // WCRN
-            FaceInfo                 faceInfo;  // BTRI
+            std::vector<MatInfo> matInfo;      // BSMM
+            std::vector<vsg::vec3> positions;  // BVTX
+            std::vector<CornerInfo> corners;   // BCRN
+            std::vector<WCornerInfo> wCorners; // WCRN
+            FaceInfo faceInfo;                 // BTRI
         };
 
         uint32_t sizeTextField = 0;
@@ -133,10 +133,10 @@ namespace ehb
         uint32_t subMeshCount = 0;
         uint32_t renderFlags = 0;
 
-        std::vector<SubMesh>     subMeshes;
-        std::vector<BoneInfo>    boneInfos;
+        std::vector<SubMesh> subMeshes;
+        std::vector<BoneInfo> boneInfos;
         std::vector<std::string> textureNames;
-        std::vector<RPosInfo>    rposInfoAbI; // absolute inverse?
-        std::vector<RPosInfo>    rposInfoRel; // relative?
+        std::vector<RPosInfo> rposInfoAbI; // absolute inverse?
+        std::vector<RPosInfo> rposInfoRel; // relative?
     };
-}
+} // namespace ehb

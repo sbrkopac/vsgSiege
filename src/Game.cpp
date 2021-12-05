@@ -4,16 +4,16 @@
 #include "state/InitState.hpp"
 
 #ifdef SIEGE_TEST_STATES_ENABLED
-#include "state/test/FullMapTestState.hpp"
-#include "state/test/ProfileLoadingState.hpp"
-#include "state/test/RegionStitchTestState.hpp"
-#include "state/test/RegionTestState.hpp"
-#include "state/test/SiegeNodeTestState.hpp"
-#include "state/test/ASPMeshTestState.hpp"
+#    include "state/test/ASPMeshTestState.hpp"
+#    include "state/test/FullMapTestState.hpp"
+#    include "state/test/ProfileLoadingState.hpp"
+#    include "state/test/RegionStitchTestState.hpp"
+#    include "state/test/RegionTestState.hpp"
+#    include "state/test/SiegeNodeTestState.hpp"
 #endif
 
 #ifdef SIEGE_VSG_EXAMPLES_ENABLED
-#include "state/vsgExamples/vsgExamplesDraw.hpp"
+#    include "state/vsgExamples/vsgExamplesDraw.hpp"
 #endif
 
 #include <spdlog/spdlog.h>
@@ -104,7 +104,10 @@ namespace ehb
         if (gameStateType == "InitState") { return new InitState(systems); }
 
 #ifdef SIEGE_TEST_STATES_ENABLED
-        if (gameStateType == "ProfileLoadingState") { return new ProfileLoadingState(systems); }
+        if (gameStateType == "ProfileLoadingState")
+        {
+            return new ProfileLoadingState(systems);
+        }
 
         if (gameStateType == "SiegeNodeTestState") { return new SiegeNodeTestState(systems); }
 
@@ -118,7 +121,10 @@ namespace ehb
 #endif
 
 #ifdef SIEGE_VSG_EXAMPLES_ENABLED
-        if (gameStateType == "vsgExamplesDraw") { return new vsgExamplesDrawState(systems); }
+        if (gameStateType == "vsgExamplesDraw")
+        {
+            return new vsgExamplesDrawState(systems);
+        }
 #endif
 
         return nullptr;

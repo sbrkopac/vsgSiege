@@ -19,9 +19,9 @@ namespace ehb
         uint8_t c0 = 0, c1 = 0, c2 = 0, c3 = 0;
     };
 
-    bool operator == (FourCC a, const char fccStr[]) noexcept;
+    bool operator==(FourCC a, const char fccStr[]) noexcept;
 
-    std::ostream& operator << (std::ostream& s, const FourCC& fcc);
+    std::ostream& operator<<(std::ostream& s, const FourCC& fcc);
 
     class BinaryReader final
     {

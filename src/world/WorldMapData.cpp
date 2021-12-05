@@ -62,7 +62,7 @@ namespace ehb
                             const uint32_t region1 = regionGuid;
                             const uint32_t region2 = itr->second;
 
-                            data[region1].emplace(region2, Data{ node1, node2, door1, door2 });
+                            data[region1].emplace(region2, Data{node1, node2, door1, door2});
                         }
                         else
                         {

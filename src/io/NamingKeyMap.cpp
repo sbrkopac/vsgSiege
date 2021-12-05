@@ -2,8 +2,8 @@
 #include "NamingKeyMap.hpp"
 
 #include <algorithm>
-#include <sstream>
 #include <list>
+#include <sstream>
 
 #include <spdlog/spdlog.h>
 

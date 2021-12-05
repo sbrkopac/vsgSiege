@@ -11,6 +11,7 @@
 #include <vsg/io/Options.h>
 #include <vsg/nodes/StateGroup.h>
 #include <vsg/viewer/Camera.h>
+#include <vsg/viewer/Viewer.h>
 
 namespace ehb
 {
@@ -32,6 +33,7 @@ namespace ehb
 
         //! created in Game.cpp
         vsg::ref_ptr<vsg::Camera> camera;
+        vsg::ref_ptr<vsg::Viewer> viewer; // putting this as a system to attempt to work around dynamic graph bugs
 
         //! specific to this object
         vsg::ref_ptr<vsg::Options> options = vsg::Options::create();

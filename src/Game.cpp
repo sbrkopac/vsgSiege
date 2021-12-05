@@ -8,6 +8,10 @@
 #include "state/RegionTestState.hpp"
 #include "state/SiegeNodeTestState.hpp"
 
+#ifdef SIEGE_VSG_EXAMPLES_ENABLED
+#include "state/vsgExamples/vsgExamplesDraw.hpp"
+#endif
+
 #include <spdlog/spdlog.h>
 
 #include <vsg/viewer/CloseHandler.h>
@@ -49,6 +53,9 @@ namespace ehb
 
         viewer->addEventHandler(vsg::CloseHandler::create(viewer));
         viewer->addEventHandler(vsg::Trackball::create(systems.camera));
+
+        //! TODO: remove this once vsg dynamic graph bugs are fixed up
+        systems.viewer = viewer;
 
         if (systems.config.getBool("profile")) { gameStateMgr.request("ProfileLoadingState"); }
         else
@@ -101,6 +108,10 @@ namespace ehb
         if (gameStateType == "FullMapTestState") { return new FullMapTestState(systems); }
 
         if (gameStateType == "RegionStitchTestState") { return new RegionStitchTestState(systems); }
+
+#ifdef SIEGE_VSG_EXAMPLES_ENABLED
+        if (gameStateType == "vsgExamplesDraw") { return new vsgExamplesDrawState(systems); }
+#endif
 
         return nullptr;
     }

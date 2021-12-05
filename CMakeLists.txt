@@ -6,10 +6,19 @@ project(vsg-siege
     LANGUAGES CXX
 )
 
+# TODO: eventually this should be switched to off
+OPTION (SIEGE_BUILD_VSG_EXAMPLES "Build mimicked vsgExamples - useful for PRs that don't require Dungeon Siege content" ON)
+
 # find the vsg
 find_package(vsg REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
+
+if (SIEGE_BUILD_VSG_EXAMPLES)
+    set (SIEGE_VSG_EXAMPLES_SOURCES
+        src/state/vsgExamples/vsgExamplesDraw.cpp
+    )
+endif()
 
 set (SOURCES
     # config
@@ -27,6 +36,7 @@ set (SOURCES
     src/state/FullMapTestState.cpp
     src/state/RegionStitchTestState.cpp
     src/state/ProfileLoadingState.cpp
+    "${SIEGE_VSG_EXAMPLES_SOURCES}"
 
     # io
     src/io/BinaryReader.cpp
@@ -51,6 +61,10 @@ set (SOURCES
 add_executable (vsg-siege src/main.cpp src/Game.cpp ${SOURCES})
 target_link_libraries (vsg-siege vsg::vsg)
 target_include_directories(vsg-siege PUBLIC src extern)
+
+if (SIEGE_BUILD_VSG_EXAMPLES)
+    target_compile_definitions(vsg-siege PRIVATE SIEGE_VSG_EXAMPLES_ENABLED)
+endif()
 
 if(MSVC)
     target_compile_options(vsg-siege PRIVATE "/MP")

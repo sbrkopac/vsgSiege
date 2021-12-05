@@ -56,7 +56,8 @@ set (SOURCES
     src/vsg/ReaderWriterRegion.cpp
 )
 
-add_executable (vsg-siege src/main.cpp src/Game.cpp ${SOURCES})
+message (STATUS "extern_source_files: " ${EXTERN_SOURCE_FILES})
+add_executable (vsg-siege ${EXTERN_SOURCE_FILES} src/main.cpp src/Game.cpp ${SOURCES})
 target_link_libraries (vsg-siege PRIVATE vsg::vsg "$<$<CXX_COMPILER_ID:GNU>:stdc++fs;${XDGBASEDIR_LIBRARIES}>")
 target_include_directories(vsg-siege PUBLIC src ${EXTERN_INCLUDE_PATHS})
 

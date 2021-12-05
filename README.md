@@ -21,7 +21,7 @@ vsgSiege requires the installation of the [Vulkan SDK](https://vulkan.lunarg.com
 
 #### For Linux
 ```
-sudo apt-get install -y libxdg-basedir-dev libminini-dev
+sudo apt-get install -y libxdg-basedir-dev
 ```
 
 ```

@@ -1,6 +1,8 @@
 
 #include "BinaryReader.hpp"
 
+#include <cstring>
+
 namespace ehb
 {
     void BinaryReader::readBytes(void* buffer, size_t numBytes)

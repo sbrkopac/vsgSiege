@@ -195,7 +195,7 @@ namespace ehb
 
                     // Float UVs:
                     corner.texCoord = reader.read<vsg::vec2>();
-                    corner.texCoord.y = 1 - corner.texCoord.y;
+                    //corner.texCoord.y = 1 - corner.texCoord.y;
                 }
             }
             else if (chunk == "WCRN")
@@ -228,7 +228,7 @@ namespace ehb
                     wCorner.color[3] = reader.read<uint8_t>();
 
                     wCorner.texCoord = reader.read<vsg::vec2>();
-                    wCorner.texCoord.y = 1 - wCorner.texCoord.y;
+                    //wCorner.texCoord.y = 1 - wCorner.texCoord.y;
 
                     /* TODO
                     // remove null bone/weights

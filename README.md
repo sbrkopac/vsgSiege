@@ -17,7 +17,12 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Building
 
-vsgSiege requires the installation of the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home), [VulkanSceneGraph](https://github.com/vsg-dev/VulkanSceneGraph), and [spdlog](https://github.com/gabime/spdlog). Please build vsgSiege out-of-source.
+vsgSiege requires the installation of the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) and [VulkanSceneGraph](https://github.com/vsg-dev/VulkanSceneGraph). Please build vsgSiege out-of-source.
+
+#### For Linux
+```
+sudo apt-get install -y libxdg-basedir-dev
+```
 
 ```
 git clone https://github.com/vsgSiege/vsgSiege.git

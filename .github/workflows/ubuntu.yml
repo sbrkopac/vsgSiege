@@ -1,0 +1,51 @@
+name: Ubuntu CI
+on:
+  push:
+  pull_request:
+env:
+  VulkanSDKVersion: 1.2.162.1
+  CMakeVersion: 3.11.x
+jobs:
+  linux-build:
+    runs-on: ubuntu-latest
+    env:
+      VULKAN_SDK: $GITHUB_WORKSPACE/../$VulkanSDKVersion/x86_64
+    steps:
+    - name: Setup cmake
+      uses: jwlawson/actions-setup-cmake@v1.9
+      with:
+        cmake-version: ${{env.CMakeVersion}}
+    - name: Cache
+      id: cache
+      uses: actions/cache@v1.1.2
+      with:
+        path: ${{env.VULKAN_SDK}}
+        key: VulkanSdk${{env.VulkanSDKVersion}}ExtractedLinux
+    - name: Download & Extract Vulkan SDK
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        wget --no-cookies -O ../vulkansdk-linux-x86_64-${{env.VulkanSDKVersion}}.tar.gz https://sdk.lunarg.com/sdk/download/${{env.VulkanSDKVersion}}/linux/vulkansdk-linux-x86_64-${{env.VulkanSDKVersion}}.tar.gz?u=
+        tar -zxf ../vulkansdk-linux-x86_64-${{env.VulkanSDKVersion}}.tar.gz -C ../ 
+    - name: Clone VSG
+      uses: actions/checkout@v2
+      with:
+        repository: vsg-dev/VulkanSceneGraph
+        path: vsg
+    - name: VSG Build and Install
+      working-directory: ${{github.workspace}}/vsg
+      run: |
+        cmake -D Vulkan_INCLUDE_DIR="${{env.VULKAN_SDK}}/include" \
+          -D Vulkan_LIBRARY="${{env.VULKAN_SDK}}/lib/libvulkan.so" .
+        make -j 2
+        sudo make install
+    - name: Clone vsgSiege
+      uses: actions/checkout@v2
+      with:
+        path: master
+    - name: vsgSiege Build and Install
+      working-directory: ${{github.workspace}}/master
+      run: |
+        sudo apt-get install -y libxdg-basedir-dev
+        cmake -D Vulkan_INCLUDE_DIR="${{env.VULKAN_SDK}}/include" \
+          -D Vulkan_LIBRARY="${{env.VULKAN_SDK}}/lib/libvulkan.so" .
+        make -j 2

@@ -1,19 +1,25 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.11)
 
 project(vsg-siege
     VERSION 0.0.0
     DESCRIPTION "Open Source implementation of Dungeon Siege"
-    LANGUAGES CXX
 )
 
 # TODO: eventually these should be switched to off
 OPTION (SIEGE_BUILD_VSG_EXAMPLES "Build mimicked vsgExamples - useful for PRs that don't require Dungeon Siege content" ON)
 OPTION (SIEGE_BUILD_TEST_STATES "Build test states" ON)
 
+# globally set 17 as the standard so imported modules get the flag as well
+set(CMAKE_CXX_STANDARD 17)
+
 # find the vsg
 find_package(vsg REQUIRED)
 
-set(CMAKE_CXX_STANDARD 17)
+# not sure if this is still required or not
+if (UNIX)
+    find_package(PkgConfig)
+    pkg_check_modules(XDGBASEDIR REQUIRED libxdg-basedir)
+endif(UNIX)
 
 if (SIEGE_BUILD_VSG_EXAMPLES)
     set (SIEGE_VSG_EXAMPLES_SOURCES
@@ -30,6 +36,8 @@ if (SIEGE_BUILD_TEST_STATES)
         src/state/test/ProfileLoadingState.cpp
     )
 endif()
+
+add_subdirectory(extern)
 
 set (SOURCES
     # config
@@ -65,9 +73,10 @@ set (SOURCES
     src/vsg/ReaderWriterRegion.cpp
 )
 
-add_executable (vsg-siege src/main.cpp src/Game.cpp ${SOURCES})
-target_link_libraries (vsg-siege vsg::vsg)
-target_include_directories(vsg-siege PUBLIC src extern)
+message (STATUS "extern_source_files: " ${EXTERN_SOURCE_FILES})
+add_executable (vsg-siege ${EXTERN_SOURCE_FILES} src/main.cpp src/Game.cpp ${SOURCES})
+target_link_libraries (vsg-siege PRIVATE vsg::vsg "$<$<CXX_COMPILER_ID:GNU>:stdc++fs;${XDGBASEDIR_LIBRARIES}>")
+target_include_directories(vsg-siege PUBLIC src ${EXTERN_INCLUDE_PATHS})
 
 if (SIEGE_BUILD_VSG_EXAMPLES)
     target_compile_definitions(vsg-siege PRIVATE SIEGE_VSG_EXAMPLES_ENABLED)

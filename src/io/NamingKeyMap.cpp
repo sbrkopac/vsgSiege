@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <sstream>
+#include <list>
 
 #include <spdlog/spdlog.h>
 

@@ -5,7 +5,10 @@
 #    include <shlobj.h>
 #    include <windows.h>
 #else
+#    include <filesystem>
 #    include <minIni.h>
+
+namespace fs = std::filesystem;
 #endif
 
 namespace ehb

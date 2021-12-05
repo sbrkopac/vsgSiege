@@ -49,4 +49,3 @@ jobs:
         cmake -D Vulkan_INCLUDE_DIR="${{env.VULKAN_SDK}}/include" \
           -D Vulkan_LIBRARY="${{env.VULKAN_SDK}}/lib/libvulkan.so" .
         make -j 2
-        sudo make install

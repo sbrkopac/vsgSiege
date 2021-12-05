@@ -3,15 +3,19 @@ cmake_minimum_required(VERSION 3.11)
 project(vsg-siege
     VERSION 0.0.0
     DESCRIPTION "Open Source implementation of Dungeon Siege"
-    LANGUAGES CXX
 )
 
-option(BUILD_STATIC_LIBS "Build the static library" ON)
+# globally set 17 as the standard so imported modules get the flag as well
+set(CMAKE_CXX_STANDARD 17)
 
 # find the vsg
 find_package(vsg REQUIRED)
 
-set(CMAKE_CXX_STANDARD 17)
+# not sure if this is still required or not
+if (UNIX)
+    find_package(PkgConfig)
+    pkg_check_modules(XDGBASEDIR REQUIRED libxdg-basedir)
+endif(UNIX)
 
 add_subdirectory(extern)
 

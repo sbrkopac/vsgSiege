@@ -8,11 +8,6 @@
 
 namespace ehb
 {
-    struct Vertex
-    {
-        vsg::vec3 position, normal, color;
-    };
-
     void vsgExamplesDrawState::enter()
     {
         // set up search paths to SPIRV shaders and textures

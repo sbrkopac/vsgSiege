@@ -34,6 +34,9 @@ namespace ehb
             t1->addChild(asp);
 
             scene3d.addChild(t1);
+
+            // workaround
+            compile(systems, systems.scene3d);
         }
     }
 

@@ -10,6 +10,7 @@
 #include <vsg/maths/transform.h>
 #include <vsg/nodes/MatrixTransform.h>
 #include <vsg/nodes/StateGroup.h>
+#include <vsg/vk/ResourceRequirements.h>
 
 namespace ehb
 {
@@ -31,7 +32,13 @@ namespace ehb
         static std::string region = "town_center";
         static std::string regionpath = "world/maps/multiplayer_world/regions/" + region + ".region"; // extension for the loader
 
-        if (auto region = vsg::read_cast<vsg::MatrixTransform>(regionpath, vsg::ref_ptr<vsg::Options>(&options))) { scene3d.addChild(region); }
+        if (auto region = vsg::read_cast<vsg::MatrixTransform>(regionpath, vsg::ref_ptr<vsg::Options>(&options))) 
+        {
+            scene3d.addChild(region);
+
+            // workaround
+            compile(systems, systems.scene3d);
+        }
     }
 
     void RegionTestState::leave() {}

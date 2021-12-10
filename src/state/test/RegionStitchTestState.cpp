@@ -124,6 +124,9 @@ namespace ehb
 
             scene3d.addChild(region2Xform);
         }
+
+        // workaround
+        compile(systems, systems.scene3d);
     }
 
     void RegionStitchTestState::leave() {}

@@ -47,6 +47,9 @@ namespace ehb
 
         Duration duration = Timer::now() - start;
         log->info("SiegeNodeTest entire state profiled @ {} milliseconds", duration.count());
+
+        // workaround
+        compile(systems, systems.scene3d);
     }
 
     void SiegeNodeTestState::leave() {}

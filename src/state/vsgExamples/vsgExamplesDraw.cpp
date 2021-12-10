@@ -134,14 +134,15 @@ namespace ehb
         // Actively being worked on by Robert
         // https://github.com/vsg-dev/vsgExamples/issues/124
 
-#if 1
+        // This is wrapped in the game state code as a compile function but I've left this intacted here to keep it vsg-esque
         vsg::CollectResourceRequirements collectRequirements;
         systems.scene3d->accept(collectRequirements);
-        systems.scene3d->setObject("ResourceHints", collectRequirements.createResourceHints());
+
+        auto resourceHints = collectRequirements.createResourceHints();
+#if 0
+        systems.scene3d->setObject("ResourceHints", resourceHints);
 #endif
 
-        auto resourceHints = vsg::ResourceHints::create();
-        resourceHints->maxSlot = 2;
         systems.viewer->compile(resourceHints);
     }
 

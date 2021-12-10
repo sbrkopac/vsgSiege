@@ -145,6 +145,9 @@ namespace ehb
         };
 
         recurse(targetRegionGuid);
+
+        // workaround
+        compile(systems, systems.scene3d);
     }
 
     void FullMapTestState::leave() {}

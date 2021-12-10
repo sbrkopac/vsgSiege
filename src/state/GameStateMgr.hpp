@@ -5,7 +5,6 @@
 #include "IGameStateMgr.hpp"
 #include <memory>
 #include <string>
-#include <string_view>
 
 #include <spdlog/logger.h>
 

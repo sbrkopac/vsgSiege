@@ -49,6 +49,7 @@ set (SOURCES
     src/cfg/SteamConfig.cpp
 
     # state
+    src/state/IGameState.cpp
     src/state/GameStateMgr.cpp
     src/state/InitState.cpp
     ${SIEGE_TEST_STATES_SOURCE}

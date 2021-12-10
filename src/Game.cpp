@@ -84,7 +84,9 @@ namespace ehb
             // i don't think we should have to compile on every frame?
             // TODO: swap this out for a dynamic way of adding this to the scene graph
             // Compile Request from VSG examples?
-            viewer->compile();
+            // Don't call compile here as it causes a crash after the state compiles the objects needed by vulkan
+            // Is the above note proper behavior? should multiple compile calls destroy the previously compiled vulkan objects?
+            // viewer->compile();
 
             viewer->handleEvents();
             viewer->recordAndSubmit();

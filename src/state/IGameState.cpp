@@ -11,11 +11,12 @@
 
 namespace vsg
 {
-    std::ostream& operator << (std::ostream& ostr, const ResourceRequirements& reqs)
+    std::ostream& operator<<(std::ostream& ostr, const ResourceRequirements& reqs)
     {
-        return ostr << "Resource Requirements calculated - " << " maxSlot: " << reqs.maxSlot;
+        return ostr << "Resource Requirements calculated - "
+                    << " maxSlot: " << reqs.maxSlot;
     }
-}
+} // namespace vsg
 
 namespace ehb
 {
@@ -27,4 +28,4 @@ namespace ehb
 
         spdlog::get("log")->info("{}", collectRequirements.requirements);
     }
-}
+} // namespace ehb

@@ -19,7 +19,7 @@ namespace ehb
 
     InputStream LocalFileSys::createInputStream(const std::string& filename_)
     {
-        if (bitsDir.empty()) { std::cout << "bits directory is empty... your application might bomb" << std::endl; }
+        if (bitsDir.empty()) { log->error("bits directory is empty... your application might bomb"); }
 
         std::string filename = stringtool::convertToLowerCase(filename_);
 

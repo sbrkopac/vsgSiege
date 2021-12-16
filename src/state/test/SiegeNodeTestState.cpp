@@ -44,6 +44,10 @@ namespace ehb
 
             SiegeNodeMesh::connect(t1, 2, t2, 1);
         }
+        else
+        {
+            log->critical("Unabel to load SiegeNode: {}", siegeNode);
+        }
 
         Duration duration = Timer::now() - start;
         log->info("SiegeNodeTest entire state profiled @ {} milliseconds", duration.count());

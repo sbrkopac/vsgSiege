@@ -99,7 +99,7 @@ namespace ehb
 
         for (const auto& filename : fileSys.getDirectoryContents("/art"))
         {
-            if (vsg::lowerCaseFileExtension(filename) == "nnk")
+            if (vsg::lowerCaseFileExtension(filename) == ".nnk")
             {
                 const std::string lowerCaseFileName = stringtool::convertToLowerCase(getSimpleFileName(filename));
 

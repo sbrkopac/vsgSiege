@@ -16,7 +16,7 @@ namespace ehb
         const std::string simpleFilename = vsg::simpleFilename(filename);
 
         // check to make sure this is a nodes.gas file
-        if (vsg::fileExtension(filename) != "region") return {};
+        if (vsg::fileExtension(filename) != ".region") return {};
 
         // the below feels a bit hacky but we need to be able to access all the files in the region on load - for now
         // you can think of this loader as a proxy loader for the rest of the elements in a region

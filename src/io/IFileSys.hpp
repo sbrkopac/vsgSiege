@@ -51,7 +51,7 @@ namespace ehb
     {
         for (const auto& filename : getFiles())
         {
-            if (vsg::lowerCaseFileExtension(filename) == "gas")
+            if (vsg::lowerCaseFileExtension(filename) == ".gas")
             {
                 if (filename.find(directory) == 0)
                 {

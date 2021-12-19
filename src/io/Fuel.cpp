@@ -273,6 +273,22 @@ namespace ehb
         return defaultValue;
     }
 
+    double FuelBlock::valueAsDouble(const std::string& name, double defaultValue) const
+    {
+        if (const Attribute* attr = attribute(name))
+        {
+            try
+            {
+                return std::stod(attr->value, nullptr);
+            }
+            catch (...)
+            {
+            }
+        }
+
+        return defaultValue;
+    }
+
     std::string FuelBlock::valueAsString(const std::string& name, const std::string& defaultValue) const
     {
         if (const Attribute* attr = attribute(name))
@@ -300,6 +316,30 @@ namespace ehb
             float z = std::stof(value.substr(itr2 + 1, itr3 - itr2 - 1));
 
             return std::array<float, 3>{x, y, z};
+        }
+
+        return defaultValue;
+    }
+
+    std::array<float, 4> FuelBlock::valueAsFloat4(const std::string& name, std::array<float, 4> defaultValue) const
+    {
+        if (const Attribute* attr = attribute(name))
+        {
+            const std::string& value = valueOf(name);
+
+            if (value.empty()) { return defaultValue; }
+
+            const auto itr1 = value.find(',');
+            const auto itr2 = value.find(',', itr1 + 1);
+            const auto itr3 = value.find(',', itr2 + 1);
+            const auto itr4 = value.find(',', itr3 + 1);
+
+            float x = std::stof(value.substr(0, itr1));
+            float y = std::stof(value.substr(itr1 + 1, itr2 - itr1 - 1));
+            float z = std::stof(value.substr(itr2 + 1, itr3 - itr2 - 1));
+            float w = std::stof(value.substr(itr3 + 1, itr4 - itr3 - 1));
+
+            return std::array<float, 4>{x, y, z, w};
         }
 
         return defaultValue;
@@ -339,6 +379,18 @@ namespace ehb
                 {
                 }
             }
+        }
+
+        return defaultValue;
+    }
+
+    vsg::quat FuelBlock::valueAsQuat(const std::string& name, const vsg::quat& defaultValue) const
+    {
+        if (const Attribute* attr = attribute(name))
+        {
+            auto value = valueAsFloat4(name);
+
+            return vsg::quat(value[0], value[1], value[2], value[3]);
         }
 
         return defaultValue;

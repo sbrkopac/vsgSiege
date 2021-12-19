@@ -26,6 +26,7 @@
 #include <vector>
 #include <vsg/maths/vec3.h>
 #include <vsg/maths/vec4.h>
+#include <vsg/maths/quat.h>
 //#include "SiegeRot.hpp"
 //#include "SiegePos.hpp"
 
@@ -104,12 +105,15 @@ namespace ehb
         int valueAsInt(const std::string& name, int defaultValue = 0) const;
         unsigned int valueAsUInt(const std::string& name, unsigned int defaultValue = 0) const;
         float valueAsFloat(const std::string& name, float defaultValue = 0.f) const;
+        double valueAsDouble(const std::string& name, double defaultvalue = 0.0) const;
         std::string valueAsString(const std::string& name, const std::string& defaultValue = "") const;
 
         // extra types...
         std::array<float, 3> valueAsFloat3(const std::string& name, const std::array<float, 3> defaultValue = {1.0, 1.0, 1.0}) const;
+        std::array<float, 4> valueAsFloat4(const std::string& name, const std::array<float, 4> defaultValue = {0.0, 0.0, 0.0, 1.0}) const;
         vsg::vec3 valueAsVec3(const std::string& name, const vsg::vec3& defaultValue = {1.0, 1.0, 1.0}) const; // don't use 1.f as vsg::vec3 could be doubles
         vsg::vec4 valueAsColor(const std::string& name, const vsg::vec4& defaultValue = {1.f, 1.f, 1.f, 1.f}) const;
+        vsg::quat valueAsQuat(const std::string& name, const vsg::quat& defaultValue = {0.0, 0.0, 0.0, 1.0}) const;
         //SiegeRot valueAsSiegeRot(const std::string & name, const SiegeRot & defaultValue = { 0.0, 0.0, 0.0, 0.0, 0}) const;
         //SiegePos valueAsSiegePos(const std::string & name, const SiegePos & defaultValue = { 0.0, 0.0, 0.0, 0 }) const;
 

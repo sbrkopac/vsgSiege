@@ -20,7 +20,7 @@ namespace ehb
 
         {
             TimePoint start = Timer::now();
-            systems.namingKeyMap.init(systems.fileSys);
+            systems.namingKeyMap->init(systems.fileSys);
             Duration duration = Timer::now() - start;
             log->info("NamingKeyMap profiled @ {} milliseconds", duration.count());
         }

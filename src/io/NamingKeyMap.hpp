@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include <vsg/core/Object.h>
+#include <vsg/core/Inherit.h>
 
 // NOTE: this class violates several of my design decisions, but the code was already written and we can come back around to clean it up later
 namespace ehb
@@ -12,7 +13,7 @@ namespace ehb
     class IFileSys;
 
     // this is a vsg::Object so we can attach it to vsg::Options and reference it in loaders
-    class NamingKeyMap final : public vsg::Object
+    class NamingKeyMap final : public vsg::Inherit<vsg::Object, NamingKeyMap>
     {
     public:
         NamingKeyMap() = default;

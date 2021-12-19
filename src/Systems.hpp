@@ -28,7 +28,7 @@ namespace ehb
 
         // hard code to local file system for now
         LocalFileSys fileSys;
-        NamingKeyMap namingKeyMap;
+        vsg::ref_ptr<NamingKeyMap> namingKeyMap = NamingKeyMap::create();
         WorldMapDataCache worldMapData;
 
         //! created in Game.cpp

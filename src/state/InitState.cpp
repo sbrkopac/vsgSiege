@@ -79,7 +79,7 @@ namespace ehb
 
         IFileSys& fileSys = systems.fileSys;
         IConfig& config = systems.config;
-        NamingKeyMap& namingKeyMap = systems.namingKeyMap;
+        NamingKeyMap& namingKeyMap = *systems.namingKeyMap;
         auto options = systems.options;
 
         // sanity check to stop errors from being thrown when using vsgExamples
@@ -89,7 +89,6 @@ namespace ehb
             namingKeyMap.init(fileSys);
 
             options->setObject("NamingKeyMap", &namingKeyMap);
-            namingKeyMap.ref(); // this is a vsg::Object so it can be stored in options but I don't want to make it an actual ref pointer as there should only be 1 instance
 
             options->readerWriters = {ReaderWriterRAW::create(fileSys), ReaderWriterSNO::create(fileSys), ReaderWriterASP::create(fileSys), ReaderWriterSiegeNodeList::create(fileSys), ReaderWriterRegion::create(fileSys)};
 

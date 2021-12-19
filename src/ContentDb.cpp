@@ -82,6 +82,8 @@ namespace ehb
         }
 
         log->debug("ContentDB has finished loading and resolving {} templates", db.size());
+
+        isReady = true;
     }
 
     const std::string& ContentDb::queryString(const std::string& query, const std::string& defaultValue) const

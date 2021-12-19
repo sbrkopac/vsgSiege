@@ -27,6 +27,8 @@ namespace ehb
         auto path = vsg::removeExtension(filename);
         auto maindotgas = path + "/main.gas";
         auto nodesdotgas = path + "/terrain_nodes/nodes.gas";
+        auto objectsPath = path + "/objects/regular";
+        auto actordotgas = objectsPath + "/actor.gas";
 
         InputStream main = fileSys.createInputStream(maindotgas);
         InputStream nodes = fileSys.createInputStream(nodesdotgas);
@@ -52,6 +54,21 @@ namespace ehb
 
                 return region;
             }
+        }
+            }
+
+#if 0
+            if (fileSys.openGasFile(actordotgas))
+            {
+                log->info("loading actors from {}", actordotgas);
+                
+                // load up the file here and create a transform for each of the objects
+                // assign the TemplateName to the transform and use a visitor later on to do the positioning
+                // that's a little less efficient because in the visitor we will need to grab the name again
+            }
+#endif
+
+            return region;
         }
 
         return {};

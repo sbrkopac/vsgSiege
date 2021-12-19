@@ -8,6 +8,7 @@
 
 #include "state/GameStateMgr.hpp"
 #include "world/WorldMapData.hpp"
+#include "ContentDb.hpp"
 
 #include <vsg/io/Options.h>
 #include <vsg/nodes/StateGroup.h>
@@ -33,6 +34,7 @@ namespace ehb
         TankFileSys fileSys;
 
         vsg::ref_ptr<NamingKeyMap> namingKeyMap = NamingKeyMap::create();
+        ContentDb contentDb;
         WorldMapDataCache worldMapData;
 
         //! created in Game.cpp

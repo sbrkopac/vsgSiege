@@ -12,6 +12,9 @@
 #include "gas/Fuel.hpp"
 // #include "vsg/Aspect.hpp"
 #include "world/SiegeNode.hpp"
+#include <vsg/core/Visitor.h>
+
+#include <spdlog/spdlog.h>
 
 namespace ehb
 {

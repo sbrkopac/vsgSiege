@@ -1,10 +1,10 @@
 
 #include "SiegeNode.hpp"
 
-#include <spdlog/spdlog.h>
-
 #include <vsg/maths/quat.h>
 #include <vsg/maths/transform.h> // required for type deduction of inverse
+
+#include <spdlog/spdlog.h>
 
 namespace ehb
 {
@@ -157,4 +157,5 @@ namespace ehb
         // "Hold on to your butts." - Ray Arnold
         connectRegion->matrix = xform;
     }
+
 } // namespace ehb

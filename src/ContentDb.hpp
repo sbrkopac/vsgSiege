@@ -20,6 +20,8 @@ namespace ehb
 
         const FuelBlock* getGameObjectTmpl(const std::string& tmpl) const;
 
+        bool isReady = false;
+
     private:
         std::unordered_map<std::string, std::unique_ptr<FuelBlock>> db;
     };

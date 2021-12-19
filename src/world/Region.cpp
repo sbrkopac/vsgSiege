@@ -1,6 +1,8 @@
 
 #include "Region.hpp"
 
+#include <spdlog/spdlog.h>
+
 namespace ehb
 {
 

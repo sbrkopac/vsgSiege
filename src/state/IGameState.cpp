@@ -13,7 +13,7 @@ namespace vsg
 {
     std::ostream& operator<<(std::ostream& ostr, const ResourceRequirements& reqs)
     {
-        return ostr << "Resource Requirements calculated - "
+        return ostr << "Resource Requirements calculated -"
                     << " maxSlot: " << reqs.maxSlot;
     }
 } // namespace vsg

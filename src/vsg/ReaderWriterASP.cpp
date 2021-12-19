@@ -35,7 +35,7 @@ namespace ehb
         {
             if (chunk == "BMSH")
             {
-                log->info("Reading {}", chunk);
+                log->debug("Reading {}", chunk);
 
                 // version
                 reader.skipBytes(4);

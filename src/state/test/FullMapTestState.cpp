@@ -26,13 +26,16 @@ namespace ehb
         WorldMapDataCache worldMapDataCache;
         worldMapDataCache.init(fileSys);
 
-        // decorate the graph with the pipeline
-        // TODO: this should really be done somewhere else i think?
-        if (vsg::ref_ptr<vsg::BindGraphicsPipeline> pipeline(options.getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline")); pipeline) { scene3d.addChild(pipeline); }
-        else
+        vsg::ref_ptr<vsg::BindGraphicsPipeline> pipeline(options.getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline"));
+
+        if (pipeline == nullptr)
         {
-            log->critical("failed to find a graphics pipeline");
+            log->critical("SiegeNodeGraphicsPipeline has not been setup!");
+
+            return;
         }
+
+        scene3d.addChild(pipeline);
 
         const auto& world = worldMapDataCache.data["multiplayer_world"];
         static std::string startingRegion = "town_center";

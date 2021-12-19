@@ -21,19 +21,14 @@ namespace ehb
         vsg::StateGroup& scene3d = *systems.scene3d;
         vsg::Options& options = *systems.options;
 
-        // decorate the graph with the pipeline
-        // TODO: this should really be done somewhere else i think?
-        if (vsg::ref_ptr<vsg::BindGraphicsPipeline> pipeline(options.getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline")); pipeline) { scene3d.addChild(pipeline); }
-        else
-        {
-            log->critical("failed to find a graphics pipeline");
-        }
-
         static std::string region = "town_center";
         static std::string regionpath = "world/maps/multiplayer_world/regions/" + region + ".region"; // extension for the loader
 
         if (auto region = vsg::read_cast<vsg::MatrixTransform>(regionpath, vsg::ref_ptr<vsg::Options>(&options))) 
         {
+            vsg::ref_ptr<vsg::BindGraphicsPipeline> pipeline(options.getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline"));
+
+            scene3d.addChild(pipeline);
             scene3d.addChild(region);
 
             // workaround

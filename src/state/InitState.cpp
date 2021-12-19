@@ -95,9 +95,6 @@ namespace ehb
 
             options->objectCache = vsg::ObjectCache::create();
 
-            // options.paths is required internally for VSG as a check if it should actually use the findFileCallback
-            // TOOD: discuss with Robert is this is intended behavior
-            options->paths = {"/"};
             options->findFileCallback = &findFileCallback;
         }
 

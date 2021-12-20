@@ -24,9 +24,9 @@
 #include <array>
 #include <string>
 #include <vector>
+#include <vsg/maths/quat.h>
 #include <vsg/maths/vec3.h>
 #include <vsg/maths/vec4.h>
-#include <vsg/maths/quat.h>
 //#include "SiegeRot.hpp"
 //#include "SiegePos.hpp"
 

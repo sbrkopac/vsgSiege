@@ -4,8 +4,8 @@
 #include <string>
 #include <unordered_map>
 
-#include <vsg/core/Object.h>
 #include <vsg/core/Inherit.h>
+#include <vsg/core/Object.h>
 
 // NOTE: this class violates several of my design decisions, but the code was already written and we can come back around to clean it up later
 namespace ehb

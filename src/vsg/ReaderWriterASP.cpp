@@ -208,7 +208,7 @@ namespace ehb
                 {
                     auto& wCorner = mesh.wCorners[c];
 
-                    wCorner.pos = reader.read<vsg::vec3>();
+                    wCorner.position = reader.read<vsg::vec3>();
                     wCorner.weight = reader.read<vsg::quat>();
 
                     wCorner.bone[0] = reader.read<uint8_t>();
@@ -315,11 +315,11 @@ namespace ehb
                 for (uint32_t i = 0; i < aspectImpl->boneInfos.size(); i++)
                 {
                     Aspect::Impl::RPosInfo& abI = aspectImpl->rposInfoAbI[i];
-                    abI.rotation = reader.read<vsg::dquat>();
+                    abI.rotation = reader.read<vsg::quat>();
                     abI.position = reader.read<vsg::vec3>();
 
                     Aspect::Impl::RPosInfo& rel = aspectImpl->rposInfoRel[i];
-                    rel.rotation = reader.read<vsg::dquat>();
+                    rel.rotation = reader.read<vsg::quat>();
                     rel.position = reader.read<vsg::vec3>();
                 }
             }

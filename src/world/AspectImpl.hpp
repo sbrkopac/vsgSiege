@@ -66,7 +66,7 @@ namespace ehb
         // "Corner" is the term used in the 3DMax export scripts.
         struct WCornerInfo
         {
-            vsg::vec3 pos{0, 0, 0};
+            vsg::vec3 position{0, 0, 0};
             vsg::vec3 normal{0, 0, 0};
             vsg::dquat weight{0, 0, 0, 1};
             vsg::vec2 texCoord{0, 0};
@@ -107,7 +107,7 @@ namespace ehb
 
         struct RPosInfo
         {
-            vsg::dquat rotation{0, 0, 0, 1};
+            vsg::quat rotation{0, 0, 0, 1};
             vsg::vec3 position{0, 0, 0};
         };
 

@@ -6,9 +6,9 @@
 #include "io/NamingKeyMap.hpp"
 #include "io/TankFileSys.hpp"
 
+#include "ContentDb.hpp"
 #include "state/GameStateMgr.hpp"
 #include "world/WorldMapData.hpp"
-#include "ContentDb.hpp"
 
 #include <vsg/io/Options.h>
 #include <vsg/nodes/StateGroup.h>

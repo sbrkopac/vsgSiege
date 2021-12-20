@@ -51,10 +51,6 @@ namespace ehb
                 // TODO: should we just store the transforms as object data against the nodeData and query from there?
                 GenerateGlobalSiegeNodeGuidToNodeXformMap v(region->placedNodeXformMap);
                 region->accept(v);
-
-                return region;
-            }
-        }
             }
 
 #if 0

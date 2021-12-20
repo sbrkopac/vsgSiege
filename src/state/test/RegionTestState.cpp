@@ -42,11 +42,6 @@ namespace ehb
 
         return SiegePos(x, y, z, node);
     }
-
-    vsg::dquat toQuat(std::array<float, 4> array)
-    {
-        return { array[0], array[1], array[2], array[3] };
-    }
 }
 
 namespace ehb
@@ -91,9 +86,6 @@ namespace ehb
             scene3d.addChild(pipeline);
             scene3d.addChild(region);
 
-            auto regionData = Region::create();
-            regionData->setNodeData(region);
-
             if (loadObjects)
             {
                 systems.contentDb.init(systems.fileSys);
@@ -105,7 +97,7 @@ namespace ehb
 
                     const std::string objectspath = regionpath + "/objects/regular/";
 
-                    for (const auto& filename : { "non_interactive.gas", "actor.gas" })
+                    for (const auto& filename : { "non_interactive.gas", "actor.gas", "interactive.gas", "container.gas"})
                     {
                         if (auto doc = systems.fileSys.openGasFile(objectspath + filename))
                         {
@@ -129,7 +121,7 @@ namespace ehb
                                         auto xform = vsg::MatrixTransform::create();
                                         xform->addChild(asp);
 
-                                        if (auto localNodeTransform = regionData->placedNodeXformMap[position.guid]; localNodeTransform != nullptr)
+                                        if (auto localNodeTransform = region->placedNodeXformMap[position.guid]; localNodeTransform != nullptr)
                                         {
                                             xform->matrix = localNodeTransform->matrix * vsg::dmat4(vsg::translate(position.pos));
                                             xform->matrix = xform->matrix * vsg::dmat4(vsg::rotate(orientation));
@@ -137,8 +129,6 @@ namespace ehb
                                         else { log->error("Couldn't find a siege node with guid {} for template {}", position.guid, tmpl); }
 
                                         objectGroup->addChild(xform);
-
-                                        log->info("added: {} to graph", model);
                                     }
                                     else
                                     {

@@ -34,7 +34,8 @@ namespace ehb
         vsg::StateGroup& scene3d = *systems.scene3d;
         auto options = systems.options;
 
-        static std::string model("m_c_gah_fg_pos_a1");
+        // static std::string model("m_c_gah_fg_pos_a1");
+        static std::string model("m_i_glb_anvil");
 
         if (auto asp = vsg::read_cast<Aspect>(model, options); asp != nullptr)
         {

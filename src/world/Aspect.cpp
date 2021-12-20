@@ -18,6 +18,13 @@ namespace ehb
     Aspect::Aspect(std::shared_ptr<Impl> impl, vsg::ref_ptr<const vsg::Options> options) :
         d(std::move(impl))
     {
+        // asp meshes can have rotations around their origin for some reason
+        const Aspect::Impl::RPosInfo& rootBoneAbI = d->rposInfoAbI[0];
+        const Aspect::Impl::RPosInfo& rootBoneRel = d->rposInfoRel[0];
+
+        auto bind = vsg::translate(rootBoneRel.position) * vsg::rotate(rootBoneRel.rotation);
+        auto inverseBind = vsg::translate(rootBoneAbI.position) * vsg::rotate(rootBoneAbI.rotation);
+
         for (const auto& mesh : d->subMeshes)
         {
             uint32_t f = 0; // track which face the loader is loading across the sub mesh
@@ -34,12 +41,16 @@ namespace ehb
                 for (uint32_t cornerCounter = 0; cornerCounter < mesh.cornerCount; ++cornerCounter)
                 {
                     const auto& c = mesh.corners[cornerCounter];
-                    // const auto& w = mesh.wCorners[cornerCounter];
+                    //const auto& c = mesh.wCorners[cornerCounter];
 
                     (*vertices)[cornerCounter] = c.position;
                     (*normals)[cornerCounter] = c.normal;
                     (*colors)[cornerCounter] = vsg::vec4(c.color[0], c.color[1], c.color[2], c.color[3]);
                     (*tcoords)[cornerCounter] = c.texCoord;
+
+                    //! TODO: hacked work-around to get meshes with only a root bone to orient correctly
+                    if (d->boneInfos.size() == 1)
+                        (*vertices)[cornerCounter] = bind * c.position;
                 }
 
                 // each face is a triangle so faceSpan * 3

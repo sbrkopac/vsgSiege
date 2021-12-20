@@ -140,11 +140,15 @@ namespace ehb
             VkVertexInputAttributeDescription{2, 2, VK_FORMAT_R32G32_SFLOAT, 0},    // tex coord data
         };
 
+        auto colorBlendState = vsg::ColorBlendState::create();
+        colorBlendState->attachments = vsg::ColorBlendState::ColorBlendAttachments{
+            {VK_TRUE, VK_BLEND_FACTOR_SRC_ALPHA, VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA, VK_BLEND_OP_ADD, VK_BLEND_FACTOR_SRC_ALPHA, VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA, VK_BLEND_OP_SUBTRACT, VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT}};
+
         vsg::GraphicsPipelineStates pipelineStates{vsg::VertexInputState::create(vertexBindingsDescriptions, vertexAttributeDescriptions),
                                                    vsg::InputAssemblyState::create(),
                                                    vsg::RasterizationState::create(),
                                                    vsg::MultisampleState::create(),
-                                                   vsg::ColorBlendState::create(),
+                                                   colorBlendState,
                                                    vsg::DepthStencilState::create()};
 
         auto pipelineLayout = vsg::PipelineLayout::create(descriptorSetLayouts, pushConstantRanges);

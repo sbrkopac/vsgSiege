@@ -5,7 +5,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "io/Fuel.hpp"
+#include "gas/Fuel.hpp"
 
 namespace ehb
 {

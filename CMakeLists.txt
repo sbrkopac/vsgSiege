@@ -5,12 +5,18 @@ project(vsg-siege
     DESCRIPTION "Open Source implementation of Dungeon Siege"
 )
 
+# add custom cmake modules
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
 # TODO: eventually these should be switched to off
 OPTION (SIEGE_BUILD_VSG_EXAMPLES "Build mimicked vsgExamples - useful for PRs that don't require Dungeon Siege content" ON)
 OPTION (SIEGE_BUILD_TEST_STATES "Build test states" ON)
+OPTION (SIEGE_REGENERATE_FUEL_PARSER "Regenerate fuel parser source files" OFF)
 
 # globally set 17 as the standard so imported modules get the flag as well
 set(CMAKE_CXX_STANDARD 17)
+
+add_subdirectory(extern)
 
 # find the vsg
 find_package(vsg REQUIRED)
@@ -38,7 +44,14 @@ if (SIEGE_BUILD_TEST_STATES)
     )
 endif()
 
-add_subdirectory(extern)
+if(SIEGE_REGENERATE_FUEL_PARSER)
+    # these are required due to having exes associated with them
+    find_package(BISON REQUIRED)
+    find_package(RE2C REQUIRED)
+
+    bison_target(FuelParser "${CMAKE_SOURCE_DIR}/src/gas/FuelParser.y" "${CMAKE_CURRENT_LIST_DIR}/src/gas/FuelParser.cpp" COMPILE_FLAGS "${YACC_FLAGS} --no-lines --defines=${CMAKE_CURRENT_LIST_DIR}/src/gas/FuelParser.hpp")
+    re2c_target(NAME FuelScanner INPUT "${CMAKE_CURRENT_LIST_DIR}/src/gas/FuelScanner.r2c" OUTPUT "${CMAKE_CURRENT_LIST_DIR}/src/gas/FuelScanner.cpp" OPTIONS "--no-debug-info")
+endif()
 
 set (SOURCES
     # config
@@ -59,10 +72,12 @@ set (SOURCES
     src/io/BinaryReader.cpp
     src/io/StringTool.cpp
     src/io/NamingKeyMap.cpp
-    src/io/Fuel.cpp
-    src/io/FuelParser.cpp
-    src/io/FuelScanner.cpp
     src/io/LocalFileSys.cpp
+    
+    # gas
+    src/gas/Fuel.cpp
+    src/gas/FuelParser.cpp
+    src/gas/FuelScanner.cpp
 
     # world
     src/world/WorldMapData.cpp

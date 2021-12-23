@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Fuel.hpp"
+#include "gas/Fuel.hpp"
 #include <algorithm>
 #include <functional>
 #include <istream>

@@ -4,6 +4,7 @@
 #include "cfg/IConfig.hpp"
 #include "io/LocalFileSys.hpp"
 #include "io/NamingKeyMap.hpp"
+#include "io/TankFileSys.hpp"
 
 #include "state/GameStateMgr.hpp"
 #include "world/WorldMapData.hpp"
@@ -26,8 +27,10 @@ namespace ehb
 
         GameStateMgr& gameStateMgr;
 
-        // hard code to local file system for now
-        LocalFileSys fileSys;
+        //! this is the only IFileSys object that should ever exist
+        //! Any local file system operations should be done via std::filesystem
+        TankFileSys fileSys;
+
         vsg::ref_ptr<NamingKeyMap> namingKeyMap = NamingKeyMap::create();
         WorldMapDataCache worldMapData;
 

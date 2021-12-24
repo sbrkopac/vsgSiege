@@ -10,11 +10,13 @@
 
 namespace ehb
 {
-    void LocalFileSys::init(IConfig& config)
+    bool LocalFileSys::init(IConfig& config)
     {
         log = spdlog::get("log");
 
         bitsDir = config.getString("bits");
+
+        return !bitsDir.empty();
     }
 
     InputStream LocalFileSys::createInputStream(const std::string& filename_)

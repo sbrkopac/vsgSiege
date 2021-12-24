@@ -20,7 +20,7 @@ namespace ehb
     {
         log->info("Entered Region Test State");
 
-        LocalFileSys& fileSys = systems.fileSys;
+        IFileSys& fileSys = systems.fileSys;
         vsg::StateGroup& scene3d = *systems.scene3d;
         vsg::Options& options = *systems.options;
 

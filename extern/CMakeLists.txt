@@ -33,11 +33,13 @@ set(EXTERN_INCLUDE_PATHS
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${FETCHCONTENT_BASE_DIR}/minini-src/dev"
     "${CMAKE_CURRENT_SOURCE_DIR}/ValveFileVDF"
+    "${CMAKE_CURRENT_SOURCE_DIR}/miniz"
     PARENT_SCOPE
 )
 
 # the below don't have a cmake build system so we will just manually include them
 set(EXTERN_SOURCE_FILES
     "${FETCHCONTENT_BASE_DIR}/minini-src/dev/minIni.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/miniz/miniz.c"
     PARENT_SCOPE
 )

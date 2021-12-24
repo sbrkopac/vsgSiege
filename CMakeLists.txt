@@ -73,6 +73,9 @@ set (SOURCES
     src/io/StringTool.cpp
     src/io/NamingKeyMap.cpp
     src/io/LocalFileSys.cpp
+    src/io/tank/TankFile.cpp
+    src/io/tank/TankFileReader.cpp
+    src/io/TankFileSys.cpp
     
     # gas
     src/gas/Fuel.cpp

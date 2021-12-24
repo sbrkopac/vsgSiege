@@ -1,13 +1,14 @@
 
 #pragma once
 
+#include <filesystem>
+#include <optional>
+
 #include "IFileSys.hpp"
-#include "vsg/io/FileSystem.h"
-#include <memory>
+#include "tank/TankFile.hpp"
 
 #include <spdlog/spdlog.h>
 
-// VSG currently doesn't use the standard filesystem library
 #ifdef WIN32
 #    include <filesystem>
 namespace fs = std::filesystem;
@@ -19,12 +20,10 @@ namespace fs = std::experimental::filesystem;
 namespace ehb
 {
     class IConfig;
-    class LocalFileSys final : public IFileSys
+    class TankFileSys : public IFileSys
     {
     public:
-        LocalFileSys() = default;
-
-        virtual ~LocalFileSys() = default;
+        virtual ~TankFileSys() = default;
 
         virtual bool init(IConfig& config) override;
 
@@ -34,7 +33,21 @@ namespace ehb
         virtual FileList getDirectoryContents(const std::string& directory) const override;
 
     private:
-        fs::path bitsDir;
+        struct TankEntry
+        {
+            TankFile tank;
+            TankFile::Reader reader;
+        };
+
+    private:
+        //! store tank files, this vector removed duplicates and orders by priority
+        std::vector<std::unique_ptr<TankEntry>> eachTank;
+
+        //! contains a full list of files from the tanks that are loaded
+        FileList cache;
+
+        //! the optional bits path
+        std::optional<fs::path> bits;
 
         std::shared_ptr<spdlog::logger> log;
     };

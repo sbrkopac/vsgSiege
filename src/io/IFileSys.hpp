@@ -21,8 +21,8 @@ namespace fs = std::experimental::filesystem;
 
 namespace ehb
 {
-    typedef std::set<std::string> FileList;
-    typedef std::unique_ptr<std::istream> InputStream;
+    using FileList = std::set<std::string>;
+    using InputStream = std::unique_ptr<std::istream>;
 
     class IConfig;
     class IFileSys
@@ -30,7 +30,7 @@ namespace ehb
     public:
         virtual ~IFileSys() = default;
 
-        virtual void init(IConfig& config) = 0;
+        virtual bool init(IConfig& config) = 0;
 
         virtual InputStream createInputStream(const std::string& filename) = 0;
 

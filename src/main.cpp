@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 
     // Currently we have to have bits as tank reading hasn't been implemented yet
     bool hasBits = !config.getString("bits", "").empty();
-    if (!hasBits) log->warn("No bits directory detected. Dungeon Siege content will be unavailable");
+    if (!hasBits) log->info("No bits directory detected. Bits are NOT required.");
 
     // all loggers should be registered here before the Game class gets instantiated
     registerSiegeLogger(config, "filesystem");

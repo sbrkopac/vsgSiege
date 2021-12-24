@@ -82,10 +82,19 @@ namespace ehb
         NamingKeyMap& namingKeyMap = *systems.namingKeyMap;
         auto options = systems.options;
 
-        // sanity check to stop errors from being thrown when using vsgExamples
-        if (!config.getString("bits", "").empty())
+        // attempt to load the tank filesystem and if it's not available check for bits
+        // if bits also aren't available then we have to go to the vsgExamples
+        bool dsContentAvailable = fileSys.init(config);
+        if (!dsContentAvailable)
         {
-            fileSys.init(config);
+            log->error("DS Tank files were unable to be loaded. Attempting fallback to bits");
+
+            dsContentAvailable = !config.getString("bits", "").empty();
+        }
+
+        // sanity check to stop errors from being thrown when using vsgExamples
+        if (dsContentAvailable)
+        {
             namingKeyMap.init(fileSys);
 
             options->setObject("NamingKeyMap", &namingKeyMap);
@@ -95,6 +104,10 @@ namespace ehb
             options->objectCache = vsg::ObjectCache::create();
 
             options->findFileCallback = &findFileCallback;
+        }
+        else
+        {
+            log->error("Tank files and bits directory are unavailable. Falling back to vsgExamples");
         }
 
         // set up search paths and load shaders
@@ -150,7 +163,7 @@ namespace ehb
         {
 #if SIEGE_VSG_EXAMPLES_ENABLED
             // Dungeon Siege content is unavailable so default to something the user can run
-            if (config.getString("bits", "").empty())
+            if (!dsContentAvailable)
             {
                 systems.gameStateMgr.request("vsgExamplesDraw");
 

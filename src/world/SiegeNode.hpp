@@ -34,7 +34,13 @@ namespace ehb
 
     inline void SiegeNodeMesh::accept(vsg::Visitor& visitor)
     {
-        if(auto v = dynamic_cast<SiegeVisitorBase*> (&visitor))
-            v->apply(*this);
+        if (SiegeVisitorBase* svb = dynamic_cast<SiegeVisitorBase*>(&visitor); svb != nullptr)
+        {
+            svb->apply(*this);
+        }
+        else
+        {
+            visitor.apply(*this);
+        }
     }
 } // namespace ehb

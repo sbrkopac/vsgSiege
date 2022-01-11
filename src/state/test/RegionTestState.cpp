@@ -14,6 +14,26 @@
 
 namespace ehb
 {
+    class SiegeNodeMeshCounter : public SiegeVisitorBase
+    {
+    public:
+
+        int32_t count = 0;
+
+        virtual void apply(vsg::Object& object) override
+        {
+            object.traverse(*this);
+        }
+
+        virtual void apply(SiegeNodeMesh& mesh) override
+        {
+            count++;
+        }
+    };
+}
+
+namespace ehb
+{
     void RegionTestState::enter()
     {
         log->info("Entered Region Test State");
@@ -30,6 +50,11 @@ namespace ehb
 
             scene3d.addChild(pipeline);
             scene3d.addChild(region);
+
+            SiegeNodeMeshCounter v;
+            region->traverse(v);
+
+            log->info("Visitor has {} meshes", v.count);
 
             // workaround
             compile(systems, systems.scene3d);

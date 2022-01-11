@@ -12,8 +12,7 @@ namespace ehb
     {
 
     public:
-
         virtual void apply(SiegeNodeMesh& node) {}
         virtual void apply(Aspect& aspect) {}
     };
-}
+} // namespace ehb

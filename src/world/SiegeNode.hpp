@@ -3,12 +3,12 @@
 
 #include <vector>
 
+#include "SiegeVisitor.hpp"
 #include <vsg/core/Inherit.h>
+#include <vsg/core/Visitor.h>
 #include <vsg/maths/mat4.h>
 #include <vsg/nodes/Group.h>
 #include <vsg/nodes/MatrixTransform.h>
-#include <vsg/core/Visitor.h>
-#include "SiegeVisitor.hpp"
 
 namespace ehb
 {

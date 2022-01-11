@@ -3,10 +3,10 @@
 
 #include <memory>
 
-#include <vsg/core/Inherit.h>
-#include <vsg/nodes/Group.h>
-#include <vsg/core/Visitor.h>
 #include "SiegeVisitor.hpp"
+#include <vsg/core/Inherit.h>
+#include <vsg/core/Visitor.h>
+#include <vsg/nodes/Group.h>
 
 // this class emulates the class: Aspect in DS
 namespace ehb

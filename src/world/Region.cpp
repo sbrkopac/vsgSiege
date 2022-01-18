@@ -3,9 +3,9 @@
 
 namespace ehb
 {
-    void Region::setNodeData(vsg::ref_ptr<vsg::Group> nodes)
+    void Region::setSiegeNodeData(vsg::ref_ptr<vsg::Group> nodes)
     {
-        GenerateGlobalGuidToNodeXformMap visitor(placedNodeXformMap);
+        GenerateGlobalSiegeNodeGuidToNodeXformMap visitor(placedNodeXformMap);
         nodes->accept(visitor);
 
         addChild(nodes);

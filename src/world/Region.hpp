@@ -7,21 +7,21 @@
 
 #include <unordered_map>
 
-#include "io/Fuel.hpp"
+#include "gas/Fuel.hpp"
 // #include "vsg/Aspect.hpp"
 #include "world/SiegeNode.hpp"
 
 namespace ehb
 {
-    using GuidToXformMap = std::unordered_map<uint32_t, vsg::ref_ptr<vsg::MatrixTransform>>;
+    using SiegeNodeGuidToXformMap = std::unordered_map<uint32_t, vsg::ref_ptr<vsg::MatrixTransform>>;
 
-    struct GenerateGlobalGuidToNodeXformMap : public vsg::Visitor
+    struct GenerateGlobalSiegeNodeGuidToNodeXformMap : public vsg::Visitor
     {
         using vsg::Visitor::apply;
 
-        GuidToXformMap& map;
+        SiegeNodeGuidToXformMap& map;
 
-        GenerateGlobalGuidToNodeXformMap(GuidToXformMap& map) :
+        GenerateGlobalSiegeNodeGuidToNodeXformMap(SiegeNodeGuidToXformMap& map) :
             map(map) {}
 
         void apply(vsg::Node& node) { node.traverse(*this); }
@@ -46,9 +46,9 @@ namespace ehb
     {
         using vsg::Visitor::apply;
 
-        GuidToXformMap& map;
+        SiegeNodeGuidToXformMap& map;
 
-        CalculateAndPlaceObjects(GuidToXformMap& map) :
+        CalculateAndPlaceObjects(SiegeNodeGuidToXformMap& map) :
             map(map) {}
 
         void apply(vsg::Node& node) { node.traverse(*this); }
@@ -87,11 +87,11 @@ namespace ehb
         Region() = default;
         ~Region() = default;
 
-        void setNodeData(vsg::ref_ptr<vsg::Group> nodes);
+        void setSiegeNodeData(vsg::ref_ptr<vsg::Group> nodes);
 
         void setObjects(vsg::ref_ptr<vsg::Group> objects);
 
-        GuidToXformMap placedNodeXformMap; // holds the final matrix transform
+        SiegeNodeGuidToXformMap placedNodeXformMap; // holds the final matrix transform
                                            // against the node guid
     };
 } // namespace ehb

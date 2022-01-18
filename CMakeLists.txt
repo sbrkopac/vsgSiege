@@ -41,6 +41,7 @@ if (SIEGE_BUILD_TEST_STATES)
         src/state/test/RegionStitchTestState.cpp
         src/state/test/ProfileLoadingState.cpp
         src/state/test/ASPMeshTestState.cpp
+        src/state/test/LightTestState.cpp
     )
 endif()
 

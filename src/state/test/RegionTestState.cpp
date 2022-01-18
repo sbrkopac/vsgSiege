@@ -42,7 +42,7 @@ namespace ehb
         vsg::Options& options = *systems.options;
 
         static std::string region = "town_center";
-        static std::string regionpath = "world/maps/multiplayer_world/regions/" + region + ".region"; // extension for the loader
+        static std::string regionpath = "/world/maps/multiplayer_world/regions/" + region + ".region"; // extension for the loader
 
         if (auto region = vsg::read_cast<vsg::MatrixTransform>(regionpath, vsg::ref_ptr<vsg::Options>(&options))) 
         {

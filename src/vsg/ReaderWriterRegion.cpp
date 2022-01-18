@@ -6,9 +6,22 @@
 #include "world/SiegeNode.hpp"
 
 #include <vsg/io/read.h>
+#include <vsg/nodes/Light.h>
+
+#include <iostream>
 
 namespace ehb
 {
+    //! TODO: add alpha
+    vsg::vec3 convert(uint32_t color)
+    {
+        float b = static_cast<float>((color & 0x000000FF) >> 0) / 255;
+        float g = static_cast<float>((color & 0x0000FF00) >> 8) / 255;
+        float r = static_cast<float>((color & 0x00FF0000) >> 16) / 255;
+        float a = static_cast<float>((color & 0xFF000000) >> 24) / 255;
+        return vsg::vec3(r, g, b);
+    }
+
     ReaderWriterRegion::ReaderWriterRegion(IFileSys& fileSys) :
         fileSys(fileSys) { log = spdlog::get("log"); }
 
@@ -27,7 +40,9 @@ namespace ehb
         auto path = vsg::removeExtension(filename);
         auto maindotgas = path + "/main.gas";
         auto nodesdotgas = path + "/terrain_nodes/nodes.gas";
+        auto lightsdotgas = path + "/lights/lights.gas";
 
+        // mandatory files required to draw a region
         InputStream main = fileSys.createInputStream(maindotgas);
         InputStream nodes = fileSys.createInputStream(nodesdotgas);
 
@@ -49,6 +64,50 @@ namespace ehb
                 // TODO: should we just store the transforms as object data against the nodeData and query from there?
                 GenerateGlobalSiegeNodeGuidToNodeXformMap v(region->placedNodeXformMap);
                 region->accept(v);
+
+                // optional data
+                if (auto lights = fileSys.openGasFile(lightsdotgas))
+                {
+                    log->info("Loading {}", lightsdotgas);
+
+                    // parent to hold all the light information
+                    auto lightXform = vsg::MatrixTransform::create();
+
+                    // there is only 1 child in this file that is the main [lights] fuel black
+                    if (auto children = lights->child("lights"))
+                    {
+                        //! TODO: gas->eachChildOfType?
+                        for (auto light : children->eachChild())
+                        {
+                            if (light->type() == "point")
+                            {
+                                auto vsgLight = vsg::PointLight::create();
+
+                                vsgLight->name = light->name();
+                                vsgLight->color = convert(light->valueAsUInt("color"));
+                            }
+                            else if (light->type() == "directional")
+                            {
+                                auto vsgLight = vsg::DirectionalLight::create();
+
+                                vsgLight->name = light->name();
+                                vsgLight->color = convert(light->valueAsUInt("color"));
+                            }
+                            else if (light->type() == "spot")
+                            {
+                                auto vsgLight = vsg::SpotLight::create();
+
+                                vsgLight->name = light->name();
+                                vsgLight->color = convert(light->valueAsUInt("color"));
+                            }
+                            else
+                            {
+                                log->error("Unhandled light type: {}", light->type());
+                            }
+                        }
+                    }
+                }
+                else { log->warn("No lights.gas defined for {}", path); }
 
                 return region;
             }

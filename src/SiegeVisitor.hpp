@@ -6,6 +6,7 @@
 
 namespace ehb
 {
+    class Region;
     class SiegeNodeMesh;
     class Aspect;
 
@@ -27,6 +28,7 @@ namespace ehb
         }
 
         // custom types
+        virtual void apply(Region& region) {}
         virtual void apply(SiegeNodeMesh& node) {}
         virtual void apply(Aspect& aspect) {}
     };

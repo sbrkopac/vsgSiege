@@ -7,15 +7,33 @@
 
 #include <unordered_map>
 
+#include <spdlog/spdlog.h>
+
 #include "gas/Fuel.hpp"
 // #include "vsg/Aspect.hpp"
+#include "world/Region.hpp"
 #include "world/SiegeNode.hpp"
 
 namespace ehb
 {
     using SiegeNodeGuidToXformMap = std::unordered_map<uint32_t, vsg::ref_ptr<vsg::MatrixTransform>>;
 
-    struct GenerateGlobalSiegeNodeGuidToNodeXformMap : public vsg::Visitor
+    // hold all region data
+    class Region : public vsg::Inherit<vsg::Group, Region>
+    {
+    public:
+        Region() = default;
+        ~Region() = default;
+
+        void setObjects(vsg::ref_ptr<vsg::Group> objects);
+
+        uint32_t guid = 0;
+
+        SiegeNodeGuidToXformMap placedNodeXformMap; // holds the final matrix transform
+                                           // against the node guid
+    };
+
+    struct GenerateGlobalSiegeNodeGuidToNodeXformMap : public SiegeVisitorBase
     {
         using vsg::Visitor::apply;
 
@@ -26,19 +44,23 @@ namespace ehb
 
         void apply(vsg::Node& node) { node.traverse(*this); }
 
+        void apply(Region& region) override
+        {
+            region.traverse(*this);
+        }
+
         void apply(vsg::MatrixTransform& t)
         {
-            // ReaderWriterSiegeNodeList
-            // this should be guaranteed - if this even crashes then
-            // something went wrong with the setup of the nodes
-            if (auto sno = t.children[0].cast<SiegeNodeMesh>())
+            uint32_t guid = 0;
+            t.getValue("guid", guid);
+
+            if (guid == 0)
             {
-                uint32_t guid;
-                t.getValue("guid", guid);
-                map.emplace(guid, &t);
+                spdlog::get("log")->critical("There is a SiegeNode transform in the graph without a guid");
+                return;
             }
 
-            t.traverse(*this);
+            map.emplace(guid, &t);
         }
     };
 
@@ -78,22 +100,5 @@ namespace ehb
 #endif
             t.traverse(*this);
         }
-    };
-
-    // hold all region data
-    class Region : public vsg::Inherit<vsg::Group, Region>
-    {
-    public:
-        Region() = default;
-        ~Region() = default;
-
-        void setSiegeNodeData(vsg::ref_ptr<vsg::Group> nodes);
-
-        void setObjects(vsg::ref_ptr<vsg::Group> objects);
-
-        uint32_t guid = 0;
-
-        SiegeNodeGuidToXformMap placedNodeXformMap; // holds the final matrix transform
-                                           // against the node guid
     };
 } // namespace ehb

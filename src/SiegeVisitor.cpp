@@ -1,6 +1,7 @@
 
 #include "SiegeVisitor.hpp"
 
+#include "world/Region.hpp"
 #include "world/SiegeNode.hpp"
 #include "world/Aspect.hpp"
 
@@ -8,7 +9,13 @@ namespace ehb
 {
     bool SiegeVisitorBase::handleCustomGroups(vsg::Group& group)
     {
-        if (auto sno = group.cast<SiegeNodeMesh>())
+        if (auto region = group.cast<Region>())
+        {
+            apply(*region);
+
+            return true;
+        }
+        else if (auto sno = group.cast<SiegeNodeMesh>())
         {
             apply(*sno);
 

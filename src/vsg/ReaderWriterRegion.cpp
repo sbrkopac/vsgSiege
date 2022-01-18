@@ -40,9 +40,15 @@ namespace ehb
 
         if (auto region = read_cast<Region>(*main, options))
         {
+            // this read loads in our siege nodes and assigns properties
             if (auto nodeData = vsg::read_cast<vsg::Group>(nodesdotgas, options))
             {
                 region->addChild(nodeData);
+
+                // since we didn't have access to the loader we will visit each node and store the transform at a high level
+                // TODO: should we just store the transforms as object data against the nodeData and query from there?
+                GenerateGlobalSiegeNodeGuidToNodeXformMap v(region->placedNodeXformMap);
+                region->accept(v);
 
                 return region;
             }

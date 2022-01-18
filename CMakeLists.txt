@@ -19,7 +19,7 @@ set(CMAKE_CXX_STANDARD 17)
 add_subdirectory(extern)
 
 # find the vsg
-find_package(vsg REQUIRED)
+find_package(vsg 0.2.6 REQUIRED)
 
 # not sure if this is still required or not
 if (UNIX)

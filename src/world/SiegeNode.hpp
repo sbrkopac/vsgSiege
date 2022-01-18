@@ -23,8 +23,6 @@ namespace ehb
 
         static void connect(const vsg::MatrixTransform* targetRegion, vsg::MatrixTransform* targetNode, uint32_t targetDoor, vsg::MatrixTransform* connectRegion, const vsg::MatrixTransform* connectNode, uint32_t connectDoor);
 
-        void accept(vsg::Visitor& visitor) override;
-
     protected:
         virtual ~SiegeNodeMesh() = default;
 
@@ -32,15 +30,4 @@ namespace ehb
         std::vector<std::pair<uint32_t, vsg::dmat4>> doorXform;
     };
 
-    inline void SiegeNodeMesh::accept(vsg::Visitor& visitor)
-    {
-        if (SiegeVisitorBase* svb = dynamic_cast<SiegeVisitorBase*>(&visitor); svb != nullptr)
-        {
-            svb->apply(*this);
-        }
-        else
-        {
-            visitor.apply(*this);
-        }
-    }
 } // namespace ehb

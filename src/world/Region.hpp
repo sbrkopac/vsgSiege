@@ -91,6 +91,8 @@ namespace ehb
 
         void setObjects(vsg::ref_ptr<vsg::Group> objects);
 
+        uint32_t guid = 0;
+
         SiegeNodeGuidToXformMap placedNodeXformMap; // holds the final matrix transform
                                            // against the node guid
     };

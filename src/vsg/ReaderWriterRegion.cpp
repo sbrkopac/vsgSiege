@@ -3,6 +3,7 @@
 #include "io/IFileSys.hpp"
 #include "vsg/ReaderWriterSNO.hpp"
 #include "world/SiegeNode.hpp"
+#include "world/Region.hpp"
 
 #include <vsg/io/read.h>
 
@@ -37,7 +38,7 @@ namespace ehb
             return {};
         }
 
-        if (auto region = read_cast<vsg::MatrixTransform>(*main, options))
+        if (auto region = read_cast<Region>(*main, options))
         {
             if (auto nodeData = vsg::read_cast<vsg::Group>(nodesdotgas, options))
             {
@@ -54,11 +55,11 @@ namespace ehb
     {
         if (Fuel doc; doc.load(stream))
         {
-            auto transform = vsg::MatrixTransform::create();
+            auto region = Region::create();
 
-            transform->setValue("guid", doc.valueAsUInt("region:guid"));
+           region->guid = doc.valueAsUInt("region:guid");
 
-            return transform;
+            return region;
         }
         else
         {

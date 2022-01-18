@@ -3,6 +3,7 @@
 
 #include "Systems.hpp"
 #include "world/SiegeNode.hpp"
+#include "world/Region.hpp"
 
 #include <spdlog/spdlog.h>
 
@@ -44,7 +45,7 @@ namespace ehb
         static std::string region = "town_center";
         static std::string regionpath = "/world/maps/multiplayer_world/regions/" + region + ".region"; // extension for the loader
 
-        if (auto region = vsg::read_cast<vsg::MatrixTransform>(regionpath, vsg::ref_ptr<vsg::Options>(&options))) 
+        if (auto region = vsg::read_cast<Region>(regionpath, vsg::ref_ptr<vsg::Options>(&options)))
         {
             vsg::ref_ptr<vsg::BindGraphicsPipeline> pipeline(options.getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline"));
 

@@ -70,8 +70,13 @@ namespace ehb
                 return;
             }
 
-            // this doesn't work because we need to take the node into account
-            light.position = position;
+            // look up our destination siege node
+            const auto destinationSiegeNodeXform = region.placedNodeXformMap.at(node);
+
+            // final placement
+            vsg::dmat4 mat = destinationSiegeNodeXform->matrix * vsg::dmat4(vsg::translate(position));
+
+            light.position = vsg::dvec3(mat[3][0], mat[3][1], mat[3][2]);
         }
     };
 

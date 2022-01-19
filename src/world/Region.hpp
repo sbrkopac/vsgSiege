@@ -4,6 +4,7 @@
 #include <vsg/core/Visitor.h>
 #include <vsg/maths/transform.h>
 #include <vsg/nodes/MatrixTransform.h>
+#include <vsg/nodes/Light.h>
 
 #include <unordered_map>
 
@@ -45,6 +46,33 @@ namespace ehb
         void apply(Region& region) override;
 
         void apply(vsg::MatrixTransform& t) override;
+    };
+
+    // this requires us to store a SiegePos against each object but allows us to recalculate things on the fly
+    class CalculateAndPlaceLights : public SiegeVisitorBase
+    {
+    public:
+
+        const Region& region;
+
+        CalculateAndPlaceLights(const Region& region) : region(region) {};
+
+        void apply(vsg::PointLight& light) override
+        {
+            spdlog::get("log")->info("visiting vsg::PointLight& light");
+
+            uint32_t node = 0; light.getValue<uint32_t>("node", node);
+            vsg::vec3 position; light.getValue<vsg::vec3>("position", position);
+
+            if (node == 0)
+            {
+                spdlog::get("log")->error("We have a valid light but it's not assigned to a SiegeNode");
+                return;
+            }
+
+            // this doesn't work because we need to take the node into account
+            light.position = position;
+        }
     };
 
     class CalculateAndPlaceObjects : public vsg::Visitor

@@ -22,6 +22,20 @@ namespace ehb
         return vsg::vec3(r, g, b);
     }
 
+    //! TODO: remove this in favour of a SiegePos class
+    void applySiegePosToObjectData(vsg::ref_ptr<vsg::Object> object, const FuelBlock* block)
+    {
+        if (object != nullptr && block != nullptr)
+        {
+            object->setValue("node", block->valueAsUInt("node"));
+            auto x = block->valueAsFloat("x");
+            auto y = block->valueAsFloat("y");
+            auto z = block->valueAsFloat("z");
+            object->setValue("position", vsg::vec3(x, y, z));
+        }
+        else { spdlog::get("log")->error("attempting to apply siege pos object data to an invalid object or from an invalid block"); }
+    }
+
     ReaderWriterRegion::ReaderWriterRegion(IFileSys& fileSys) :
         fileSys(fileSys) { log = spdlog::get("log"); }
 
@@ -85,6 +99,11 @@ namespace ehb
 
                                 vsgLight->name = light->name();
                                 vsgLight->color = convert(light->valueAsUInt("color"));
+
+                                //! TEMP:
+                                applySiegePosToObjectData(vsgLight, light->child("position"));
+
+                                lightXform->addChild(vsgLight);
                             }
                             else if (light->type() == "directional")
                             {
@@ -92,6 +111,11 @@ namespace ehb
 
                                 vsgLight->name = light->name();
                                 vsgLight->color = convert(light->valueAsUInt("color"));
+
+                                //! TEMP:
+                                applySiegePosToObjectData(vsgLight, light->child("position"));
+
+                                lightXform->addChild(vsgLight);
                             }
                             else if (light->type() == "spot")
                             {
@@ -99,6 +123,11 @@ namespace ehb
 
                                 vsgLight->name = light->name();
                                 vsgLight->color = convert(light->valueAsUInt("color"));
+
+                                //! TEMP:
+                                applySiegePosToObjectData(vsgLight, light->child("position"));
+
+                                lightXform->addChild(vsgLight);
                             }
                             else
                             {
@@ -106,6 +135,10 @@ namespace ehb
                             }
                         }
                     }
+
+                    // calculate lights using a visitor just because
+                    CalculateAndPlaceLights lightV(*region);
+                    lightXform->accept(lightV);
                 }
                 else { log->warn("No lights.gas defined for {}", path); }
 

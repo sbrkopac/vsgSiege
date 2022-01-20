@@ -1,6 +1,5 @@
 
 #include "WritableConfig.hpp"
-#include "io/FileNameUtils.hpp"
 #include <cassert>
 #include <spdlog/spdlog.h>
 

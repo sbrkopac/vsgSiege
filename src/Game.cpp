@@ -18,6 +18,9 @@
 
 #include <spdlog/spdlog.h>
 
+#include <vsg/viewer/CommandGraph.h>
+#include <vsg/viewer/RenderGraph.h>
+#include <vsg/viewer/View.h>
 #include <vsg/viewer/CloseHandler.h>
 #include <vsg/viewer/Trackball.h>
 #include <vsg/viewer/Window.h>
@@ -52,7 +55,14 @@ namespace ehb
         auto lookAt = vsg::LookAt::create(vsg::dvec3(1.0, 15.0, 50.0), vsg::dvec3(0.0, 0.0, 0.0), vsg::dvec3(0.0, 1.0, 0.0));
         systems.camera = vsg::Camera::create(perspective, lookAt, viewport);
 
-        auto commandGraph = vsg::createCommandGraphForView(window, systems.camera, systems.scene3d);
+        systems.view = vsg::View::create(systems.camera);
+        auto renderGraph = vsg::RenderGraph::create(window, systems.view);
+        auto commandGraph = vsg::CommandGraph::create(window);
+        commandGraph->addChild(renderGraph);
+
+        systems.view->addChild(systems.scene3d);
+        systems.compileTraversal->add(window, systems.view);
+
         viewer->assignRecordAndSubmitTaskAndPresentation({commandGraph});
 
         viewer->addEventHandler(vsg::CloseHandler::create(viewer));
@@ -60,6 +70,7 @@ namespace ehb
 
         //! TODO: remove this once vsg dynamic graph bugs are fixed up
         systems.viewer = viewer;
+        viewer->compile();
 
         if (systems.config.getBool("profile")) { gameStateMgr.request("ProfileLoadingState"); }
         else

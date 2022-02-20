@@ -68,9 +68,7 @@ namespace ehb
         viewer->addEventHandler(vsg::CloseHandler::create(viewer));
         viewer->addEventHandler(vsg::Trackball::create(systems.camera));
 
-        //! TODO: remove this once vsg dynamic graph bugs are fixed up
         systems.viewer = viewer;
-        viewer->compile();
 
         if (systems.config.getBool("profile")) { gameStateMgr.request("ProfileLoadingState"); }
         else

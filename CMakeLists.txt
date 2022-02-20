@@ -12,6 +12,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 OPTION (SIEGE_BUILD_VSG_EXAMPLES "Build mimicked vsgExamples - useful for PRs that don't require Dungeon Siege content" ON)
 OPTION (SIEGE_BUILD_TEST_STATES "Build test states" ON)
 OPTION (SIEGE_REGENERATE_FUEL_PARSER "Regenerate fuel parser source files" OFF)
+OPTION (SIEGE_ENABLE_VERTEXDRAW "Temp option to test performance of rendering" OFF)
 
 # globally set 17 as the standard so imported modules get the flag as well
 set(CMAKE_CXX_STANDARD 17)
@@ -100,6 +101,10 @@ message (STATUS "extern_source_files: " ${EXTERN_SOURCE_FILES})
 add_executable (vsg-siege ${EXTERN_SOURCE_FILES} src/main.cpp src/Game.cpp src/ContentDb.cpp src/SiegeVisitor.cpp ${SOURCES})
 target_link_libraries (vsg-siege PRIVATE vsg::vsg "$<$<CXX_COMPILER_ID:GNU>:stdc++fs;${XDGBASEDIR_LIBRARIES}>")
 target_include_directories(vsg-siege PUBLIC src ${EXTERN_INCLUDE_PATHS})
+
+if (SIEGE_ENABLE_VERTEXDRAW)
+    target_compile_definitions(vsg-siege PRIVATE ENABLE_VERTEXDRAW)
+endif()
 
 if (SIEGE_BUILD_VSG_EXAMPLES)
     target_compile_definitions(vsg-siege PRIVATE SIEGE_VSG_EXAMPLES_ENABLED)

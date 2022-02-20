@@ -2,14 +2,19 @@
 #include "Aspect.hpp"
 #include "AspectImpl.hpp"
 
-#include <vsg/commands/BindIndexBuffer.h>
-#include <vsg/commands/BindVertexBuffers.h>
-#include <vsg/commands/Commands.h>
-#include <vsg/commands/DrawIndexed.h>
 #include <vsg/io/read.h>
 #include <vsg/state/DescriptorImage.h>
 #include <vsg/state/DescriptorSet.h>
 #include <vsg/state/PipelineLayout.h>
+
+#ifdef ENABLE_VERTEXDRAW
+    #include <vsg/nodes/VertexIndexDraw.h>
+#else
+    #include <vsg/commands/BindIndexBuffer.h>
+    #include <vsg/commands/BindVertexBuffers.h>
+    #include <vsg/commands/Commands.h>
+    #include <vsg/commands/DrawIndexed.h>
+#endif
 
 #include <spdlog/spdlog.h>
 
@@ -67,11 +72,22 @@ namespace ehb
                     }
                 }
 
+#ifndef ENABLE_VERTEXDRAW
                 auto commands = vsg::Commands::create();
                 commands->addChild(vsg::BindVertexBuffers::create(0, attributeArrays));
                 commands->addChild(vsg::BindIndexBuffer::create(indices));
                 commands->addChild(vsg::DrawIndexed::create(static_cast<uint32_t>(indices->valueCount()), 1, 0, 0, 0));
+
                 addChild(commands);
+#else
+                auto vid = vsg::VertexIndexDraw::create();
+                vid->assignArrays(attributeArrays);
+                vid->assignIndices(indices);
+                vid->indexCount = indices->size();
+                vid->instanceCount = 1;
+                addChild(vid);
+#endif
+
             }
         }
     }

@@ -5,17 +5,23 @@
 #include "io/LocalFileSys.hpp"
 #include "world/SiegeNode.hpp"
 
-#include <vsg/commands/BindIndexBuffer.h>
-#include <vsg/commands/BindVertexBuffers.h>
-#include <vsg/commands/Commands.h>
-#include <vsg/commands/DrawIndexed.h>
 #include <vsg/io/read.h>
 #include <vsg/maths/quat.h>
 #include <vsg/state/DescriptorImage.h>
 #include <vsg/state/DescriptorSet.h>
 
+#ifdef ENABLE_VERTEXDRAW
+    #include <vsg/nodes/VertexIndexDraw.h>
+#else
+    #include <vsg/commands/BindIndexBuffer.h>
+    #include <vsg/commands/BindVertexBuffers.h>
+    #include <vsg/commands/Commands.h>
+    #include <vsg/commands/DrawIndexed.h>
+#endif
+
 namespace ehb
 {
+
     static constexpr uint32_t SNO_MAGIC = 0x444F4E53;
 
     ReaderWriterSNO::ReaderWriterSNO(IFileSys& fileSys) :
@@ -168,11 +174,20 @@ namespace ehb
             }
 
             // Create a command graph for each surface in the mesh
+#ifndef ENABLE_VERTEXDRAW
             auto commands = vsg::Commands::create();
             commands->addChild(vsg::BindVertexBuffers::create(0, attributeArrays));
             commands->addChild(vsg::BindIndexBuffer::create(indices));
             commands->addChild(vsg::DrawIndexed::create(static_cast<uint32_t>(indices->valueCount()), 1, 0, 0, 0));
             group->addChild(commands);
+#else
+            auto vid = vsg::VertexIndexDraw::create();
+            vid->assignArrays(attributeArrays);
+            vid->assignIndices(indices);
+            vid->indexCount = indices->size();
+            vid->instanceCount = 1;
+            group->addChild(vid);
+#endif
         }
 
         return group;

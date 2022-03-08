@@ -14,6 +14,13 @@
 #include "TankFile.hpp"
 #include "miniz.h"
 
+#include <mutex>
+
+namespace ehb
+{
+	std::mutex g_read;
+}
+
 namespace ehb
 {
 	static uint32_t computeCrc32(const void* data, size_t sizeBytes) noexcept
@@ -400,6 +407,9 @@ ByteArray TankFile::Reader::extractResourceToMemory(TankFile & tank, const std::
 		// NOTE: Not sure if this should be a hard error...
 		log->warn("Resource file entry {} is flagged as invalid!", resFile.name);
 	}
+
+	// temporary work-around to make this multithreaded capable
+	std::lock_guard<std::mutex> lock(g_read);
 
 	const auto fileOffset  = resFile.offset;
 	const auto fileSize    = resFile.size;

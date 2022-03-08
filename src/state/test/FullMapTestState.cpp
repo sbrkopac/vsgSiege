@@ -4,6 +4,7 @@
 #include "Systems.hpp"
 #include "world/SiegeNode.hpp"
 #include "world/WorldMapData.hpp"
+#include "world/Region.hpp"
 
 #include <filesystem>
 #include <spdlog/spdlog.h>
@@ -79,21 +80,21 @@ namespace ehb
         auto regions = vsg::read(allRegionPaths, threadedOptions);
         for (auto& [path, region] : regions)
         {
-            uint32_t guid;
-            region->getValue("guid", guid);
-            const auto regionData = region->cast<vsg::MatrixTransform>()->children[0]->cast<vsg::Group>();
+            vsg::ref_ptr<Region> regionData(region->cast<Region>());
+            uint32_t guid = regionData->guid;
+
             if (guid != 0)
             {
-                for (const auto& node : regionData->children)
+                for (auto [guid, node] : regionData->placedNodeXformMap)
                 {
-                    if (uint32_t guid; node->getValue("guid", guid)) { eachNode.emplace(guid, node.cast<vsg::MatrixTransform>()); }
-                    else
-                    {
-                        log->critical("there is a node in a loaded region with a guid");
-                    }
+                    eachNode.emplace(guid, node);
                 }
 
-                loadedRegions.emplace(guid, region->cast<vsg::MatrixTransform>());
+                // a region is just a group and not a transform
+                auto transform = vsg::MatrixTransform::create();
+                transform->children.push_back(regionData);
+
+                loadedRegions.emplace(guid, transform);
             }
             else
             {

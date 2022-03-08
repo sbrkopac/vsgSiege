@@ -6,6 +6,7 @@
 #include "Systems.hpp"
 
 #include <vsg/vk/ResourceRequirements.h>
+#include <vsg/core/Version.h>
 
 #include <spdlog/fmt/ostr.h> // must be included
 
@@ -13,7 +14,8 @@ namespace vsg
 {
     std::ostream& operator<<(std::ostream& ostr, const ResourceRequirements& reqs)
     {
-        return ostr << "Resource Requirements calculated -"
+        return ostr << "vsgVersion: " << vsgGetVersionString()
+                    << "\nResource Requirements calculated -"
                     << " maxSlot: " << reqs.maxSlot;
     }
 } // namespace vsg

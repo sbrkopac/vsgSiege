@@ -6,6 +6,8 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/basic_file_sink.h>
+
+#include <vsg/core/Version.h>
 // clang-format on
 
 #include <filesystem>
@@ -24,6 +26,8 @@ int main(int argc, char* argv[])
 
     WritableConfig config(argc, argv);
     config.dump("log");
+
+    log->info("VSG Version = {}", vsgGetVersionString());
 
     // Currently we have to have bits as tank reading hasn't been implemented yet
     bool hasBits = !config.getString("bits", "").empty();

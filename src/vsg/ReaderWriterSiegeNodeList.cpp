@@ -93,7 +93,7 @@ namespace ehb
 
                 if (meshFileName != meshGuid)
                 {
-                    if (auto mesh = vsg::read_cast<vsg::Group>(meshFileName, options); mesh != nullptr)
+                    if (auto mesh = vsg::read_cast<SiegeNodeMesh>(meshFileName, options); mesh != nullptr)
                     {
                         auto xform = vsg::MatrixTransform::create();
 

@@ -2,8 +2,8 @@
 #include "ReaderWriterRegion.hpp"
 #include "io/IFileSys.hpp"
 #include "vsg/ReaderWriterSNO.hpp"
-#include "world/SiegeNode.hpp"
 #include "world/Region.hpp"
+#include "world/SiegeNode.hpp"
 
 #include <vsg/io/read.h>
 
@@ -63,7 +63,7 @@ namespace ehb
         {
             auto region = Region::create();
 
-           region->guid = doc.valueAsUInt("region:guid");
+            region->guid = doc.valueAsUInt("region:guid");
 
             return region;
         }

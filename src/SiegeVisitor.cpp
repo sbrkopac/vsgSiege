@@ -1,9 +1,9 @@
 
 #include "SiegeVisitor.hpp"
 
+#include "world/Aspect.hpp"
 #include "world/Region.hpp"
 #include "world/SiegeNode.hpp"
-#include "world/Aspect.hpp"
 
 namespace ehb
 {

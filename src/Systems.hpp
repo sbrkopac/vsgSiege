@@ -12,8 +12,8 @@
 #include <vsg/io/Options.h>
 #include <vsg/nodes/StateGroup.h>
 #include <vsg/viewer/Camera.h>
-#include <vsg/viewer/Viewer.h>
 #include <vsg/viewer/View.h>
+#include <vsg/viewer/Viewer.h>
 
 namespace ehb
 {

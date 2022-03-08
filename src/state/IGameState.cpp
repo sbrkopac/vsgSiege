@@ -5,8 +5,8 @@
 
 #include "Systems.hpp"
 
-#include <vsg/vk/ResourceRequirements.h>
 #include <vsg/core/Version.h>
+#include <vsg/vk/ResourceRequirements.h>
 
 #include <spdlog/fmt/ostr.h> // must be included
 

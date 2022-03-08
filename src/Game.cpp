@@ -18,11 +18,11 @@
 
 #include <spdlog/spdlog.h>
 
+#include <vsg/viewer/CloseHandler.h>
 #include <vsg/viewer/CommandGraph.h>
 #include <vsg/viewer/RenderGraph.h>
-#include <vsg/viewer/View.h>
-#include <vsg/viewer/CloseHandler.h>
 #include <vsg/viewer/Trackball.h>
+#include <vsg/viewer/View.h>
 #include <vsg/viewer/Window.h>
 
 namespace ehb

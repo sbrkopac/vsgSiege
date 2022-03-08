@@ -36,7 +36,6 @@ namespace ehb
     class GenerateGlobalSiegeNodeGuidToNodeXformMap : public SiegeVisitorBase
     {
     public:
-
         SiegeNodeGuidToXformMap& map;
 
         GenerateGlobalSiegeNodeGuidToNodeXformMap(SiegeNodeGuidToXformMap& map);
@@ -51,7 +50,6 @@ namespace ehb
     class CalculateAndPlaceObjects : public vsg::Visitor
     {
     public:
-
         SiegeNodeGuidToXformMap& map;
 
         CalculateAndPlaceObjects(SiegeNodeGuidToXformMap& map);

@@ -23,7 +23,7 @@ namespace ehb
 
         TimePoint start = Timer::now();
 
-        if (vsg::ref_ptr<vsg::Group> sno = vsg::read_cast<vsg::Group>(siegeNode, vsg::ref_ptr<vsg::Options>(&options)); sno != nullptr)
+        if (auto sno = vsg::read_cast<SiegeNodeMesh>(siegeNode, vsg::ref_ptr<vsg::Options>(&options)); sno != nullptr)
         {
             vsg::ref_ptr<vsg::BindGraphicsPipeline> pipeline(options.getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline"));
 

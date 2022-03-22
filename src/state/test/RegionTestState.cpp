@@ -40,14 +40,14 @@ namespace ehb
         log->info("Entered Region Test State");
 
         vsg::StateGroup& scene3d = *systems.scene3d;
-        vsg::Options& options = *systems.options;
+        auto options = systems.options;
 
         static std::string region = "town_center";
         static std::string regionpath = "/world/maps/multiplayer_world/regions/" + region + ".region"; // extension for the loader
 
-        if (auto region = vsg::read_cast<Region>(regionpath, vsg::ref_ptr<vsg::Options>(&options)))
+        if (auto region = vsg::read_cast<Region>(regionpath, options))
         {
-            vsg::ref_ptr<vsg::BindGraphicsPipeline> pipeline(options.getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline"));
+            vsg::ref_ptr<vsg::BindGraphicsPipeline> pipeline(options->getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline"));
 
             scene3d.addChild(pipeline);
             scene3d.addChild(region);

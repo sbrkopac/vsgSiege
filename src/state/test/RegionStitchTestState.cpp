@@ -23,12 +23,12 @@ namespace ehb
 
         IFileSys& fileSys = systems.fileSys;
         vsg::StateGroup& scene3d = *systems.scene3d;
-        vsg::Options& options = *systems.options;
+        auto options = systems.options;
 
         WorldMapDataCache worldMapDataCache;
         worldMapDataCache.init(fileSys);
 
-        vsg::ref_ptr<vsg::BindGraphicsPipeline> pipeline(options.getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline"));
+        vsg::ref_ptr<vsg::BindGraphicsPipeline> pipeline(options->getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline"));
         if (pipeline == nullptr)
         {
             log->critical("SiegeNodeGraphicsPipeline has not been setup!");
@@ -77,7 +77,7 @@ namespace ehb
         // hold our loaded regions prior to adding them to the graph
         std::unordered_map<uint32_t, vsg::ref_ptr<vsg::MatrixTransform>> loadedRegions;
 
-        vsg::ref_ptr<vsg::Options> threadedOptions(&options);
+        vsg::ref_ptr<vsg::Options> threadedOptions(options);
         threadedOptions->operationThreads = vsg::OperationThreads::create(2);
 
         auto regions = vsg::read(allRegionPaths, threadedOptions);

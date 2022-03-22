@@ -16,13 +16,13 @@ namespace ehb
         log->info("{}", name());
 
         vsg::StateGroup& scene3d = *systems.scene3d;
-        vsg::Options& options = *systems.options;
+        auto options = systems.options;
 
         static std::string model("m_c_gah_fg_pos_a1");
 
-        if (vsg::ref_ptr<vsg::Group> asp = vsg::read_cast<vsg::Group>(model, vsg::ref_ptr<vsg::Options>(&options)); asp != nullptr)
+        if (vsg::ref_ptr<vsg::Group> asp = vsg::read_cast<vsg::Group>(model, options); asp != nullptr)
         {
-            vsg::ref_ptr<vsg::BindGraphicsPipeline> bindGraphicsPipeline(options.getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline"));
+            vsg::ref_ptr<vsg::BindGraphicsPipeline> bindGraphicsPipeline(options->getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline"));
 
             scene3d.addChild(bindGraphicsPipeline);
             scene3d.addChild(asp);

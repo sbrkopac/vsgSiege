@@ -16,16 +16,16 @@ namespace ehb
         log->info("Entered Test State");
 
         vsg::StateGroup& scene3d = *systems.scene3d;
-        vsg::Options& options = *systems.options;
+        auto options = systems.options;
 
         static std::string siegeNode("t_grs01_houses_generic-a-log");
         //static std::string siegeNode("t_xxx_flr_04x04-v0");
 
         TimePoint start = Timer::now();
 
-        if (auto sno = vsg::read_cast<SiegeNodeMesh>(siegeNode, vsg::ref_ptr<vsg::Options>(&options)); sno != nullptr)
+        if (auto sno = vsg::read_cast<SiegeNodeMesh>(siegeNode, options); sno != nullptr)
         {
-            vsg::ref_ptr<vsg::BindGraphicsPipeline> pipeline(options.getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline"));
+            vsg::ref_ptr<vsg::BindGraphicsPipeline> pipeline(options->getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline"));
 
             scene3d.addChild(pipeline);
 
@@ -46,7 +46,7 @@ namespace ehb
         }
         else
         {
-            log->critical("Unabel to load SiegeNode: {}", siegeNode);
+            log->critical("Unable to load SiegeNode: {}", siegeNode);
         }
 
         Duration duration = Timer::now() - start;

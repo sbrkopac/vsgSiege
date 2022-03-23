@@ -3,11 +3,27 @@
 
 #include "Systems.hpp"
 #include "world/SiegeNode.hpp"
+#include "world/Aspect.hpp"
 
 #include <vsg/io/read.h>
 #include <vsg/nodes/MatrixTransform.h>
 
 #include <spdlog/spdlog.h>
+
+namespace ehb
+{
+    class AspectMeshCounter : public SiegeVisitorBase
+    {
+    public:
+
+        int32_t count = 0;
+
+        virtual void apply(Aspect& mesh) override
+        {
+            count++;
+        }
+    };
+}
 
 namespace ehb
 {
@@ -20,12 +36,17 @@ namespace ehb
 
         static std::string model("m_c_gah_fg_pos_a1");
 
-        if (vsg::ref_ptr<vsg::Group> asp = vsg::read_cast<vsg::Group>(model, options); asp != nullptr)
+        if (auto asp = vsg::read_cast<Aspect>(model, options); asp != nullptr)
         {
             vsg::ref_ptr<vsg::BindGraphicsPipeline> bindGraphicsPipeline(options->getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline"));
 
             scene3d.addChild(bindGraphicsPipeline);
             scene3d.addChild(asp);
+
+            AspectMeshCounter v;
+            scene3d.traverse(v);
+
+            log->info("Visitor has {} meshes", v.count);
 
             // workaround
             compile(systems, systems.scene3d);

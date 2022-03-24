@@ -96,8 +96,7 @@ namespace ehb
         for (const std::string& filename : cache)
         {
             // skip filesystem binary liquid files
-            if (filename.find("dir.lqd20") != std::string::npos)
-                ;
+            if (filename.find("dir.lqd20") != std::string::npos) continue;
 
             if (filename.size() > directory.size() && filename.find(directory) == 0 && filename.find('/', directory.size() + 1) == std::string::npos)
             {

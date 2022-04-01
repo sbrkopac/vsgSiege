@@ -17,6 +17,8 @@
 #include <vsg/state/RasterizationState.h>
 #include <vsg/state/ShaderStage.h>
 #include <vsg/state/VertexInputState.h>
+#include <vsg/utils/ShaderSet.h>
+#include <vsg/utils/GraphicsPipelineConfig.h>
 
 #include <spdlog/spdlog.h>
 
@@ -110,6 +112,7 @@ namespace ehb
             log->error("Tank files and bits directory are unavailable. Falling back to vsgExamples");
         }
 
+#if 0
         // set up search paths and load shaders
         vsg::ref_ptr<vsg::ShaderStage> vertexShader = vsg::ShaderStage::create(VK_SHADER_STAGE_VERTEX_BIT, "main", vert_PushConstants);
         vsg::ref_ptr<vsg::ShaderStage> fragmentShader = vsg::ShaderStage::create(VK_SHADER_STAGE_FRAGMENT_BIT, "main", frag_PushConstants);
@@ -150,10 +153,19 @@ namespace ehb
         auto pipelineLayout = vsg::PipelineLayout::create(descriptorSetLayouts, pushConstantRanges);
         auto graphicsPipeline = vsg::GraphicsPipeline::create(pipelineLayout, vsg::ShaderStages{vertexShader, fragmentShader}, pipelineStates);
         auto bindGraphicsPipeline = vsg::BindGraphicsPipeline::create(graphicsPipeline);
+#endif
+        auto shaderSet = vsg::createFlatShadedShaderSet();
+        auto graphicsPipelineConfig = vsg::GraphicsPipelineConfig::create(shaderSet);
+
+        graphicsPipelineConfig->enableArray("vsg_Vertex", VK_VERTEX_INPUT_RATE_VERTEX, 12);
+        graphicsPipelineConfig->enableArray("vsg_Normal", VK_VERTEX_INPUT_RATE_VERTEX, 12);
+        graphicsPipelineConfig->enableArray("vsg_TexCoord0", VK_VERTEX_INPUT_RATE_VERTEX, 8);
+
+        graphicsPipelineConfig->init();
 
         // accessed by the ReaderWriters to setup pipelines and layouts
-        options->setObject("SiegeNodeGraphicsPipeline", bindGraphicsPipeline);
-        options->setObject("SiegeNodeLayout", bindGraphicsPipeline->pipeline->layout);
+        options->setObject("SiegeNodeGraphicsPipeline", graphicsPipelineConfig->bindGraphicsPipeline);
+        options->setObject("SiegeNodeLayout", graphicsPipelineConfig->bindGraphicsPipeline->pipeline->layout);
 
         if (const std::string& state = config.getString("state"); !state.empty())
         {

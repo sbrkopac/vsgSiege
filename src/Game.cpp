@@ -41,7 +41,8 @@ namespace ehb
         traits->windowTitle = "Open Siege supported by VSG";
         traits->width = width;
         traits->height = height;
-        traits->debugLayer = systems.config.getBool("debuglayer");
+        // traits->debugLayer = systems.config.getBool("debuglayer");
+        traits->debugLayer = true;
         traits->apiDumpLayer = systems.config.getBool("apidumplayer");
         traits->swapchainPreferences.presentMode = VkPresentModeKHR::VK_PRESENT_MODE_IMMEDIATE_KHR; // disable vsync
 

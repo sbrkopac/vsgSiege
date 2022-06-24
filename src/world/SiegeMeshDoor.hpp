@@ -4,7 +4,7 @@
 #include <vsg/maths/mat3.h>
 #include <vsg/maths/vec3.h>
 
-namespace siege
+namespace ehb
 {
 	class SiegeMeshDoor
 	{

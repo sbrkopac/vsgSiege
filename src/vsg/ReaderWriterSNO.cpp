@@ -68,7 +68,10 @@ namespace ehb
             return {};
         }
 
-        auto checksum = reader.read<float>();
+        if (header.majorVersion > 6 || (header.majorVersion == 6 && header.minorVersion >= 2))
+        {
+            auto checksum = reader.read<float>(); // TODO: should we do anything with the checksum?
+        }
 
         // Construct our vsg::Group for the graph
         vsg::ref_ptr<SiegeNodeMesh> group = SiegeNodeMesh::create();

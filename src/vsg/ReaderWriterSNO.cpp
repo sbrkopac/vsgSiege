@@ -81,7 +81,7 @@ namespace ehb
         {
             auto id = reader.read<uint32_t>();
 
-            auto pos = reader.read<vsg::vec3>();
+            auto center = reader.read<vsg::vec3>();
             float a00 = reader.read<float>(), a01 = reader.read<float>(), a02 = reader.read<float>(),
                   a10 = reader.read<float>(), a11 = reader.read<float>(), a12 = reader.read<float>(),
                   a20 = reader.read<float>(), a21 = reader.read<float>(), a22 = reader.read<float>();
@@ -106,11 +106,27 @@ namespace ehb
             xform(2, 0) = a20;
             xform(2, 1) = a21;
             xform(2, 2) = a22;
-            xform(3, 0) = pos.x;
-            xform(3, 1) = pos.y;
-            xform(3, 2) = pos.z;
+            xform(3, 0) = center.x;
+            xform(3, 1) = center.y;
+            xform(3, 2) = center.z;
 
             group->doorXform.emplace_back(id, std::move(xform));
+
+            // TODO: use the below
+            // the above combines and conflates the data that belongs to the door
+            // eventually the above will be removed and we will use the below door list to make our connections
+            vsg::mat3 orient;
+            orient(0, 0) = a00;
+            orient(0, 1) = a01;
+            orient(0, 2) = a02;
+            orient(1, 0) = a10;
+            orient(1, 1) = a11;
+            orient(1, 2) = a12;
+            orient(2, 0) = a20;
+            orient(2, 1) = a21;
+            orient(2, 2) = a22;
+
+            group->doorList.emplace_back(std::make_unique<SiegeMeshDoor>(id, center, orient));
         }
 
         // read spot data

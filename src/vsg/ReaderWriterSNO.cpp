@@ -205,6 +205,108 @@ namespace ehb
             group->addChild(commands);
         }
 
+        auto logicalMeshCount = reader.read<uint32_t>();
+        log->info("logicalMeshCount = {}", logicalMeshCount);
+
+        for (uint32_t i = 0; i < logicalMeshCount; ++i)
+        {
+            auto id = reader.read<uint8_t>();
+            auto min = reader.read<vsg::vec3>();
+            auto max = reader.read<vsg::vec3>();
+
+            auto flags = reader.read<uint32_t>();
+
+            auto connectionCount = reader.read<uint32_t>();
+
+            for (uint32_t j = 0; j < connectionCount; ++j)
+            {
+                auto leafid = reader.read<uint16_t>();
+
+                auto leafmin = reader.read<vsg::vec3>();
+                auto leafmax = reader.read<vsg::vec3>();
+
+                if (header.majorVersion > 6 || (header.majorVersion == 6 && header.minorVersion >= 4))
+                {
+                    auto center = reader.read<vsg::vec3>();
+                }
+                else
+                {
+                    auto center = leafmin + ((leafmax - leafmin) * 0.5f);
+                }
+
+                if (header.majorVersion > 6 || (header.majorVersion == 6 && header.minorVersion >= 2))
+                {
+                    auto triangleCount = reader.read<uint16_t>();
+                    reader.skipBytes(sizeof(uint16_t) * triangleCount);
+                }
+                else
+                {
+                    auto triangleCount = 1;
+                    reader.skipBytes(sizeof(uint16_t));
+                }
+
+                auto localConnectionCount = reader.read<uint32_t>();
+                if (localConnectionCount != std::numeric_limits<uint32_t>::max())
+                {
+                    for (uint32_t k = 0; k < localConnectionCount; ++k)
+                    {
+                        reader.skipBytes(sizeof(uint16_t));
+                    }
+                }
+                else
+                {
+                    log->info("NULL");
+                }
+            }
+
+            auto nodalConnectionCount = reader.read<uint32_t>();
+
+            for (uint32_t nc = 0; nc < nodalConnectionCount; ++nc)
+            {
+                auto farid = reader.read<uint8_t>();
+                auto nodalLeafConnectionCount = reader.read<uint32_t>();
+
+                for (uint32_t nlc = 0; nlc < nodalLeafConnectionCount; ++nlc)
+                {
+                    auto localid = reader.read<uint16_t>();
+                    auto localfarid = reader.read<uint16_t>();
+                }
+            }
+
+            auto triangleCount = reader.read<uint32_t>();
+
+            // vert + normal pair
+            struct trinorm { vsg::vec3 verts[3]; vsg::vec3 normal; };
+            reader.skipBytes(triangleCount * sizeof(trinorm));
+
+            log->info("read bsp tree");
+
+            std::function<void(BinaryReader&)> func;
+            func = [&](BinaryReader &reader)
+            {
+                auto nodemin = reader.read<vsg::vec3>();
+                auto nodemax = reader.read<vsg::vec3>();
+
+                auto isleaf = reader.read<bool>();
+
+                auto triangleCount = reader.read<uint16_t>();
+                for (uint32_t i = 0; i < triangleCount; ++i)
+                {
+                    reader.skipBytes(sizeof(uint16_t));
+                }
+
+                auto children = reader.read<uint8_t>();
+
+                if (children) // should always be 2
+                {
+                    func(reader);
+                    func(reader);
+                }
+            };
+
+            func(reader);
+        }
+
         return group;
     };
 } // namespace ehb

@@ -20,7 +20,7 @@ namespace ehb
     {
         if (auto fullFilePath = vsg::findFile(filename, options); !fullFilePath.empty())
         {
-            if (auto file = fileSys.createInputStream(fullFilePath + ".raw"); file != nullptr) { return read(*file, options); }
+            if (auto file = fileSys.createInputStream(fullFilePath.string() + ".raw"); file != nullptr) { return read(*file, options); }
         }
 
         return {};

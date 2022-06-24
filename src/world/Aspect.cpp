@@ -10,6 +10,7 @@
 #include <vsg/state/DescriptorImage.h>
 #include <vsg/state/DescriptorSet.h>
 #include <vsg/state/PipelineLayout.h>
+#include <vsg/state/BindDescriptorSet.h>
 
 #include <spdlog/spdlog.h>
 

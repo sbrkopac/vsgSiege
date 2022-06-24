@@ -144,9 +144,9 @@ namespace ehb
 
         if (const std::string& dsInstallPath = config.getString("ds-install-path"); !dsInstallPath.empty())
         {
-            defaultValues.emplace("map_paths", vsg::concatPaths(vsg::Path(dsInstallPath), vsg::Path("Maps")));
+            defaultValues.emplace("map_paths", vsg::Path(vsg::Path(dsInstallPath) + vsg::Path("Maps")).string());
             // defaultValues.emplace("res_paths", osgDB::concatPaths(dsInstallPath, "DSLOA"));
-            defaultValues.emplace("res_paths", vsg::concatPaths(vsg::Path(dsInstallPath), vsg::Path("Resources")));
+            defaultValues.emplace("res_paths", vsg::Path(vsg::Path(dsInstallPath) + vsg::Path("Resources")).string());
         }
         else
         {
@@ -157,7 +157,7 @@ namespace ehb
 
         if (const std::string& dataDir = config.getString("data-dir"); !dataDir.empty())
         {
-            defaultValues.emplace("mod_paths", vsg::concatPaths(vsg::Path(dataDir), vsg::Path("Mods")));
+            defaultValues.emplace("mod_paths", vsg::Path(vsg::Path(dataDir) + vsg::Path("Mods")).string());
         }
 
         for (const std::string& key : {"map_paths", "mod_paths", "res_paths"})

@@ -15,7 +15,7 @@ namespace ehb
     {
         if (auto fullFilePath = vsg::findFile(filename, options); !fullFilePath.empty())
         {
-            if (auto file = fileSys.createInputStream(fullFilePath + ".asp"); file != nullptr) { return read(*file, options); }
+            if (auto file = fileSys.createInputStream(fullFilePath.string() + ".asp"); file != nullptr) { return read(*file, options); }
         }
 
         return {};

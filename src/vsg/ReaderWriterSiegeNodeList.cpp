@@ -38,14 +38,14 @@ namespace ehb
 
     vsg::ref_ptr<vsg::Object> ReaderWriterSiegeNodeList::read(const vsg::Path& filename, vsg::ref_ptr<const vsg::Options> options) const
     {
-        const std::string simpleFilename = vsg::simpleFilename(filename);
+        const std::string simpleFilename = vsg::simpleFilename(filename).string();
 
         // check to make sure this is a nodes.gas file
         if (simpleFilename != "nodes") return {};
 
-        log->info("about to build region with path : {} and simpleFilename {}", filename, simpleFilename);
+        log->info("about to build region with path : {} and simpleFilename {}", filename.string(), simpleFilename);
 
-        InputStream stream = fileSys.createInputStream(filename);
+        InputStream stream = fileSys.createInputStream(filename.string());
 
         return read(*stream, options);
     }

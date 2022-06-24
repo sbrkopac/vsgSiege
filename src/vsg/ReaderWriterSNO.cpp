@@ -12,7 +12,7 @@
 #include <vsg/io/read.h>
 #include <vsg/maths/quat.h>
 #include <vsg/state/DescriptorImage.h>
-#include <vsg/state/DescriptorSet.h>
+#include <vsg/state/BindDescriptorSet.h>
 
 namespace ehb
 {
@@ -25,7 +25,7 @@ namespace ehb
     {
         if (auto fullFilePath = vsg::findFile(filename, options); !fullFilePath.empty())
         {
-            if (auto file = fileSys.createInputStream(fullFilePath + ".sno"); file != nullptr) { return read(*file, options); }
+            if (auto file = fileSys.createInputStream(fullFilePath.string() + ".sno"); file != nullptr) { return read(*file, options); }
         }
 
         return {};

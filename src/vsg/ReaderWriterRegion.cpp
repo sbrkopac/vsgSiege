@@ -14,7 +14,7 @@ namespace ehb
 
     vsg::ref_ptr<vsg::Object> ReaderWriterRegion::read(const vsg::Path& filename, vsg::ref_ptr<const vsg::Options> options) const
     {
-        const std::string simpleFilename = vsg::simpleFilename(filename);
+        const std::string simpleFilename = vsg::simpleFilename(filename).string();
 
         // check to make sure this is a nodes.gas file
         if (vsg::fileExtension(filename) != ".region") return {};
@@ -22,18 +22,18 @@ namespace ehb
         // the below feels a bit hacky but we need to be able to access all the files in the region on load - for now
         // you can think of this loader as a proxy loader for the rest of the elements in a region
 
-        log->info("about to load region with path : {} and simpleFilename {}", filename, simpleFilename);
+        log->info("about to load region with path : {} and simpleFilename {}", filename.string(), simpleFilename);
 
         auto path = vsg::removeExtension(filename);
         auto maindotgas = path + "/main.gas";
         auto nodesdotgas = path + "/terrain_nodes/nodes.gas";
 
-        InputStream main = fileSys.createInputStream(maindotgas);
-        InputStream nodes = fileSys.createInputStream(nodesdotgas);
+        InputStream main = fileSys.createInputStream(maindotgas.string());
+        InputStream nodes = fileSys.createInputStream(nodesdotgas.string());
 
         if (main == nullptr || nodes == nullptr)
         {
-            log->critical("main.gas or nodes.gas are missing for region {}", filename);
+            log->critical("main.gas or nodes.gas are missing for region {}", filename.string());
 
             return {};
         }

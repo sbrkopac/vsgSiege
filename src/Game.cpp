@@ -61,7 +61,6 @@ namespace ehb
         commandGraph->addChild(renderGraph);
 
         systems.view->addChild(systems.scene3d);
-        systems.compileTraversal->add(window, systems.view);
 
         viewer->assignRecordAndSubmitTaskAndPresentation({commandGraph});
 

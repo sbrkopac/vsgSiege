@@ -9,7 +9,6 @@
 #include "vsg/ReaderWriterSNO.hpp"
 #include "vsg/ReaderWriterSiegeNodeList.hpp"
 
-#include <vsg/io/ObjectCache.h>
 #include <vsg/state/ColorBlendState.h>
 #include <vsg/state/DepthStencilState.h>
 #include <vsg/state/InputAssemblyState.h>
@@ -70,7 +69,7 @@ namespace ehb
     {
         static auto namingKeyMap = options->getObject<NamingKeyMap>("NamingKeyMap");
 
-        return namingKeyMap->findDataFile(filename);
+        return namingKeyMap->findDataFile(filename.string());
     }
 
     void InitState::enter()
@@ -100,8 +99,6 @@ namespace ehb
             options->setObject("NamingKeyMap", &namingKeyMap);
 
             options->readerWriters = {ReaderWriterRAW::create(fileSys), ReaderWriterSNO::create(fileSys), ReaderWriterASP::create(fileSys), ReaderWriterSiegeNodeList::create(fileSys), ReaderWriterRegion::create(fileSys)};
-
-            options->objectCache = vsg::ObjectCache::create();
 
             options->findFileCallback = &findFileCallback;
         }

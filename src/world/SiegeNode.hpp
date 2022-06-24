@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "SiegeMeshDoor.hpp"
 #include "SiegeVisitor.hpp"
 #include <vsg/core/Inherit.h>
 #include <vsg/core/Visitor.h>

@@ -22,8 +22,6 @@ namespace ehb
         void apply(vsg::Group& group) override
         {
             handleCustomGroups(group);
-
-            group.traverse(*this);
         }
 
         // custom types

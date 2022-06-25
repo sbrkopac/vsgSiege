@@ -207,7 +207,7 @@ namespace ehb
         }
 
         auto logicalMeshCount = reader.read<uint32_t>();
-        log->info("logicalMeshCount = {}", logicalMeshCount);
+        // log->info("logicalMeshCount = {}", logicalMeshCount);
 
         for (uint32_t i = 0; i < logicalMeshCount; ++i)
         {

@@ -45,13 +45,15 @@ void main() {
 
 namespace ehb
 {
-    vsg::ref_ptr<vsg::Group> bspTriangles; // there is probably a better way to do this
-
     class BSPTreeRenderer : public SiegeVisitorBase
     {
     public:
 
-        int count = 0;
+        int32_t leafCount = 0;
+
+        vsg::ref_ptr<vsg::Group> drawCommands;
+
+        BSPTreeRenderer() { drawCommands = new vsg::Group; }
 
         // Should I utilize SharedObjects and not make this static? There shouldn't be that many instances of this
         static vsg::ref_ptr<vsg::BindGraphicsPipeline> createGraphicsPipeline()
@@ -141,11 +143,11 @@ namespace ehb
                         commands->addChild(vsg::BindIndexBuffer::create(indices));
                         commands->addChild(vsg::DrawIndexed::create(static_cast<uint32_t>(indices->valueCount()), 1, 0, 0, 0));
 
-                        bspTriangles->addChild(commands);
-
-                        count++;
+                        drawCommands->addChild(commands);
                     }
                 }
+
+                leafCount++;
             }
             else
             {
@@ -158,46 +160,6 @@ namespace ehb
 
 namespace ehb
 {
-    void generateBSPDrawRender(BSPTree* tree, const BSPNode* node) // the first param is because BSPTree holds a pointer to all the triangles
-    {
-        assert(node != nullptr);
-
-        static auto log = spdlog::get("log");
-
-        if (node->m_IsLeaf)
-        {
-            if (node->m_Triangles)
-            {
-                for (int32_t i = 0; i < node->m_NumTriangles; ++i)
-                {
-                    TriNorm& tri = tree->m_Triangles[node->m_Triangles[i]];
-
-                    auto vertices = vsg::vec3Array::create(3);
-                    auto indices = vsg::ushortArray::create({ 0, 1, 2 });
-
-                    std::memcpy(&(*vertices)[0], &tri.m_Vertices[0], sizeof(vsg::vec3));
-                    std::memcpy(&(*vertices)[1], &tri.m_Vertices[1], sizeof(vsg::vec3));
-                    std::memcpy(&(*vertices)[2], &tri.m_Vertices[2], sizeof(vsg::vec3));
-
-                    auto commands = vsg::Commands::create();
-                    commands->addChild(vsg::BindVertexBuffers::create(0, vsg::DataList{ vertices }));
-                    commands->addChild(vsg::BindIndexBuffer::create(indices));
-                    commands->addChild(vsg::DrawIndexed::create(static_cast<uint32_t>(indices->valueCount()), 1, 0, 0, 0));
-
-                    bspTriangles->addChild(commands);
-                }
-            }
-        }
-        else
-        {
-            generateBSPDrawRender(tree, node->m_LeftChild);
-            generateBSPDrawRender(tree, node->m_RightChild);
-        }
-    }
-}
-
-namespace ehb
-{
     void BSPTreeTestState::enter()
     {
         log->info("Entered Test State");
@@ -205,20 +167,17 @@ namespace ehb
         vsg::StateGroup& scene3d = *systems.scene3d;
         auto options = systems.options;
 
-        static std::string siegeNode("t_grs01_houses_generic-a-log");
-
-        bspTriangles = new vsg::Group;
+        static std::string siegeNode("t_grs01_houses_generic-a-log");        
 
         TimePoint start = Timer::now();
 
-#if 1
+#if 0
         if (auto sno = vsg::read_cast<SiegeNodeMesh>(siegeNode, options); sno != nullptr)
         {
             vsg::ref_ptr<vsg::BindGraphicsPipeline> pipeline(options->getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline"));
 
             scene3d.addChild(pipeline);
 
-            // transforms are required to connect two nodes together using doors
             auto t1 = vsg::MatrixTransform::create();
 
             t1->addChild(sno);
@@ -227,12 +186,13 @@ namespace ehb
 
             scene3d.addChild(BSPTreeRenderer::createGraphicsPipeline());
 
-            // generateBSPDrawRender(sno->tree(), sno->tree()->GetRoot());
-
-            auto count = vsg::visit<BSPTreeRenderer>(sno).count;
-            log->info("COUNT = {}", count);
-
-            scene3d.addChild(bspTriangles);            
+            BSPTreeRenderer treeRenderer;
+            sno->accept(treeRenderer);
+            if (treeRenderer.leafCount > 0)
+            {
+                log->info("Leafs visited = {}", treeRenderer.leafCount);
+                scene3d.addChild(treeRenderer.drawCommands);
+            }
 
             // workaround
             compile(systems, systems.scene3d);
@@ -250,10 +210,15 @@ namespace ehb
             vsg::ref_ptr<vsg::BindGraphicsPipeline> pipeline(options->getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline"));
 
             scene3d.addChild(pipeline);
-            scene3d.addChild(region);
+            // scene3d.addChild(region);
 
-            auto count = vsg::visit<BSPTreeRenderer>(region).count;
-            log->info("Visitor has {} meshes", count);
+            BSPTreeRenderer treeRenderer;
+            region->accept(treeRenderer);
+            if (treeRenderer.leafCount > 0)
+            {
+                log->info("Leafs visited = {}", treeRenderer.leafCount);
+                scene3d.addChild(treeRenderer.drawCommands);
+            }
 
             // workaround
             compile(systems, systems.scene3d);

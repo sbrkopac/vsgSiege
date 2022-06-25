@@ -6,6 +6,7 @@
 
 #include "SiegeMeshDoor.hpp"
 #include "SiegeVisitor.hpp"
+#include "bsp.hpp"
 #include <vsg/core/Inherit.h>
 #include <vsg/core/Visitor.h>
 #include <vsg/maths/mat4.h>
@@ -34,6 +35,8 @@ namespace ehb
     private:
 
         SiegeMeshDoorList doorList;
+
+        std::unique_ptr<BSPTree> bspTree;
 
         std::vector<std::pair<uint32_t, vsg::dmat4>> doorXform;
     };

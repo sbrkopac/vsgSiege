@@ -4,6 +4,7 @@
 #include "io/BinaryReader.hpp"
 #include "io/LocalFileSys.hpp"
 #include "world/SiegeNode.hpp"
+#include "world/bsp.hpp"
 
 #include <vsg/commands/BindIndexBuffer.h>
 #include <vsg/commands/BindVertexBuffers.h>
@@ -274,39 +275,37 @@ namespace ehb
             }
 
             auto triangleCount = reader.read<uint32_t>();
+            TriNorm* data = new TriNorm[triangleCount];
+            reader.readBytes(data, sizeof(TriNorm)* triangleCount);
 
-            // vert + normal pair
-            struct trinorm { vsg::vec3 verts[3]; vsg::vec3 normal; };
-            reader.skipBytes(triangleCount * sizeof(trinorm));
+            group->bspTree = std::make_unique<BSPTree>(data, triangleCount, 0, 0, false);
 
-            log->info("read bsp tree");
-
-            std::function<void(BinaryReader&)> func;
-            func = [&](BinaryReader &reader)
-            {
-                auto nodemin = reader.read<vsg::vec3>();
-                auto nodemax = reader.read<vsg::vec3>();
-
-                auto isleaf = reader.read<bool>();
-
-                auto triangleCount = reader.read<uint16_t>();
-                for (uint32_t i = 0; i < triangleCount; ++i)
-                {
-                    reader.skipBytes(sizeof(uint16_t));
-                }
-
-                auto children = reader.read<uint8_t>();
-
-                if (children) // should always be 2
-                {
-                    func(reader);
-                    func(reader);
-                }
-            };
-
-            func(reader);
+            readBSPNodeFromFile(reader, group->bspTree->GetRoot());
         }
 
         return group;
     };
+
+    void ReaderWriterSNO::readBSPNodeFromFile(BinaryReader& reader, BSPNode* node) const
+    {
+        reader.readBytes(&node->m_MinBound, sizeof(vsg::vec3));
+        reader.readBytes(&node->m_MaxBound, sizeof(vsg::vec3));
+        reader.readBytes(&node->m_IsLeaf, sizeof(bool));
+        reader.readBytes(&node->m_NumTriangles, sizeof(uint16_t));
+
+        node->m_Triangles = new uint16_t[node->m_NumTriangles];
+        reader.readBytes(node->m_Triangles, sizeof(uint16_t) * node->m_NumTriangles);
+
+        auto children = reader.read<uint8_t>();
+        if (children)
+        {
+            node->m_LeftChild = new BSPNode;
+            std::memset(node->m_LeftChild, 0, sizeof(BSPNode));
+            node->m_RightChild = new BSPNode;
+            std::memset(node->m_RightChild, 0, sizeof(BSPNode));
+
+            readBSPNodeFromFile(reader, node->m_LeftChild);
+            readBSPNodeFromFile(reader, node->m_RightChild);
+        }
+    }
 } // namespace ehb

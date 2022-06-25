@@ -10,6 +10,8 @@
 namespace ehb
 {
     class IFileSys;
+    class BinaryReader;
+    struct BSPNode;
     class ReaderWriterSNO final : public vsg::Inherit<vsg::ReaderWriter, ReaderWriterSNO>
     {
     public:
@@ -22,5 +24,7 @@ namespace ehb
         IFileSys& fileSys;
 
         std::shared_ptr<spdlog::logger> log;
+
+        void readBSPNodeFromFile(BinaryReader& reader, BSPNode* node) const;
     };
 } // namespace ehb

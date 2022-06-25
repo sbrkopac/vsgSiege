@@ -10,6 +10,7 @@
 #    include "state/test/RegionStitchTestState.hpp"
 #    include "state/test/RegionTestState.hpp"
 #    include "state/test/SiegeNodeTestState.hpp"
+#    include "state/test/BSPTreeTestState.hpp"
 #endif
 
 #ifdef SIEGE_VSG_EXAMPLES_ENABLED
@@ -128,6 +129,8 @@ namespace ehb
         if (gameStateType == "FullMapTestState") { return new FullMapTestState(systems); }
 
         if (gameStateType == "RegionStitchTestState") { return new RegionStitchTestState(systems); }
+
+        if (gameStateType == "BSPTreeTestState") { return new BSPTreeTestState(systems); }
 #endif
 
 #ifdef SIEGE_VSG_EXAMPLES_ENABLED

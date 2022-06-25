@@ -29,6 +29,8 @@ namespace ehb
 
         static void connect(const vsg::MatrixTransform* targetRegion, vsg::MatrixTransform* targetNode, uint32_t targetDoor, vsg::MatrixTransform* connectRegion, const vsg::MatrixTransform* connectNode, uint32_t connectDoor);
 
+        BSPTree* tree();
+
     protected:
         virtual ~SiegeNodeMesh() = default;
 
@@ -40,5 +42,10 @@ namespace ehb
 
         std::vector<std::pair<uint32_t, vsg::dmat4>> doorXform;
     };
+
+    inline BSPTree* SiegeNodeMesh::tree()
+    {
+        return bspTree.get();
+    }
 
 } // namespace ehb

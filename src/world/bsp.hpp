@@ -137,9 +137,13 @@ namespace ehb
 		// The actual tree information
 		BSPNode* m_BSPRoot;
 
+	public: // SAM: temp right now so I can access triangles in a test state to generate a drawable mesh in vulkan
+
 		// The geometric information
 		TriNorm* m_Triangles;
 		int				m_numTriangles;
+
+	private:
 
 		// Balance/complexity information for this tree
 		int				m_MaxPrimitives;

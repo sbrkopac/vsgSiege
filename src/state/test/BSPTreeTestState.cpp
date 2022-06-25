@@ -108,6 +108,8 @@ namespace ehb
         void apply(Region& region) override
         {
             region.traverse(*this);
+
+            assembleGeometry();
         }
 
         void apply(SiegeNodeMesh& mesh) override
@@ -115,11 +117,34 @@ namespace ehb
             currTree = mesh.tree();
 
             handleBSPNode(currTree->GetRoot());
+
+            // assembleGeometry();
         }
 
     private:
 
         BSPTree* currTree;
+
+        uint32_t triangleCount = 0;
+
+        std::vector<vsg::vec3> intermediateVector; // do I have to do this?
+        std::vector<uint32_t> intermediateVector2; // do I have to do this?
+
+        void assembleGeometry()
+        {
+            auto vertices = vsg::vec3Array::create(intermediateVector.size());
+            vertices->assign(intermediateVector.size(), &intermediateVector.begin()[0]);
+
+            auto indices = vsg::uintArray::create(intermediateVector2.size());
+            indices->assign(intermediateVector2.size(), &intermediateVector2.begin()[0]);
+
+            auto commands = vsg::Commands::create();
+            commands->addChild(vsg::BindVertexBuffers::create(0, vsg::DataList{ vertices }));
+            commands->addChild(vsg::BindIndexBuffer::create(indices));
+            commands->addChild(vsg::DrawIndexed::create(static_cast<uint32_t>(indices->valueCount()), 1, 0, 0, 0));
+
+            drawCommands->addChild(commands);   
+        }
 
         void handleBSPNode(BSPNode* node)
         {
@@ -138,12 +163,28 @@ namespace ehb
                         std::memcpy(&(*vertices)[1], &tri.m_Vertices[1], sizeof(vsg::vec3));
                         std::memcpy(&(*vertices)[2], &tri.m_Vertices[2], sizeof(vsg::vec3));
 
-                        auto commands = vsg::Commands::create();
-                        commands->addChild(vsg::BindVertexBuffers::create(0, vsg::DataList{ vertices }));
-                        commands->addChild(vsg::BindIndexBuffer::create(indices));
-                        commands->addChild(vsg::DrawIndexed::create(static_cast<uint32_t>(indices->valueCount()), 1, 0, 0, 0));
+                        vsg::vec3 a, b, c;
+                        std::memcpy(&a, &tri.m_Vertices[0], sizeof(vsg::vec3));
+                        std::memcpy(&b, &tri.m_Vertices[1], sizeof(vsg::vec3));
+                        std::memcpy(&c, &tri.m_Vertices[2], sizeof(vsg::vec3));
 
-                        drawCommands->addChild(commands);
+                        intermediateVector.push_back(a);
+                        intermediateVector.push_back(b);
+                        intermediateVector.push_back(c);
+
+                        intermediateVector2.push_back(0 + triangleCount);
+                        intermediateVector2.push_back(1 + triangleCount);
+                        intermediateVector2.push_back(2 + triangleCount);
+
+
+                        //auto commands = vsg::Commands::create();
+                        //commands->addChild(vsg::BindVertexBuffers::create(0, vsg::DataList{ vertices }));
+                        //commands->addChild(vsg::BindIndexBuffer::create(indices));
+                        //commands->addChild(vsg::DrawIndexed::create(static_cast<uint32_t>(indices->valueCount()), 1, 0, 0, 0));
+
+                        //drawCommands->addChild(commands);
+
+                        triangleCount += 3;
                     }
                 }
 

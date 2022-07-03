@@ -87,6 +87,7 @@ set (SOURCES
     src/world/SiegeNode.cpp
     src/world/Aspect.cpp
     src/world/Region.cpp
+    src/world/RenderingStaticObject.cpp
 
     # vsg
     src/vsg/ReaderWriterRAW.cpp

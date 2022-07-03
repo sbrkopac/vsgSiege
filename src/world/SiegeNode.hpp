@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "SiegeVisitor.hpp"
+#include "world/RenderingStaticObject.hpp"
 #include <vsg/core/Inherit.h>
 #include <vsg/core/Visitor.h>
 #include <vsg/maths/mat4.h>
@@ -27,6 +28,12 @@ namespace ehb
         virtual ~SiegeNodeMesh() = default;
 
     private:
+
+        vsg::vec3* m_pNormals;
+        uint32_t* m_pColors;
+
+        RenderingStaticObject* m_pRenderObject;
+
         std::vector<std::pair<uint32_t, vsg::dmat4>> doorXform;
     };
 

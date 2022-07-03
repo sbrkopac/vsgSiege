@@ -4,6 +4,7 @@
 #include "io/BinaryReader.hpp"
 #include "io/LocalFileSys.hpp"
 #include "world/SiegeNode.hpp"
+#include "world/RenderingStaticObject.hpp"
 
 #include <vsg/commands/BindIndexBuffer.h>
 #include <vsg/commands/BindVertexBuffers.h>
@@ -48,6 +49,14 @@ namespace ehb
         uint32_t	m_reserved0;
         uint32_t	m_reserved1;
         uint32_t	m_reserved2;
+    };
+
+    struct storeVertex
+    {
+        float x, y, z;
+        float nx, ny, nz;
+        uint32_t color;
+        UV	  uv;
     };
 
     ReaderWriterSNO::ReaderWriterSNO(IFileSys& fileSys) :
@@ -126,6 +135,10 @@ namespace ehb
             reader.skipBytes(44);
             auto tmp = reader.readString();
         }
+        
+        // experimental: create software mesh for easier lookup later
+        sVertex* pVertices = new sVertex[header.m_numVertices];
+        group->m_pNormals = new vsg::vec3[header.m_numVertices];
 
         // create vertex data per entire mesh
         auto vertices = vsg::vec3Array::create(header.m_numVertices);
@@ -136,10 +149,32 @@ namespace ehb
         // read in our vertex data
         for (uint32_t index = 0; index < header.m_numVertices; index++)
         {
+#if 1
+            auto buildVertex = reader.read<storeVertex>();
+            
+            sVertex& nVertex = pVertices[index];
+            nVertex.x = buildVertex.x;
+            nVertex.y = buildVertex.y;
+            nVertex.z = buildVertex.z;
+            nVertex.uv = buildVertex.uv;
+
+            vsg::vec3& nNormal = group->m_pNormals[index];
+            nNormal.x = buildVertex.nx;
+            nNormal.y = buildVertex.ny;
+            nNormal.z = buildVertex.nz;
+
+            // group->m_pColors[index] = buildVertex.color;
+
+            (*vertices)[index].x = nVertex.x; (*vertices)[index].y = nVertex.y; (*vertices)[index].z = nVertex.z;
+            (*normals)[index].x = nNormal.x; (*normals)[index].y = nNormal.y; (*normals)[index].z = nNormal.z;
+            (*tcoords)[index].x = nVertex.uv.u; (*tcoords)[index].y = nVertex.uv.v;
+
+#else
             reader.readBytes(reinterpret_cast<char*>(&(*vertices)[index]), sizeof(vsg::vec3));
             reader.readBytes(reinterpret_cast<char*>(&(*normals)[index]), sizeof(vsg::vec3));
             reader.readBytes(reinterpret_cast<char*>(&(*colors)[index]), sizeof(uint32_t)); // color is swizzled - not sure if i should address that here or in the vulkan side
             reader.readBytes(reinterpret_cast<char*>(&(*tcoords)[index]), sizeof(vsg::vec2));
+#endif
         }
 
         // Currently for each SiegeNode we create multiple "command graphs" in order to make sure we can pick

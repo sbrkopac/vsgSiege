@@ -2,6 +2,7 @@
 #include "vsgExamplesDraw.hpp"
 #include "Systems.hpp"
 
+#include <iostream>
 #include <spdlog/spdlog.h>
 
 #include <vsg/all.h>

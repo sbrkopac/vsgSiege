@@ -18,6 +18,38 @@ namespace ehb
 {
     static constexpr uint32_t SNO_MAGIC = 0x444F4E53;
 
+    struct SiegeMeshHeader
+    {
+        // File identification
+        uint32_t	m_id;
+        uint32_t	m_majorVersion;
+        uint32_t	m_minorVersion;
+
+        // Door and spot information
+        uint32_t	m_numDoors;
+        uint32_t	m_numSpots;
+
+        // Mesh information
+        uint32_t	m_numVertices;
+        uint32_t	m_numTriangles;
+
+        // Stage information
+        uint32_t	m_numStages;
+
+        // Spatial information
+        vsg::vec3		m_minBBox;
+        vsg::vec3		m_maxBBox;
+        vsg::vec3		m_centroidOffset;
+
+        // Whether or not this mesh requires wrapping
+        bool			m_bTile;
+
+        // Reserved information for possible future use
+        uint32_t	m_reserved0;
+        uint32_t	m_reserved1;
+        uint32_t	m_reserved2;
+    };
+
     ReaderWriterSNO::ReaderWriterSNO(IFileSys& fileSys) :
         fileSys(fileSys) { log = spdlog::get("log"); }
 
@@ -37,33 +69,21 @@ namespace ehb
 
         // prefer auto since the template provides the type and it's easier to change if we have to
 
-        auto magic = reader.read<uint32_t>();
-        auto version = reader.read<uint32_t>();
-        auto unk1 = reader.read<uint32_t>();
+        auto header = reader.read<SiegeMeshHeader>();
 
-        if (magic != SNO_MAGIC) return {};
+        if (header.m_majorVersion > 6 ||
+            (header.m_majorVersion == 6 && header.m_minorVersion >= 2))
+        {
+            uint32_t checksum = reader.read<uint32_t>();
+        }
 
-        auto doorCount = reader.read<uint32_t>();
-        auto spotCount = reader.read<uint32_t>();
-        auto cornerCount = reader.read<uint32_t>();
-        auto faceCount = reader.read<uint32_t>();
-        auto textureCount = reader.read<uint32_t>();
-
-        // SiegeMax calculates a bounding box for us but we will let VSG do some box calculations
-        // This is good for comparatives if we get a "weird" result from VSG
-        auto min = reader.read<vsg::vec3>();
-        auto max = reader.read<vsg::vec3>();
-
-        // No idea what is under here
-        auto unk2 = reader.read<float>(), unk3 = reader.read<float>(), unk4 = reader.read<float>();
-        auto unk5 = reader.read<uint32_t>(), unk6 = reader.read<uint32_t>(), unk7 = reader.read<uint32_t>(), unk8 = reader.read<uint32_t>();
-        auto checksum = reader.read<float>();
+        if (header.m_id != SNO_MAGIC) return {};
 
         // Construct our vsg::Group for the graph
         vsg::ref_ptr<SiegeNodeMesh> group = SiegeNodeMesh::create();
 
         // read door data
-        for (uint32_t index = 0; index < doorCount; index++)
+        for (uint32_t index = 0; index < header.m_numDoors; index++)
         {
             auto id = reader.read<uint32_t>();
 
@@ -100,7 +120,7 @@ namespace ehb
         }
 
         // read spot data
-        for (uint32_t index = 0; index < spotCount; index++)
+        for (uint32_t index = 0; index < header.m_numSpots; index++)
         {
             // rot, pos, string?
             reader.skipBytes(44);
@@ -108,13 +128,13 @@ namespace ehb
         }
 
         // create vertex data per entire mesh
-        auto vertices = vsg::vec3Array::create(cornerCount);
-        auto normals = vsg::vec3Array::create(cornerCount);
-        auto colors = vsg::vec4Array::create(cornerCount);
-        auto tcoords = vsg::vec2Array::create(cornerCount);
+        auto vertices = vsg::vec3Array::create(header.m_numVertices);
+        auto normals = vsg::vec3Array::create(header.m_numVertices);
+        auto colors = vsg::vec4Array::create(header.m_numVertices);
+        auto tcoords = vsg::vec2Array::create(header.m_numVertices);
 
         // read in our vertex data
-        for (uint32_t index = 0; index < cornerCount; index++)
+        for (uint32_t index = 0; index < header.m_numVertices; index++)
         {
             reader.readBytes(reinterpret_cast<char*>(&(*vertices)[index]), sizeof(vsg::vec3));
             reader.readBytes(reinterpret_cast<char*>(&(*normals)[index]), sizeof(vsg::vec3));
@@ -125,7 +145,7 @@ namespace ehb
         // Currently for each SiegeNode we create multiple "command graphs" in order to make sure we can pick
         // them apart in the graph for things like fading
         // Not sure if we should be doing this or creating a software representation and just passing 1 draw call to the GPU?
-        for (uint32_t index = 0; index < textureCount; index++)
+        for (uint32_t index = 0; index < header.m_numStages; index++)
         {
             auto textureName = reader.readString(); // std::getline(stream, textureName, '\0');
             auto textureFileName = textureName + ".raw";

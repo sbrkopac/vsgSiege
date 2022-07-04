@@ -180,23 +180,31 @@ namespace ehb
         // Currently for each SiegeNode we create multiple "command graphs" in order to make sure we can pick
         // them apart in the graph for things like fading
         // Not sure if we should be doing this or creating a software representation and just passing 1 draw call to the GPU?
+        TexStageList stageList;
         for (uint32_t index = 0; index < header.m_numStages; index++)
         {
             auto textureName = reader.readString(); // std::getline(stream, textureName, '\0');
             auto textureFileName = textureName + ".raw";
 
-            auto start = reader.read<uint32_t>(), span = reader.read<uint32_t>(), count = reader.read<uint32_t>();
+            sTexStage nStage;
 
-            // std::cout << "handling texture: " << textureName << std::endl;
+            nStage.tIndex = reader.read<uint32_t>(); nStage.numVerts = reader.read<uint32_t>(); nStage.numVIndices = reader.read<uint32_t>();
 
-            auto attributeArrays = vsg::DataList{vertices, colors, tcoords};
+            // read in our indices to the software representation
+            nStage.pVIndices = new uint16_t[nStage.numVIndices];
+            reader.readBytes(nStage.pVIndices, sizeof(uint16_t) * nStage.numVIndices);
 
-            // batch read in our indices
-            auto indices = vsg::ushortArray::create(count);
-            reader.readBytes(static_cast<char*>(indices->dataPointer()), sizeof(uint16_t) * count);
+            nStage.numLIndices = 0;
+            nStage.pLIndices = nullptr;
 
-            // offset them based on their starting point
-            std::transform(std::begin(*indices), std::end(*indices), std::begin(*indices), [&start](uint16_t v) -> uint16_t { return v + start; });
+            stageList.push_back(nStage);
+
+            // assign those indices to our GPU
+            auto indices = vsg::ushortArray::create(nStage.numVIndices);
+            indices->assign(nStage.numVIndices, nStage.pVIndices);
+
+            // offset them based on their starting point            
+            std::transform(std::begin(*indices), std::end(*indices), std::begin(*indices), [&nStage](uint16_t v) -> uint16_t { return v + nStage.tIndex; });
 
             // TODO: handle layers and animated SiegeNode textures
             if (auto layout = static_cast<const vsg::PipelineLayout*>(options->getObject("SiegeNodeLayout")); layout != nullptr)
@@ -222,6 +230,8 @@ namespace ehb
                 return {};
             }
 
+            auto attributeArrays = vsg::DataList{ vertices, colors, tcoords };
+
             // Create a command graph for each surface in the mesh
             auto commands = vsg::Commands::create();
             commands->addChild(vsg::BindVertexBuffers::create(0, attributeArrays));
@@ -229,6 +239,8 @@ namespace ehb
             commands->addChild(vsg::DrawIndexed::create(static_cast<uint32_t>(indices->valueCount()), 1, 0, 0, 0));
             group->addChild(commands);
         }
+
+        group->m_pRenderObject = new RenderingStaticObject(pVertices, header.m_numVertices, header.m_numTriangles, stageList);
 
         return group;
     };

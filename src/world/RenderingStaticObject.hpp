@@ -67,6 +67,7 @@ namespace ehb
     public:
 
         RenderingStaticObject(sVertex* vertices, int32_t numVertices, uint16_t* indices, int32_t numIndices, uint32_t* textureTriCount, TexList& textureList);
+        RenderingStaticObject(sVertex* pVertices, int32_t numVertices, int32_t numTriangles, TexStageList& stageList);
 
         ~RenderingStaticObject();
 
@@ -93,9 +94,20 @@ namespace ehb
         sVertex* m_pVertices;
     };
 
-    inline RenderingStaticObject::RenderingStaticObject(sVertex* vertices, int32_t numVertices, uint16_t* indices, int32_t numIndices, uint32_t* textureTriCount, TexList& textureList)
+    inline RenderingStaticObject::RenderingStaticObject(sVertex* vertices, int32_t numVertices, uint16_t* indices, int32_t numIndices, uint32_t* textureTriCount, TexList& textureList) :
+        m_numVertices(numVertices), m_numTriangles(numIndices / 3), m_texlist(textureList), m_pVertices(nullptr)
     {
         organizeInformation(vertices, indices, textureTriCount);
+    }
+
+    inline RenderingStaticObject::RenderingStaticObject(sVertex* pVertices, int32_t numVertices, int32_t numTriangles, TexStageList& stageList) :
+        m_numVertices(numVertices), m_numTriangles(numTriangles), m_pVertices(pVertices), m_TexStageList(stageList)
+    {
+        // Build up a default texture list
+        StaticObjectTex tex;
+        tex.textureId = 0;
+        tex.alpha = false;
+        m_texlist.resize(m_TexStageList.size(), tex);
     }
 
     inline RenderingStaticObject::~RenderingStaticObject()

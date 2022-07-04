@@ -18,14 +18,14 @@ namespace ehb
         friend class ReaderWriterSNO;
 
     public:
-        explicit SiegeNodeMesh() = default;
+        explicit SiegeNodeMesh();
 
         static void connect(const vsg::MatrixTransform* targetNode, uint32_t targetDoor, vsg::MatrixTransform* connectNode, uint32_t connectDoor);
 
         static void connect(const vsg::MatrixTransform* targetRegion, vsg::MatrixTransform* targetNode, uint32_t targetDoor, vsg::MatrixTransform* connectRegion, const vsg::MatrixTransform* connectNode, uint32_t connectDoor);
 
     protected:
-        virtual ~SiegeNodeMesh() = default;
+        virtual ~SiegeNodeMesh();
 
     private:
 
@@ -36,5 +36,17 @@ namespace ehb
 
         std::vector<std::pair<uint32_t, vsg::dmat4>> doorXform;
     };
+
+    inline SiegeNodeMesh::SiegeNodeMesh() : 
+        m_pRenderObject(nullptr), m_pNormals (nullptr), m_pColors(nullptr)
+    {
+
+    }
+
+    inline SiegeNodeMesh::~SiegeNodeMesh()
+    {
+        delete[] m_pNormals;
+        delete m_pRenderObject;
+    }
 
 } // namespace ehb

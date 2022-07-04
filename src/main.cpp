@@ -12,6 +12,8 @@
 
 #include <filesystem>
 
+#include "world/SiegePos.hpp"
+
 // http://www.codersnotes.com/sleepy/
 
 // it's important that all siege loggers are setup prior to the game executing as we do sink modifications that aren't thread safe

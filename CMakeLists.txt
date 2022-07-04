@@ -88,6 +88,7 @@ set (SOURCES
     src/world/Aspect.cpp
     src/world/Region.cpp
     src/world/RenderingStaticObject.cpp
+    src/world/DatabaseGuid.cpp
 
     # vsg
     src/vsg/ReaderWriterRAW.cpp

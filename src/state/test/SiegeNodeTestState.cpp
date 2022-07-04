@@ -103,24 +103,20 @@ namespace ehb
                     norm[1].y += mesh.normals()[i].y;
                     norm[1].z += mesh.normals()[i].z;
 
-                    auto vertices = vsg::vec3Array::create(2);
+                    auto vertices = vsg::vec3Array::create(
+                        { { norm[0].x, norm[0].y, norm[0].z },
+                          { norm[1].x, norm[1].y, norm[1].z }
+                        });
+
                     auto indices = vsg::ushortArray::create({ 0, 1 });
 
-                    (*vertices)[0].x = norm[0].x;
-                    (*vertices)[0].y = norm[0].y;
-                    (*vertices)[0].z = norm[0].z;
+                    // TODO: VertexIndexDraw
+                    auto commands = vsg::Commands::create();
+                    commands->addChild(vsg::BindVertexBuffers::create(0, vsg::DataList{ vertices }));
+                    commands->addChild(vsg::BindIndexBuffer::create(indices));
+                    commands->addChild(vsg::DrawIndexed::create(static_cast<uint32_t>(indices->valueCount()), 1, 0, 0, 0));
 
-                    (*vertices)[1].x = norm[1].x;
-                    (*vertices)[1].y = norm[1].y;
-                    (*vertices)[1].z = norm[1].z;
-
-                    auto vid = vsg::VertexIndexDraw::create();
-                    vid->assignArrays(vsg::DataList{ vertices });
-                    vid->assignIndices(indices);
-                    vid->indexCount = static_cast<uint32_t>(indices->size());
-                    vid->indexCount = 1;
-
-                    group->addChild(vid);
+                    group->addChild(commands);                    
                 }
             }
         }

@@ -6,6 +6,7 @@
 #include "world/SiegeNode.hpp"
 
 #include <vsg/io/read.h>
+#include <vsg/utils/SharedObjects.h>
 
 namespace ehb
 {
@@ -95,6 +96,8 @@ namespace ehb
                 {
                     if (auto mesh = vsg::read_cast<SiegeNodeMesh>(meshFileName, options); mesh != nullptr)
                     {
+                        options->sharedObjects->share(mesh);
+
                         auto xform = vsg::MatrixTransform::create();
 
                         xform->setValue("bounds_camera", node->valueAsBool("bounds_camera"));

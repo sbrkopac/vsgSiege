@@ -37,6 +37,8 @@ namespace ehb
             (*tcoords)[i].y = softwareVertex.uv.v;
         }
 
+        std::fill(std::begin(*colors), std::end(*colors), 0xFFFFFFFF);
+
         sharedObjects->share(vertices);
         sharedObjects->share(colors);
         sharedObjects->share(tcoords);

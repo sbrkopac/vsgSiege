@@ -55,6 +55,8 @@ namespace ehb
 
         vsg::ref_ptr<vsg::Group> group = vsg::Group::create();
 
+        MatrixStack matrixStack;
+
         static vsg::ref_ptr<vsg::BindGraphicsPipeline> createGraphicsPipeline()
         {
             vsg::ref_ptr<vsg::ShaderStage> vertexShader = vsg::ShaderStage::create(VK_SHADER_STAGE_VERTEX_BIT, "main", vert_PushConstants3);
@@ -106,22 +108,21 @@ namespace ehb
 
         void apply(vsg::MatrixTransform& transform) override
         {
-            for (auto&& children : transform.children)
-            {
-                if (auto mesh = children->cast<SiegeNodeMesh>())
-                {
-                    apply(transform.matrix, *mesh);
-                }
-            }
+            if (matrixStack.empty())
+                matrixStack.push_back(transform.transform(vsg::dmat4{}));
+            else
+                matrixStack.push_back(transform.transform(matrixStack.back()));
+
+            transform.traverse(*this);
+
+            matrixStack.pop_back();
         }
 
-        void apply(const vsg::dmat4& matrix, SiegeNodeMesh& mesh)
+        void apply(SiegeNodeMesh& mesh) override
         {
             auto log = spdlog::get("log");
             if (auto renderObject = mesh.renderObject())
             {
-                // log->info("apply(SiegeNodeMesh&)");
-
                 sVertex norm[2];
                 for (int32_t i = 0; i < renderObject->numVertices(); ++i)
                 {
@@ -144,7 +145,7 @@ namespace ehb
 
                     for (auto& v : *vertices)
                     {
-                        v = matrix * (vsg::dvec3) v;
+                        v = matrixStack.back() * (vsg::dvec3) v;
                     }
 
                     auto commands = vsg::Commands::create();

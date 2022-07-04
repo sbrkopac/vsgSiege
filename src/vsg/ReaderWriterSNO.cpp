@@ -135,6 +135,8 @@ namespace ehb
             reader.skipBytes(44);
             auto tmp = reader.readString();
         }
+
+        group->m_pColors = new uint32_t[header.m_numVertices];
         
         // experimental: create software mesh for easier lookup later
         sVertex* pVertices = new sVertex[header.m_numVertices];
@@ -149,7 +151,6 @@ namespace ehb
         // read in our vertex data
         for (uint32_t index = 0; index < header.m_numVertices; index++)
         {
-#if 1
             auto buildVertex = reader.read<storeVertex>();
             
             sVertex& nVertex = pVertices[index];
@@ -163,23 +164,13 @@ namespace ehb
             nNormal.y = buildVertex.ny;
             nNormal.z = buildVertex.nz;
 
-            // group->m_pColors[index] = buildVertex.color;
+            group->m_pColors[index] = buildVertex.color;
 
             (*vertices)[index].x = nVertex.x; (*vertices)[index].y = nVertex.y; (*vertices)[index].z = nVertex.z;
             (*normals)[index].x = nNormal.x; (*normals)[index].y = nNormal.y; (*normals)[index].z = nNormal.z;
             (*tcoords)[index].x = nVertex.uv.u; (*tcoords)[index].y = nVertex.uv.v;
-
-#else
-            reader.readBytes(reinterpret_cast<char*>(&(*vertices)[index]), sizeof(vsg::vec3));
-            reader.readBytes(reinterpret_cast<char*>(&(*normals)[index]), sizeof(vsg::vec3));
-            reader.readBytes(reinterpret_cast<char*>(&(*colors)[index]), sizeof(uint32_t)); // color is swizzled - not sure if i should address that here or in the vulkan side
-            reader.readBytes(reinterpret_cast<char*>(&(*tcoords)[index]), sizeof(vsg::vec2));
-#endif
         }
 
-        // Currently for each SiegeNode we create multiple "command graphs" in order to make sure we can pick
-        // them apart in the graph for things like fading
-        // Not sure if we should be doing this or creating a software representation and just passing 1 draw call to the GPU?
         TexStageList stageList;
         for (uint32_t index = 0; index < header.m_numStages; index++)
         {
@@ -187,9 +178,11 @@ namespace ehb
 
             nStage.name = reader.readString(); // std::getline(stream, textureName, '\0');            
 
-            nStage.tIndex = index; nStage.startIndex = reader.read<uint32_t>(); nStage.numVerts = reader.read<uint32_t>(); nStage.numVIndices = reader.read<uint32_t>();
+            nStage.tIndex = index;
+            nStage.startIndex = reader.read<uint32_t>();
+            nStage.numVerts = reader.read<uint32_t>();
+            nStage.numVIndices = reader.read<uint32_t>();
 
-            // read in our indices to the software representation
             nStage.pVIndices = new uint16_t[nStage.numVIndices];
             reader.readBytes(nStage.pVIndices, sizeof(uint16_t) * nStage.numVIndices);
 
@@ -197,52 +190,13 @@ namespace ehb
             nStage.pLIndices = nullptr;
 
             stageList.push_back(nStage);
-
-#if 0
-            // assign those indices to our GPU
-            auto indices = vsg::ushortArray::create(nStage.numVIndices);
-            indices->assign(nStage.numVIndices, nStage.pVIndices);
-
-            // offset them based on their starting point            
-            std::transform(std::begin(*indices), std::end(*indices), std::begin(*indices), [&nStage](uint16_t v) -> uint16_t { return v + nStage.startIndex; });
-
-            // TODO: handle layers and animated SiegeNode textures
-            if (auto layout = static_cast<const vsg::PipelineLayout*>(options->getObject("SiegeNodeLayout")); layout != nullptr)
-            {
-                if (auto textureData = vsg::read_cast<vsg::Data>(nStage.name, options); textureData != nullptr)
-                {
-                    auto texture = vsg::DescriptorImage::create(vsg::Sampler::create(), textureData, 0, 0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
-
-                    //! NOTE: should we be accessing the first element of the vector?
-                    //! TODO: check with Robert about having to const_cast in loaders to get the pipeline layout
-                    auto descriptorSet = vsg::DescriptorSet::create(layout->setLayouts[0], vsg::Descriptors{texture});
-                    auto bindDescriptorSets = vsg::BindDescriptorSets::create(VK_PIPELINE_BIND_POINT_GRAPHICS, const_cast<vsg::PipelineLayout*>(layout), 0, vsg::DescriptorSets{descriptorSet});
-
-                    group->addChild(bindDescriptorSets);
-                }
-            }
-            else
-            {
-                // This is a critical error and causes huge problems and we shouldn't ever get here
-                // TODO: throw?
-                log->error("No layout passed via options. Mesh will probably render incorrectly.");
-
-                return {};
-            }
-
-            auto attributeArrays = vsg::DataList{ vertices, colors, tcoords };
-
-            // Create a command graph for each surface in the mesh
-            auto commands = vsg::Commands::create();
-            commands->addChild(vsg::BindVertexBuffers::create(0, attributeArrays));
-            commands->addChild(vsg::BindIndexBuffer::create(indices));
-            commands->addChild(vsg::DrawIndexed::create(static_cast<uint32_t>(indices->valueCount()), 1, 0, 0, 0));
-            group->addChild(commands);
-#endif
         }
 
         group->m_pRenderObject = new RenderingStaticObject(options, pVertices, header.m_numVertices, header.m_numTriangles, stageList);
 
+        // Currently for each SiegeNode we create multiple "command graphs" in order to make sure we can pick
+        // them apart in the graph for things like fading
+        // Not sure if we should be doing this or creating a software representation and just passing 1 draw call to the GPU?
         group->addChild(group->m_pRenderObject->buildDrawCommands());
 
         return group;

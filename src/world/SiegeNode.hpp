@@ -47,6 +47,7 @@ namespace ehb
     {
         delete[] m_pNormals;
         delete m_pRenderObject;
+        delete[] m_pColors;
     }
 
 } // namespace ehb

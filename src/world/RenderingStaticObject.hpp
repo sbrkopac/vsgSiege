@@ -45,7 +45,7 @@ namespace ehb
     // static object texture info
     struct StaticObjectTex
     {
-        uint32_t textureId;
+        uint32_t textureId; // sam: not currently used as this was used in fixed pipeline to keep track of the texture index
         bool alpha;
         bool noalphasort;
     };

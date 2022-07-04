@@ -24,6 +24,10 @@ namespace ehb
 
         static void connect(const vsg::MatrixTransform* targetRegion, vsg::MatrixTransform* targetNode, uint32_t targetDoor, vsg::MatrixTransform* connectRegion, const vsg::MatrixTransform* connectNode, uint32_t connectDoor);
 
+        RenderingStaticObject* renderObject() { return m_pRenderObject; }
+        vsg::vec3* normals() { return m_pNormals; }
+        uint32_t* colors() { return m_pColors; }
+
     protected:
         virtual ~SiegeNodeMesh();
 

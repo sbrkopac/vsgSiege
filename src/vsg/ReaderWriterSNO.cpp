@@ -143,7 +143,7 @@ namespace ehb
         // create vertex data per entire mesh
         auto vertices = vsg::vec3Array::create(header.m_numVertices);
         auto normals = vsg::vec3Array::create(header.m_numVertices);
-        auto colors = vsg::vec4Array::create(header.m_numVertices);
+        auto colors = vsg::uintArray::create(header.m_numVertices);
         auto tcoords = vsg::vec2Array::create(header.m_numVertices);
 
         // read in our vertex data
@@ -183,12 +183,11 @@ namespace ehb
         TexStageList stageList;
         for (uint32_t index = 0; index < header.m_numStages; index++)
         {
-            auto textureName = reader.readString(); // std::getline(stream, textureName, '\0');
-            auto textureFileName = textureName + ".raw";
-
             sTexStage nStage;
 
-            nStage.tIndex = reader.read<uint32_t>(); nStage.numVerts = reader.read<uint32_t>(); nStage.numVIndices = reader.read<uint32_t>();
+            nStage.name = reader.readString(); // std::getline(stream, textureName, '\0');            
+
+            nStage.tIndex = index; nStage.startIndex = reader.read<uint32_t>(); nStage.numVerts = reader.read<uint32_t>(); nStage.numVIndices = reader.read<uint32_t>();
 
             // read in our indices to the software representation
             nStage.pVIndices = new uint16_t[nStage.numVIndices];
@@ -199,17 +198,18 @@ namespace ehb
 
             stageList.push_back(nStage);
 
+#if 0
             // assign those indices to our GPU
             auto indices = vsg::ushortArray::create(nStage.numVIndices);
             indices->assign(nStage.numVIndices, nStage.pVIndices);
 
             // offset them based on their starting point            
-            std::transform(std::begin(*indices), std::end(*indices), std::begin(*indices), [&nStage](uint16_t v) -> uint16_t { return v + nStage.tIndex; });
+            std::transform(std::begin(*indices), std::end(*indices), std::begin(*indices), [&nStage](uint16_t v) -> uint16_t { return v + nStage.startIndex; });
 
             // TODO: handle layers and animated SiegeNode textures
             if (auto layout = static_cast<const vsg::PipelineLayout*>(options->getObject("SiegeNodeLayout")); layout != nullptr)
             {
-                if (auto textureData = vsg::read_cast<vsg::Data>(textureName, options); textureData != nullptr)
+                if (auto textureData = vsg::read_cast<vsg::Data>(nStage.name, options); textureData != nullptr)
                 {
                     auto texture = vsg::DescriptorImage::create(vsg::Sampler::create(), textureData, 0, 0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
 
@@ -238,9 +238,12 @@ namespace ehb
             commands->addChild(vsg::BindIndexBuffer::create(indices));
             commands->addChild(vsg::DrawIndexed::create(static_cast<uint32_t>(indices->valueCount()), 1, 0, 0, 0));
             group->addChild(commands);
+#endif
         }
 
-        group->m_pRenderObject = new RenderingStaticObject(pVertices, header.m_numVertices, header.m_numTriangles, stageList);
+        group->m_pRenderObject = new RenderingStaticObject(options, pVertices, header.m_numVertices, header.m_numTriangles, stageList);
+
+        group->addChild(group->m_pRenderObject->buildDrawCommands());
 
         return group;
     };

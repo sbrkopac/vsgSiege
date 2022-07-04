@@ -7,6 +7,9 @@
 #include <list>
 #include <set>
 
+#include <vsg/commands/Commands.h>
+#include <vsg/io/Options.h>
+
 namespace ehb
 {
     struct UV
@@ -29,6 +32,7 @@ namespace ehb
 
     struct sTexStage
     {
+        std::string name;               // sam: added for vulkan so we can load the actual texture when we need it
         uint32_t tIndex;				// Which texture is active in this stage
         uint32_t startIndex;			// Where to start the indices in the VBuffer
         uint32_t numVerts;				// Number of vertices
@@ -67,7 +71,7 @@ namespace ehb
     public:
 
         RenderingStaticObject(sVertex* vertices, int32_t numVertices, uint16_t* indices, int32_t numIndices, uint32_t* textureTriCount, TexList& textureList);
-        RenderingStaticObject(sVertex* pVertices, int32_t numVertices, int32_t numTriangles, TexStageList& stageList);
+        RenderingStaticObject(vsg::ref_ptr<const vsg::Options> options, sVertex* pVertices, int32_t numVertices, int32_t numTriangles, TexStageList& stageList);
 
         ~RenderingStaticObject();
 
@@ -80,11 +84,16 @@ namespace ehb
 
         sVertex* vertices() { return m_pVertices; }
 
+        // VSG specific
+        vsg::ref_ptr<vsg::Group> buildDrawCommands();
+
     private:
 
         void organizeInformation(sVertex* verts, uint16_t* indices, uint32_t* textureTriCount);
 
     private:
+
+        vsg::ref_ptr<const vsg::Options> options;
 
         int32_t m_numVertices;
         int32_t m_numTriangles;
@@ -100,8 +109,8 @@ namespace ehb
         organizeInformation(vertices, indices, textureTriCount);
     }
 
-    inline RenderingStaticObject::RenderingStaticObject(sVertex* pVertices, int32_t numVertices, int32_t numTriangles, TexStageList& stageList) :
-        m_numVertices(numVertices), m_numTriangles(numTriangles), m_pVertices(pVertices), m_TexStageList(stageList)
+    inline RenderingStaticObject::RenderingStaticObject(vsg::ref_ptr<const vsg::Options> options, sVertex* pVertices, int32_t numVertices, int32_t numTriangles, TexStageList& stageList) :
+        options(options), m_numVertices(numVertices), m_numTriangles(numTriangles), m_pVertices(pVertices), m_TexStageList(stageList)
     {
         // Build up a default texture list
         StaticObjectTex tex;

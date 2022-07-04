@@ -17,6 +17,8 @@
 #include <vsg/state/ShaderStage.h>
 #include <vsg/state/VertexInputState.h>
 
+#include <vsg/utils/SharedObjects.h>
+
 #include <spdlog/spdlog.h>
 
 namespace ehb
@@ -101,6 +103,8 @@ namespace ehb
             options->readerWriters = {ReaderWriterRAW::create(fileSys), ReaderWriterSNO::create(fileSys), ReaderWriterASP::create(fileSys), ReaderWriterSiegeNodeList::create(fileSys), ReaderWriterRegion::create(fileSys)};
 
             options->findFileCallback = &findFileCallback;
+
+            options->sharedObjects = vsg::SharedObjects::create();
         }
         else
         {

@@ -114,12 +114,13 @@ namespace ehb
                     (*vertices)[1].y = norm[1].y;
                     (*vertices)[1].z = norm[1].z;
 
-                    auto commands = vsg::Commands::create();
-                    commands->addChild(vsg::BindVertexBuffers::create(0, vsg::DataList{ vertices }));
-                    commands->addChild(vsg::BindIndexBuffer::create(indices));
-                    commands->addChild(vsg::DrawIndexed::create(static_cast<uint32_t>(indices->valueCount()), 1, 0, 0, 0));
+                    auto vid = vsg::VertexIndexDraw::create();
+                    vid->assignArrays(vsg::DataList{ vertices });
+                    vid->assignIndices(indices);
+                    vid->indexCount = static_cast<uint32_t>(indices->size());
+                    vid->indexCount = 1;
 
-                    group->addChild(commands);
+                    group->addChild(vid);
                 }
             }
         }

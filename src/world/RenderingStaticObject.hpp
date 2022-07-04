@@ -85,7 +85,7 @@ namespace ehb
         sVertex* vertices() { return m_pVertices; }
 
         // VSG specific
-        vsg::ref_ptr<vsg::Group> buildDrawCommands();
+        vsg::ref_ptr<vsg::Group> createOrShareBuildCommands();
 
     private:
 

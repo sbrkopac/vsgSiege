@@ -13,7 +13,7 @@
 
 namespace ehb
 {
-    vsg::ref_ptr<vsg::Group> RenderingStaticObject::buildDrawCommands()
+    vsg::ref_ptr<vsg::Group> RenderingStaticObject::createOrShareBuildCommands()
     {
         auto sharedObjects = options->sharedObjects;
 

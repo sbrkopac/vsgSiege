@@ -197,7 +197,7 @@ namespace ehb
         // Currently for each SiegeNode we create multiple "command graphs" in order to make sure we can pick
         // them apart in the graph for things like fading
         // Not sure if we should be doing this or creating a software representation and just passing 1 draw call to the GPU?
-        group->addChild(group->m_pRenderObject->buildDrawCommands());
+        group->addChild(group->m_pRenderObject->createOrShareBuildCommands());
 
         return group;
     };

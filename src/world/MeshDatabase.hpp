@@ -4,15 +4,18 @@
 #include <string>
 #include <map>
 
+#include <vsg/core/Object.h>
+#include <vsg/core/Inherit.h>
+
 namespace ehb
 {
-	class MeshDatabase
+	// hacked up solution to pass to vsg::Options
+	class MeshDatabase : public vsg::Inherit<vsg::Object, MeshDatabase>
 	{
 	public:
 		using MeshFileMap = std::map<uint32_t, std::string>;
 
 		// Construction
-		MeshDatabase() = default;
 		~MeshDatabase() = default;
 
 		// Insert a new entry into the mapping

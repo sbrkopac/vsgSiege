@@ -11,6 +11,7 @@
 
 #include <vsg/utils/SharedObjects.h>
 
+#include <stdlib.h> // strtoul
 #include <spdlog/spdlog.h>
 
 namespace ehb
@@ -30,6 +31,7 @@ namespace ehb
         IFileSys& fileSys = systems.fileSys;
         IConfig& config = systems.config;
         NamingKeyMap& namingKeyMap = *systems.namingKeyMap;
+        MeshDatabase& meshDatabase = *systems.meshDatabase;
         auto options = systems.options;
 
         // attempt to load the tank filesystem and if it's not available check for bits
@@ -48,6 +50,30 @@ namespace ehb
             namingKeyMap.init(fileSys);
 
             options->setObject("NamingKeyMap", &namingKeyMap);
+
+            // setup the node database for our mesh guid to filename mappings
+            {
+                static const std::string directory = "/world/global/siege_nodes";
+
+                fileSys.eachGasFile(
+                    directory,
+                    [this, &meshDatabase](const std::string& filename, auto doc) {
+                        for (auto root : doc->eachChild())
+                        {
+                            for (auto node : root->eachChild())
+                            {
+
+                                // auto test = std::stoul(node->valueOf("guid"));
+                                auto guid = std::strtoul(node->valueOf("guid").c_str(), nullptr, 0);
+                                auto filename = stringtool::convertToLowerCase(node->valueOf("filename"));
+
+                                meshDatabase.InsertMeshMapping(guid, filename);
+                            }
+                        }
+                    });
+            }
+
+            options->setObject("MeshDatabase", &meshDatabase);
 
             // experimenting with putting the GraphicsPipeline setup code in the Reader / Writers
             auto readerWriterRAW = ReaderWriterRAW::create(fileSys);

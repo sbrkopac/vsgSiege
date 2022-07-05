@@ -7,6 +7,7 @@
 #include "io/TankFileSys.hpp"
 
 #include "state/GameStateMgr.hpp"
+#include "world/MeshDatabase.hpp"
 #include "world/WorldMapData.hpp"
 
 #include <vsg/io/Options.h>
@@ -33,6 +34,7 @@ namespace ehb
         TankFileSys fileSys;
 
         vsg::ref_ptr<NamingKeyMap> namingKeyMap = NamingKeyMap::create();
+        vsg::ref_ptr<MeshDatabase> meshDatabase = MeshDatabase::create();
         WorldMapDataCache worldMapData;
 
         //! created in Game.cpp

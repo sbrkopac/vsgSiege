@@ -10,8 +10,8 @@
 #include <vsg/maths/vec3.h>
 
 #include "RenderingStaticObject.hpp"
-#include "SiegeMeshDoor.hpp"
 #include "SiegeLogicalMesh.hpp"
+#include "SiegeMeshDoor.hpp"
 
 namespace ehb
 {

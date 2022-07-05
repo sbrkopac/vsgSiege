@@ -1,9 +1,9 @@
 
 #include "SiegeMesh.hpp"
 
-#include "io/BinaryReader.hpp"
-#include "SiegeLogicalNode.hpp" // Logical Flag enum
 #include "SiegeLogicalMesh.hpp"
+#include "SiegeLogicalNode.hpp" // Logical Flag enum
+#include "io/BinaryReader.hpp"
 
 namespace ehb
 {

@@ -25,7 +25,7 @@ namespace ehb
 		void RemoveMeshMapping(uint32_t meshGUID);
 
 		// Find the name of a mesh file
-		const char* FindFileName(uint32_t meshGUID);
+		const char* FindFileName(uint32_t meshGUID) const;
 
 		// Get the mesh file mapping
 		MeshFileMap& FileNameMap() { return m_MeshFileMap; }
@@ -49,11 +49,10 @@ namespace ehb
 	}
 
 	// Find the name of a mesh file
-	inline const char* MeshDatabase::FindFileName(uint32_t meshGUID)
+	inline const char* MeshDatabase::FindFileName(uint32_t meshGUID) const
 	{
 		// Find the mesh in the mapping
-		MeshFileMap::iterator i = m_MeshFileMap.find(meshGUID);
-		if (i != m_MeshFileMap.end())
+		if (auto i = m_MeshFileMap.find(meshGUID); i != m_MeshFileMap.end())
 		{
 			return (*i).second.c_str();
 		}

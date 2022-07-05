@@ -18,20 +18,9 @@ namespace ehb
         virtual vsg::ref_ptr<vsg::Object> read(std::istream& stream, vsg::ref_ptr<const vsg::Options> = {}) const override;
 
     private:
-        const std::string& resolveFileName(const std::string& filename) const;
-
-    private:
         IFileSys& fileSys;
-
-        std::unordered_map<std::string, std::string> keyMap;
 
         std::shared_ptr<spdlog::logger> log;
     };
 
-    inline const std::string& ReaderWriterSiegeNodeList::resolveFileName(const std::string& filename) const
-    {
-        const auto itr = keyMap.find(filename);
-
-        return itr != keyMap.end() ? itr->second : filename;
-    }
 } // namespace ehb

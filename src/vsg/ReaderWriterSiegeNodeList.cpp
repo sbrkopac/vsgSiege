@@ -4,6 +4,7 @@
 #include "io/StringTool.hpp"
 #include "vsg/ReaderWriterSiegeMesh.hpp"
 #include "world/SiegeNode.hpp"
+#include "world/MeshDatabase.hpp"
 
 #include <vsg/io/read.h>
 #include <vsg/utils/SharedObjects.h>
@@ -14,27 +15,6 @@ namespace ehb
         fileSys(fileSys)
     {
         log = spdlog::get("log");
-
-        static const std::string directory = "/world/global/siege_nodes";
-
-        fileSys.eachGasFile(
-            directory,
-            [this](const std::string& filename, auto doc) {
-                for (auto root : doc->eachChild())
-                {
-                    for (auto node : root->eachChild())
-                    {
-                        const auto itr = keyMap.emplace(node->valueOf("guid"), stringtool::convertToLowerCase(node->valueOf("filename")));
-
-                        if (itr.second != true)
-                        {
-                            log->error("duplicate mesh mapping found: tried to insert {} for guid {}, but found filename {} there already", node->valueOf("filename"), node->valueOf("guid"), itr.first->second);
-                        }
-                    }
-                }
-            });
-
-        log->info("{} loaded nodes {} into its mappings", __func__, keyMap.size());
     }
 
     vsg::ref_ptr<vsg::Object> ReaderWriterSiegeNodeList::read(const vsg::Path& filename, vsg::ref_ptr<const vsg::Options> options) const
@@ -53,6 +33,8 @@ namespace ehb
 
     vsg::ref_ptr<vsg::Object> ReaderWriterSiegeNodeList::read(std::istream& stream, vsg::ref_ptr<const vsg::Options> options) const
     {
+        static auto meshDatabase = options->getObject<MeshDatabase>("MeshDatabase");
+
         struct DoorEntry
         {
             uint32_t id = 0;
@@ -72,7 +54,8 @@ namespace ehb
             {
                 const uint32_t nodeGuid = node->valueAsUInt("guid");
                 // const uint64_t meshGuid = node->valueAsUInt("mesh_guid");
-                const std::string meshGuid = stringtool::convertToLowerCase(node->valueOf("mesh_guid"));
+                // const std::string meshGuid = stringtool::convertToLowerCase(node->valueOf("mesh_guid"));
+                const auto meshGuid = std::strtoul(stringtool::convertToLowerCase(node->valueOf("mesh_guid")).c_str(), nullptr, 0);
 
                 const std::string& texSetAbbr = node->valueOf("texsetabbr");
 
@@ -90,34 +73,27 @@ namespace ehb
                     doorMap.emplace(nodeGuid, std::move(e));
                 }
 
-                const std::string meshFileName = resolveFileName(meshGuid);
+                auto meshFileName = meshDatabase->FindFileName(meshGuid);
 
-                if (meshFileName != meshGuid)
+                if (auto mesh = vsg::read_cast<SiegeNode>(meshFileName, options); mesh != nullptr)
                 {
-                    if (auto mesh = vsg::read_cast<SiegeNode>(meshFileName, options); mesh != nullptr)
-                    {
-                        options->sharedObjects->share(mesh);
+                    options->sharedObjects->share(mesh);
 
-                        auto xform = vsg::MatrixTransform::create();
+                    auto xform = vsg::MatrixTransform::create();
 
-                        xform->setValue("bounds_camera", node->valueAsBool("bounds_camera"));
-                        xform->setValue("camera_fade", node->valueAsBool("camera_fade"));
-                        xform->setValue<uint32_t>("guid", node->valueAsUInt("guid"));
-                        xform->setValue<uint32_t>("nodelevel", node->valueAsUInt("nodelevel"));
-                        xform->setValue<uint32_t>("nodeobject", node->valueAsUInt("nodeobject"));
-                        xform->setValue<uint32_t>("nodesection", node->valueAsUInt("nodesection"));
-                        xform->setValue("occludes_camera", node->valueAsBool("occludes_camera"));
-                        xform->setValue("occludes_light", node->valueAsBool("occludes_light"));
+                    xform->setValue("bounds_camera", node->valueAsBool("bounds_camera"));
+                    xform->setValue("camera_fade", node->valueAsBool("camera_fade"));
+                    xform->setValue<uint32_t>("guid", node->valueAsUInt("guid"));
+                    xform->setValue<uint32_t>("nodelevel", node->valueAsUInt("nodelevel"));
+                    xform->setValue<uint32_t>("nodeobject", node->valueAsUInt("nodeobject"));
+                    xform->setValue<uint32_t>("nodesection", node->valueAsUInt("nodesection"));
+                    xform->setValue("occludes_camera", node->valueAsBool("occludes_camera"));
+                    xform->setValue("occludes_light", node->valueAsBool("occludes_light"));
 
-                        group->addChild(xform);
-                        xform->addChild(mesh);
+                    group->addChild(xform);
+                    xform->addChild(mesh);
 
-                        nodeMap.emplace(nodeGuid, xform);
-                    }
-                }
-                else
-                {
-                    log->error("mesh guid {} is not listed in {}", meshGuid, "/world/global/siege_nodes");
+                    nodeMap.emplace(nodeGuid, xform);
                 }
             }
 

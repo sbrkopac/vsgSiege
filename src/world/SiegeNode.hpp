@@ -5,11 +5,8 @@
 #include <memory>
 
 #include "SiegeVisitor.hpp"
-#include "world/RenderingStaticObject.hpp"
-#include "SiegeMeshDoor.hpp"
 #include "SiegeMesh.hpp"
 #include <vsg/core/Inherit.h>
-#include <vsg/core/Visitor.h>
 #include <vsg/maths/mat4.h>
 #include <vsg/nodes/Group.h>
 #include <vsg/nodes/MatrixTransform.h>

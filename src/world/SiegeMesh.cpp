@@ -98,5 +98,7 @@ namespace ehb
         }
 
         m_pRenderObject = std::make_unique<RenderingStaticObject>(options, pVertices, header.m_numVertices, header.m_numTriangles, stageList);
+
+        return true;
     }
 }

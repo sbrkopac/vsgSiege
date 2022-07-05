@@ -176,7 +176,7 @@ namespace ehb
                 }
             }
 
-            newStage.numVerts = newStage.verts.size();
+            newStage.numVerts = static_cast<uint32_t>(newStage.verts.size());
             totalVertCount += newStage.numVerts;
 
             texStageList.push_back(newStage);
@@ -204,7 +204,7 @@ namespace ehb
             uint32_t index = 0;
 
             // Fill in the indices for the lighting info
-            newTexStage.numLIndices = (*o).lIndex.size();
+            newTexStage.numLIndices = static_cast<uint32_t>((*o).lIndex.size());
             newTexStage.pLIndices = new uint32_t[newTexStage.numLIndices];
             for (std::vector< uint32_t >::iterator d = (*o).lIndex.begin(); d != (*o).lIndex.end(); ++d, ++index)
             {
@@ -212,7 +212,7 @@ namespace ehb
             }
 
             // Fill in the vertex indices
-            newTexStage.numVIndices = (*o).vIndex.size();
+            newTexStage.numVIndices = static_cast<uint32_t>((*o).vIndex.size());
             newTexStage.pVIndices = new uint16_t[newTexStage.numVIndices];
             index = 0;
             for (std::vector< uint16_t >::iterator w = (*o).vIndex.begin(); w != (*o).vIndex.end(); ++w, ++index)

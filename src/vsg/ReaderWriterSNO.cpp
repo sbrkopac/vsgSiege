@@ -4,16 +4,8 @@
 #include "io/BinaryReader.hpp"
 #include "io/LocalFileSys.hpp"
 #include "world/SiegeNode.hpp"
-#include "world/RenderingStaticObject.hpp"
 
-#include <vsg/commands/BindIndexBuffer.h>
-#include <vsg/commands/BindVertexBuffers.h>
-#include <vsg/commands/Commands.h>
-#include <vsg/commands/DrawIndexed.h>
 #include <vsg/io/read.h>
-#include <vsg/maths/quat.h>
-#include <vsg/state/DescriptorImage.h>
-#include <vsg/state/BindDescriptorSet.h>
 
 #include <vsg/state/ColorBlendState.h>
 #include <vsg/state/DepthStencilState.h>

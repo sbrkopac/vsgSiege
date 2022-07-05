@@ -232,7 +232,7 @@ namespace ehb
             stageList.push_back(nStage);
         }
 
-        group->m_pRenderObject = new RenderingStaticObject(options, pVertices, header.m_numVertices, header.m_numTriangles, stageList);
+        group->m_pRenderObject = std::make_unique<RenderingStaticObject>(options, pVertices, header.m_numVertices, header.m_numTriangles, stageList);
 
         // Currently for each SiegeNode we create multiple "command graphs" in order to make sure we can pick
         // them apart in the graph for things like fading

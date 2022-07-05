@@ -84,6 +84,7 @@ set (SOURCES
 
     # world
     src/world/WorldMapData.cpp
+    src/world/SiegeMesh.cpp
     src/world/SiegeNode.cpp
     src/world/Aspect.cpp
     src/world/Region.cpp

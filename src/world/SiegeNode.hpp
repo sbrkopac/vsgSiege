@@ -29,7 +29,7 @@ namespace ehb
 
         static void connect(const vsg::MatrixTransform* targetRegion, vsg::MatrixTransform* targetNode, uint32_t targetDoor, vsg::MatrixTransform* connectRegion, const vsg::MatrixTransform* connectNode, uint32_t connectDoor);
 
-        RenderingStaticObject* renderObject() { return m_pRenderObject; }
+        RenderingStaticObject* renderObject() { return m_pRenderObject.get(); }
         vsg::vec3* normals() { return m_pNormals; }
         uint32_t* colors() { return m_pColors; }
 
@@ -45,7 +45,7 @@ namespace ehb
         vsg::vec3* m_pNormals;
         uint32_t* m_pColors;
 
-        RenderingStaticObject* m_pRenderObject;
+        std::unique_ptr<RenderingStaticObject> m_pRenderObject;
 
         SiegeMeshDoorList doorList;
     };
@@ -53,13 +53,11 @@ namespace ehb
     inline SiegeNodeMesh::SiegeNodeMesh() : 
         m_pRenderObject(nullptr), m_pNormals (nullptr), m_pColors(nullptr)
     {
-
     }
 
     inline SiegeNodeMesh::~SiegeNodeMesh()
     {
         delete[] m_pNormals;
-        delete m_pRenderObject;
         delete[] m_pColors;
     }
 

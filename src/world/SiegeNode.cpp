@@ -26,10 +26,10 @@ namespace ehb
             return;
         }
 
-        auto dTargetDoor = targetMesh->doorById(targetDoor);
+        auto dTargetDoor = targetMesh->mesh()->doorById(targetDoor);
         auto &m1 = dTargetDoor->transform();
 
-        auto dConnectDoor = connectMesh->doorById(connectDoor);
+        auto dConnectDoor = connectMesh->mesh()->doorById(connectDoor);
         auto &m2 = dConnectDoor->transform();
 
         // log->info("Supporting information found for SiegeNode::Connect - attempting connection of doors {} to {}", connectDoor, targetDoor);
@@ -75,11 +75,11 @@ namespace ehb
             return;
         }
 
-        auto dTargetDoor = targetMesh->doorById(targetDoor);
+        auto dTargetDoor = targetMesh->mesh()->doorById(targetDoor);
         auto& m1 = dTargetDoor->transform();
 
-        auto dConnectDoor = connectMesh->doorById(connectDoor);
-        auto& m2 = dConnectDoor->transform();
+        auto dConnectDoor = connectMesh->mesh()->doorById(connectDoor);
+        auto &m2 = dConnectDoor->transform();
 
         // log->info("Supporting information found for SiegeNode::Connect - attempting connection of doors {} to {}", connectDoor, targetDoor);
 
@@ -106,34 +106,4 @@ namespace ehb
         connectRegion->matrix = xform;
     }
 
-    SiegeMeshDoor* SiegeNodeMesh::doorByIndex(uint32_t index) const
-    {
-        uint32_t currIndex = 0;
-        for (auto d = doorList.begin(); d != doorList.end(); ++d, ++currIndex)
-        {
-            assert((*d));
-
-            if (index == currIndex)
-            {
-                return d->get();
-            }
-        }
-
-        return nullptr;
-    }
-
-    SiegeMeshDoor* SiegeNodeMesh::doorById(uint32_t id) const
-    {
-        for (auto d = doorList.begin(); d != doorList.end(); ++d)
-        {
-            assert((*d));
-
-            if (id == (*d)->id())
-            {
-                return d->get();
-            }
-        }
-
-        return nullptr;
-    }
 } // namespace ehb

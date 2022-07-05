@@ -70,38 +70,6 @@ namespace ehb
 {
     static constexpr uint32_t SNO_MAGIC = 0x444F4E53;
 
-    struct SiegeMeshHeader
-    {
-        // File identification
-        uint32_t	m_id;
-        uint32_t	m_majorVersion;
-        uint32_t	m_minorVersion;
-
-        // Door and spot information
-        uint32_t	m_numDoors;
-        uint32_t	m_numSpots;
-
-        // Mesh information
-        uint32_t	m_numVertices;
-        uint32_t	m_numTriangles;
-
-        // Stage information
-        uint32_t	m_numStages;
-
-        // Spatial information
-        vsg::vec3		m_minBBox;
-        vsg::vec3		m_maxBBox;
-        vsg::vec3		m_centroidOffset;
-
-        // Whether or not this mesh requires wrapping
-        bool			m_bTile;
-
-        // Reserved information for possible future use
-        uint32_t	m_reserved0;
-        uint32_t	m_reserved1;
-        uint32_t	m_reserved2;
-    };
-
     struct storeVertex
     {
         float x, y, z;
@@ -142,102 +110,13 @@ namespace ehb
         // Construct our vsg::Group for the graph
         vsg::ref_ptr<SiegeNodeMesh> group = SiegeNodeMesh::create();
 
-        // read door data
-        for (uint32_t index = 0; index < header.m_numDoors; index++)
-        {
-            auto id = reader.read<uint32_t>();
-
-            auto pos = reader.read<vsg::vec3>();
-            float a00 = reader.read<float>(), a01 = reader.read<float>(), a02 = reader.read<float>(),
-                  a10 = reader.read<float>(), a11 = reader.read<float>(), a12 = reader.read<float>(),
-                  a20 = reader.read<float>(), a21 = reader.read<float>(), a22 = reader.read<float>();
-
-            auto count = reader.read<uint32_t>();
-
-            reader.skipBytes(count * 4);
-
-            /*
-             * this is pretty straight forward but just documenting that vsg and
-             * dungeon siege node transformation matrices ARE compatible so no funky
-             * modifications are required here
-             */
-            vsg::mat3 orient{ a00, a01, a02,
-                              a10, a11, a12,
-                              a20, a21, a22 };
-
-            group->doorList.emplace_back(std::make_unique<SiegeMeshDoor>(id, pos, orient));
-        }
-
-        // read spot data
-        for (uint32_t index = 0; index < header.m_numSpots; index++)
-        {
-            // rot, pos, string?
-            reader.skipBytes(44);
-            auto tmp = reader.readString();
-        }
-
-        group->m_pColors = new uint32_t[header.m_numVertices];
-        
-        // experimental: create software mesh for easier lookup later
-        sVertex* pVertices = new sVertex[header.m_numVertices];
-        group->m_pNormals = new vsg::vec3[header.m_numVertices];
-
-        // create vertex data per entire mesh
-        auto vertices = vsg::vec3Array::create(header.m_numVertices);
-        auto normals = vsg::vec3Array::create(header.m_numVertices);
-        auto colors = vsg::uintArray::create(header.m_numVertices);
-        auto tcoords = vsg::vec2Array::create(header.m_numVertices);
-
-        // read in our vertex data
-        for (uint32_t index = 0; index < header.m_numVertices; index++)
-        {
-            auto buildVertex = reader.read<storeVertex>();
-            
-            sVertex& nVertex = pVertices[index];
-            nVertex.x = buildVertex.x;
-            nVertex.y = buildVertex.y;
-            nVertex.z = buildVertex.z;
-            nVertex.uv = buildVertex.uv;
-
-            vsg::vec3& nNormal = group->m_pNormals[index];
-            nNormal.x = buildVertex.nx;
-            nNormal.y = buildVertex.ny;
-            nNormal.z = buildVertex.nz;
-
-            group->m_pColors[index] = buildVertex.color;
-
-            (*vertices)[index].x = nVertex.x; (*vertices)[index].y = nVertex.y; (*vertices)[index].z = nVertex.z;
-            (*normals)[index].x = nNormal.x; (*normals)[index].y = nNormal.y; (*normals)[index].z = nNormal.z;
-            (*tcoords)[index].x = nVertex.uv.u; (*tcoords)[index].y = nVertex.uv.v;
-        }
-
-        TexStageList stageList;
-        for (uint32_t index = 0; index < header.m_numStages; index++)
-        {
-            sTexStage nStage;
-
-            nStage.name = reader.readString(); // std::getline(stream, textureName, '\0');            
-
-            nStage.tIndex = index;
-            nStage.startIndex = reader.read<uint32_t>();
-            nStage.numVerts = reader.read<uint32_t>();
-            nStage.numVIndices = reader.read<uint32_t>();
-
-            nStage.pVIndices = new uint16_t[nStage.numVIndices];
-            reader.readBytes(nStage.pVIndices, sizeof(uint16_t) * nStage.numVIndices);
-
-            nStage.numLIndices = 0;
-            nStage.pLIndices = nullptr;
-
-            stageList.push_back(nStage);
-        }
-
-        group->m_pRenderObject = std::make_unique<RenderingStaticObject>(options, pVertices, header.m_numVertices, header.m_numTriangles, stageList);
+        group->_mesh = new SiegeMesh();
+        group->_mesh->load(reader, header, options);
 
         // Currently for each SiegeNode we create multiple "command graphs" in order to make sure we can pick
         // them apart in the graph for things like fading
         // Not sure if we should be doing this or creating a software representation and just passing 1 draw call to the GPU?
-        group->addChild(group->m_pRenderObject->createOrShareBuildCommands());
+        group->addChild(group->mesh()->renderObject()->createOrShareBuildCommands());
 
         return group;
     };

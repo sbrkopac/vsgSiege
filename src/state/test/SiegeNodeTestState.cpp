@@ -90,7 +90,7 @@ namespace ehb
         void apply(SiegeNodeMesh& mesh) override
         {
             auto log = spdlog::get("log");
-            if (auto renderObject = mesh.renderObject())
+            if (auto renderObject = mesh.mesh()->renderObject())
             {
                 log->info("apply(SiegeNodeMesh&)");
 
@@ -99,9 +99,9 @@ namespace ehb
                 {
                     norm[0] = norm[1] = renderObject->vertices()[i];
 
-                    norm[1].x += mesh.normals()[i].x;
-                    norm[1].y += mesh.normals()[i].y;
-                    norm[1].z += mesh.normals()[i].z;
+                    norm[1].x += mesh.mesh()->normals()[i].x;
+                    norm[1].y += mesh.mesh()->normals()[i].y;
+                    norm[1].z += mesh.mesh()->normals()[i].z;
 
                     auto vertices = vsg::vec3Array::create(
                         { { norm[0].x, norm[0].y, norm[0].z },

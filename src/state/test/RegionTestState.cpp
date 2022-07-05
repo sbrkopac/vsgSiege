@@ -121,16 +121,16 @@ namespace ehb
         void apply(SiegeNodeMesh& mesh) override
         {
             auto log = spdlog::get("log");
-            if (auto renderObject = mesh.renderObject())
+            if (auto renderObject = mesh.mesh()->renderObject())
             {
                 sVertex norm[2];
                 for (int32_t i = 0; i < renderObject->numVertices(); ++i)
                 {
                     norm[0] = norm[1] = renderObject->vertices()[i];
 
-                    norm[1].x += mesh.normals()[i].x;
-                    norm[1].y += mesh.normals()[i].y;
-                    norm[1].z += mesh.normals()[i].z;
+                    norm[1].x += mesh.mesh()->normals()[i].x;
+                    norm[1].y += mesh.mesh()->normals()[i].y;
+                    norm[1].z += mesh.mesh()->normals()[i].z;
 
                     auto vertices = vsg::vec3Array::create(
                         { { norm[0].x, norm[0].y, norm[0].z },

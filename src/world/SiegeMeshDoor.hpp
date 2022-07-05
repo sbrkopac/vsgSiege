@@ -21,26 +21,26 @@ namespace ehb
         SiegeMeshDoor() = default;
 
         SiegeMeshDoor(const uint32_t& id, const vsg::vec3 & center, const vsg::mat3& orientation, const std::vector<int32_t>& vertices) :
-            id(id), center(center), orientation(orientation), verts(vertices)
+            _id(id), _center(center), _orientation(orientation), _verts(vertices)
         {
 
         }
 
-        uint32_t id() { return id; }
+        uint32_t id() { return _id; }
 
-        const vsg::vec3& center() { return center; }
-        const vsg::mat3& orientation() { return orientation; }
+        const vsg::vec3& center() { return _center; }
+        const vsg::mat3& orientation() { return _orientation; }
 
-        std::vector<int32_t>& vertexIndices() { return verts; }
+        std::vector<int32_t>& vertexIndices() { return _verts; }
 
     protected:
 
-        uint32_t id;
+        uint32_t _id;
 
-        vsg::vec3 center;
-        vsg::mat3 orientation;
+        vsg::vec3 _center;
+        vsg::mat3 _orientation;
 
         // Verts (indices to owner mesh)
-        std::vector<int32_t> verts;
+        std::vector<int32_t> _verts;
     };
 }

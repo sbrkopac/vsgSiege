@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <cmath>
+#include <math.h>
 #include <vsg/maths/vec3.h>
 
 // contains some addition comparatives such as epsilon

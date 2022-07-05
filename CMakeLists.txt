@@ -86,6 +86,8 @@ set (SOURCES
     src/world/WorldMapData.cpp
     src/world/SiegeMesh.cpp
     src/world/SiegeNode.cpp
+    src/world/SiegeLogicalMesh.cpp
+    src/world/SiegeLogicalNode.cpp
     src/world/SiegeBSP.cpp
     src/world/Aspect.cpp
     src/world/Region.cpp

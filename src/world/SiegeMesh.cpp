@@ -2,6 +2,8 @@
 #include "SiegeMesh.hpp"
 
 #include "io/BinaryReader.hpp"
+#include "SiegeLogicalNode.hpp" // Logical Flag enum
+#include "SiegeLogicalMesh.hpp"
 
 namespace ehb
 {
@@ -103,6 +105,26 @@ namespace ehb
         }
 
         m_pRenderObject = std::make_unique<RenderingStaticObject>(options, pVertices, header.m_numVertices, header.m_numTriangles, stageList);
+
+        numLogicalMeshes = reader.read<uint32_t>();
+        m_pLogicalMeshes = new SiegeLogicalMesh[numLogicalMeshes];
+
+        for (uint32_t l = 0; l < numLogicalMeshes; ++l)
+        {
+            m_pLogicalMeshes->Load(reader, header);
+
+            if (header.m_majorVersion <= 6 && header.m_minorVersion < 1)
+            {
+                if (m_pLogicalMeshes[l].m_flags == LF_NONE)
+                {
+                    m_pLogicalMeshes[l].m_flags = m_pLogicalMeshes[l].m_flags | LF_IS_WALL;
+                }
+                if (m_pLogicalMeshes[l].m_flags == LF_ALL)
+                {
+                    m_pLogicalMeshes[l].m_flags = m_pLogicalMeshes[l].m_flags | LF_IS_FLOOR;
+                }
+            }
+        }
 
         return true;
     }

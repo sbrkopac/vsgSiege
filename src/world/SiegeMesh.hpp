@@ -11,6 +11,7 @@
 
 #include "RenderingStaticObject.hpp"
 #include "SiegeMeshDoor.hpp"
+#include "SiegeLogicalMesh.hpp"
 
 namespace ehb
 {
@@ -115,6 +116,9 @@ namespace ehb
 
         bool tiled;
 
+        uint32_t numLogicalMeshes;
+        SiegeLogicalMesh* m_pLogicalMeshes;
+
         uint32_t* m_pColors;
     };
 
@@ -127,6 +131,7 @@ namespace ehb
     {
         delete[] m_pNormals;
         delete[] m_pColors;
+        delete[] m_pLogicalMeshes;
     }
 
     inline SiegeMeshDoor* SiegeMesh::doorByIndex(uint32_t index) const

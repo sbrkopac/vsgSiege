@@ -1,5 +1,5 @@
 
-#include "ReaderWriterSNO.hpp"
+#include "vsg/ReaderWriterSiegeMesh.hpp"
 
 #include "io/BinaryReader.hpp"
 #include "io/LocalFileSys.hpp"
@@ -70,10 +70,10 @@ namespace ehb
         UV uv;
     };
 
-    ReaderWriterSNO::ReaderWriterSNO(IFileSys& fileSys) :
+    ReaderWriterSiegeMesh::ReaderWriterSiegeMesh(IFileSys& fileSys) :
         fileSys(fileSys) { log = spdlog::get("log"); }
 
-    vsg::ref_ptr<vsg::Object> ReaderWriterSNO::read(const vsg::Path& filename, vsg::ref_ptr<const vsg::Options> options) const
+    vsg::ref_ptr<vsg::Object> ReaderWriterSiegeMesh::read(const vsg::Path& filename, vsg::ref_ptr<const vsg::Options> options) const
     {
         if (auto fullFilePath = vsg::findFile(filename, options); !fullFilePath.empty())
         {
@@ -83,7 +83,7 @@ namespace ehb
         return {};
     }
 
-    vsg::ref_ptr<vsg::Object> ReaderWriterSNO::read(std::istream& stream, vsg::ref_ptr<const vsg::Options> options) const
+    vsg::ref_ptr<vsg::Object> ReaderWriterSiegeMesh::read(std::istream& stream, vsg::ref_ptr<const vsg::Options> options) const
     {
         BinaryReader reader(stream);
 
@@ -113,7 +113,7 @@ namespace ehb
         return group;
     };
 
-    vsg::ref_ptr<vsg::BindGraphicsPipeline> ReaderWriterSNO::createOrShareGraphicsPipeline()
+    vsg::ref_ptr<vsg::BindGraphicsPipeline> ReaderWriterSiegeMesh::createOrShareGraphicsPipeline()
     {
         if (!bindGraphicsPipeline)
         {

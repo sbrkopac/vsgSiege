@@ -2,7 +2,7 @@
 #include "ReaderWriterSiegeNodeList.hpp"
 #include "io/IFileSys.hpp"
 #include "io/StringTool.hpp"
-#include "vsg/ReaderWriterSNO.hpp"
+#include "vsg/ReaderWriterSiegeMesh.hpp"
 #include "world/SiegeNode.hpp"
 
 #include <vsg/io/read.h>

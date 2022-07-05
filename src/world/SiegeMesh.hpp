@@ -55,7 +55,7 @@ namespace ehb
     //! TODO: I'm making this a vsg::Object so we can call share on it but maybe a more complete cache solution is appropriate
     class SiegeMesh : public vsg::Object
     {
-        friend class ReaderWriterSNO;
+        friend class ReaderWriterSiegeMesh;
 
     public:
         using SiegeMeshDoorList = std::list<std::unique_ptr<SiegeMeshDoor>>;

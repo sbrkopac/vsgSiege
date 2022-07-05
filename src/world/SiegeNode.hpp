@@ -20,7 +20,7 @@ namespace ehb
 {
     class SiegeNode final : public vsg::Inherit<vsg::Group, SiegeNode>
     {
-        friend class ReaderWriterSNO;
+        friend class ReaderWriterSiegeMesh;
 
     public:
         using SiegeMeshDoorList = std::list<std::unique_ptr<SiegeMeshDoor>>;

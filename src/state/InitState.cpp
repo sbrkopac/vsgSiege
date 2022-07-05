@@ -6,7 +6,7 @@
 #include "vsg/ReaderWriterASP.hpp"
 #include "vsg/ReaderWriterRAW.hpp"
 #include "vsg/ReaderWriterRegion.hpp"
-#include "vsg/ReaderWriterSNO.hpp"
+#include "vsg/ReaderWriterSiegeMesh.hpp"
 #include "vsg/ReaderWriterSiegeNodeList.hpp"
 
 #include <vsg/utils/SharedObjects.h>
@@ -51,7 +51,7 @@ namespace ehb
 
             // experimenting with putting the GraphicsPipeline setup code in the Reader / Writers
             auto readerWriterRAW = ReaderWriterRAW::create(fileSys);
-            auto readerWriterSNO = ReaderWriterSNO::create(fileSys);
+            auto readerWriterSNO = ReaderWriterSiegeMesh::create(fileSys);
             auto readerWriterASP = ReaderWriterASP::create(fileSys);
             auto readerWriterSiegeNodeList = ReaderWriterSiegeNodeList::create(fileSys);
             auto readerWriterRegion = ReaderWriterRegion::create(fileSys);

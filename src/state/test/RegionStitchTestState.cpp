@@ -2,7 +2,7 @@
 #include "RegionStitchTestState.hpp"
 
 #include "Systems.hpp"
-#include "vsg/ReaderWriterSNO.hpp"
+#include "vsg/ReaderWriterSiegeMesh.hpp"
 #include "world/SiegeNode.hpp"
 #include "world/WorldMapData.hpp"
 #include "world/Region.hpp"

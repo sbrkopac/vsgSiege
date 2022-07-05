@@ -1,7 +1,7 @@
 
 #include "ReaderWriterRegion.hpp"
 #include "io/IFileSys.hpp"
-#include "vsg/ReaderWriterSNO.hpp"
+#include "vsg/ReaderWriterSiegeMesh.hpp"
 #include "world/Region.hpp"
 #include "world/SiegeNode.hpp"
 

@@ -96,7 +96,7 @@ set (SOURCES
 
     # vsg
     src/vsg/ReaderWriterRAW.cpp
-    src/vsg/ReaderWriterSNO.cpp
+    src/vsg/ReaderWriterSiegeMesh.cpp
     src/vsg/ReaderWriterASP.cpp
     src/vsg/ReaderWriterSiegeNodeList.cpp
     src/vsg/ReaderWriterRegion.cpp

@@ -14,8 +14,8 @@ namespace ehb
 
             auto pos = reader.read<vsg::vec3>();
             float a00 = reader.read<float>(), a01 = reader.read<float>(), a02 = reader.read<float>(),
-                a10 = reader.read<float>(), a11 = reader.read<float>(), a12 = reader.read<float>(),
-                a20 = reader.read<float>(), a21 = reader.read<float>(), a22 = reader.read<float>();
+                  a10 = reader.read<float>(), a11 = reader.read<float>(), a12 = reader.read<float>(),
+                  a20 = reader.read<float>(), a21 = reader.read<float>(), a22 = reader.read<float>();
 
             auto count = reader.read<uint32_t>();
 
@@ -26,9 +26,9 @@ namespace ehb
              * dungeon siege node transformation matrices ARE compatible so no funky
              * modifications are required here
              */
-            vsg::mat3 orient{ a00, a01, a02,
-                              a10, a11, a12,
-                              a20, a21, a22 };
+            vsg::mat3 orient{a00, a01, a02,
+                             a10, a11, a12,
+                             a20, a21, a22};
 
             doorList.emplace_back(std::make_unique<SiegeMeshDoor>(id, pos, orient));
         }
@@ -71,9 +71,14 @@ namespace ehb
 
             m_pColors[index] = buildVertex.color;
 
-            (*vertices)[index].x = nVertex.x; (*vertices)[index].y = nVertex.y; (*vertices)[index].z = nVertex.z;
-            (*normals)[index].x = nNormal.x; (*normals)[index].y = nNormal.y; (*normals)[index].z = nNormal.z;
-            (*tcoords)[index].x = nVertex.uv.u; (*tcoords)[index].y = nVertex.uv.v;
+            (*vertices)[index].x = nVertex.x;
+            (*vertices)[index].y = nVertex.y;
+            (*vertices)[index].z = nVertex.z;
+            (*normals)[index].x = nNormal.x;
+            (*normals)[index].y = nNormal.y;
+            (*normals)[index].z = nNormal.z;
+            (*tcoords)[index].x = nVertex.uv.u;
+            (*tcoords)[index].y = nVertex.uv.v;
         }
 
         TexStageList stageList;
@@ -81,7 +86,7 @@ namespace ehb
         {
             sTexStage nStage;
 
-            nStage.name = reader.readString(); // std::getline(stream, textureName, '\0');            
+            nStage.name = reader.readString(); // std::getline(stream, textureName, '\0');
 
             nStage.tIndex = index;
             nStage.startIndex = reader.read<uint32_t>();
@@ -101,4 +106,4 @@ namespace ehb
 
         return true;
     }
-}
+} // namespace ehb

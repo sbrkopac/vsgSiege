@@ -4,8 +4,8 @@
 #include <memory>
 #include <vector>
 
-#include <vsg/maths/vec3.h>
 #include <vsg/maths/mat3.h>
+#include <vsg/maths/vec3.h>
 
 namespace ehb
 {
@@ -14,15 +14,13 @@ namespace ehb
     class SiegeMeshDoor
     {
     public:
-
         SiegeMeshDoor(SiegeMeshDoor const&) = delete;
-        SiegeMeshDoor& operator = (SiegeMeshDoor const&) = delete;
+        SiegeMeshDoor& operator=(SiegeMeshDoor const&) = delete;
 
     public:
-
         SiegeMeshDoor() = default;
 
-        SiegeMeshDoor(const uint32_t& id, const vsg::vec3 & center, const vsg::mat3& orientation) :
+        SiegeMeshDoor(const uint32_t& id, const vsg::vec3& center, const vsg::mat3& orientation) :
             _id(id), _center(center), _orientation(orientation)
         {
             _transform(0, 0) = orientation(0, 0);
@@ -48,7 +46,6 @@ namespace ehb
         const vsg::dmat4& transform() { return _transform; }
 
     protected:
-
         uint32_t _id;
 
         vsg::vec3 _center;
@@ -57,4 +54,4 @@ namespace ehb
         // combination of _center and _orientation
         vsg::dmat4 _transform;
     };
-}
+} // namespace ehb

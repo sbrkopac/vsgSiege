@@ -56,7 +56,7 @@ layout(location = 0) out vec4 outColor;
 void main() {
     outColor = texture(texSampler, fragTexCoord);
 })";
-}
+} // namespace ehb
 
 namespace ehb
 {
@@ -67,7 +67,7 @@ namespace ehb
         float x, y, z;
         float nx, ny, nz;
         uint32_t color;
-        UV	  uv;
+        UV uv;
     };
 
     ReaderWriterSNO::ReaderWriterSNO(IFileSys& fileSys) :
@@ -125,7 +125,7 @@ namespace ehb
                 {0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr} // { binding, descriptorTpe, descriptorCount, stageFlags, pImmutableSamplers}
             };
 
-            vsg::DescriptorSetLayouts descriptorSetLayouts{ vsg::DescriptorSetLayout::create(descriptorBindings) };
+            vsg::DescriptorSetLayouts descriptorSetLayouts{vsg::DescriptorSetLayout::create(descriptorBindings)};
 
             vsg::PushConstantRanges pushConstantRanges{
                 {VK_SHADER_STAGE_VERTEX_BIT, 0, 128} // projection view, and model matrices, actual push constant calls automatically provided by the VSG's DispatchTraversal
@@ -145,15 +145,15 @@ namespace ehb
                 VkVertexInputAttributeDescription{2, 2, VK_FORMAT_R32G32_SFLOAT, 0},    // tex coord data
             };
 
-            vsg::GraphicsPipelineStates pipelineStates{ vsg::VertexInputState::create(vertexBindingsDescriptions, vertexAttributeDescriptions),
+            vsg::GraphicsPipelineStates pipelineStates{vsg::VertexInputState::create(vertexBindingsDescriptions, vertexAttributeDescriptions),
                                                        vsg::InputAssemblyState::create(),
                                                        vsg::RasterizationState::create(),
                                                        vsg::MultisampleState::create(),
                                                        vsg::ColorBlendState::create(),
-                                                       vsg::DepthStencilState::create() };
+                                                       vsg::DepthStencilState::create()};
 
             auto pipelineLayout = vsg::PipelineLayout::create(descriptorSetLayouts, pushConstantRanges);
-            auto graphicsPipeline = vsg::GraphicsPipeline::create(pipelineLayout, vsg::ShaderStages{ vertexShader, fragmentShader }, pipelineStates);
+            auto graphicsPipeline = vsg::GraphicsPipeline::create(pipelineLayout, vsg::ShaderStages{vertexShader, fragmentShader}, pipelineStates);
             bindGraphicsPipeline = vsg::BindGraphicsPipeline::create(graphicsPipeline);
         }
 

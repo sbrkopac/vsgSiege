@@ -27,10 +27,10 @@ namespace ehb
         }
 
         auto dTargetDoor = targetMesh->mesh()->doorById(targetDoor);
-        auto &m1 = dTargetDoor->transform();
+        auto& m1 = dTargetDoor->transform();
 
         auto dConnectDoor = connectMesh->mesh()->doorById(connectDoor);
-        auto &m2 = dConnectDoor->transform();
+        auto& m2 = dConnectDoor->transform();
 
         // log->info("Supporting information found for SiegeNode::Connect - attempting connection of doors {} to {}", connectDoor, targetDoor);
 
@@ -48,7 +48,7 @@ namespace ehb
         xform = vsg::rotate(oneEightyRotate) * xform;
 
         // now transform by the first door...
-        xform = (m1) * xform;
+        xform = (m1)*xform;
 
         // and adjust for the node we're connecting to
         xform = targetNode->matrix * xform;
@@ -79,7 +79,7 @@ namespace ehb
         auto& m1 = dTargetDoor->transform();
 
         auto dConnectDoor = connectMesh->mesh()->doorById(connectDoor);
-        auto &m2 = dConnectDoor->transform();
+        auto& m2 = dConnectDoor->transform();
 
         // log->info("Supporting information found for SiegeNode::Connect - attempting connection of doors {} to {}", connectDoor, targetDoor);
 

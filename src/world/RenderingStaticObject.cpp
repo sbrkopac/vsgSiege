@@ -1,14 +1,14 @@
 
 #include "RenderingStaticObject.hpp"
 
-#include <vsg/io/read.h>
-#include <vsg/nodes/Group.h>
 #include <vsg/commands/BindIndexBuffer.h>
 #include <vsg/commands/BindVertexBuffers.h>
 #include <vsg/commands/Commands.h>
 #include <vsg/commands/DrawIndexed.h>
-#include <vsg/state/DescriptorImage.h>
+#include <vsg/io/read.h>
+#include <vsg/nodes/Group.h>
 #include <vsg/state/BindDescriptorSet.h>
+#include <vsg/state/DescriptorImage.h>
 #include <vsg/utils/SharedObjects.h>
 
 namespace ehb
@@ -55,10 +55,10 @@ namespace ehb
                 auto texture = vsg::DescriptorImage::create(vsg::Sampler::create(), textureData, 0, 0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
                 sharedObjects->share(texture);
 
-                auto descriptorSet = vsg::DescriptorSet::create(layout->setLayouts[0], vsg::Descriptors{ texture });
+                auto descriptorSet = vsg::DescriptorSet::create(layout->setLayouts[0], vsg::Descriptors{texture});
                 sharedObjects->share(descriptorSet);
 
-                auto bindDescriptorSets = vsg::BindDescriptorSets::create(VK_PIPELINE_BIND_POINT_GRAPHICS, const_cast<vsg::PipelineLayout*>(layout), 0, vsg::DescriptorSets{ descriptorSet });
+                auto bindDescriptorSets = vsg::BindDescriptorSets::create(VK_PIPELINE_BIND_POINT_GRAPHICS, const_cast<vsg::PipelineLayout*>(layout), 0, vsg::DescriptorSets{descriptorSet});
                 sharedObjects->share(bindDescriptorSets);
 
                 // add texture to graph
@@ -73,7 +73,7 @@ namespace ehb
                 sharedObjects->share(indices);
 
                 auto commands = vsg::Commands::create();
-                commands->addChild(vsg::BindVertexBuffers::create(0, vsg::DataList { vertices, colors, tcoords }));
+                commands->addChild(vsg::BindVertexBuffers::create(0, vsg::DataList{vertices, colors, tcoords}));
                 commands->addChild(vsg::BindIndexBuffer::create(indices));
                 commands->addChild(vsg::DrawIndexed::create(static_cast<uint32_t>(indices->valueCount()), 1, 0, 0, 0));
 
@@ -85,4 +85,4 @@ namespace ehb
 
         return group;
     }
-}
+} // namespace ehb

@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include <vector>
 #include <memory>
+#include <vector>
 
-#include "SiegeVisitor.hpp"
 #include "SiegeMesh.hpp"
+#include "SiegeVisitor.hpp"
 #include <vsg/core/Inherit.h>
 #include <vsg/maths/mat4.h>
 #include <vsg/nodes/Group.h>
@@ -23,7 +23,6 @@ namespace ehb
         friend class ReaderWriterSNO;
 
     public:
-
         using SiegeMeshDoorList = std::list<std::unique_ptr<SiegeMeshDoor>>;
 
         explicit SiegeNode() = default;
@@ -38,7 +37,6 @@ namespace ehb
         virtual ~SiegeNode() = default;
 
     private:
-
         vsg::ref_ptr<SiegeMesh> _mesh;
     };
 

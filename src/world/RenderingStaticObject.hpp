@@ -3,9 +3,9 @@
 
 #include <cstdint>
 #include <cstring>
-#include <vector>
 #include <list>
 #include <set>
+#include <vector>
 
 #include <vsg/commands/Commands.h>
 #include <vsg/io/Options.h>
@@ -24,7 +24,7 @@ namespace ehb
         uint32_t color;
         UV uv;
 
-        bool operator == (const sVertex& s)
+        bool operator==(const sVertex& s)
         {
             return (!std::memcpy((void*)&s, this, sizeof(sVertex)));
         }
@@ -32,14 +32,14 @@ namespace ehb
 
     struct sTexStage
     {
-        std::string name;               // sam: added for vulkan so we can load the actual texture when we need it
-        uint32_t tIndex;				// Which texture is active in this stage
-        uint32_t startIndex;			// Where to start the indices in the VBuffer
-        uint32_t numVerts;				// Number of vertices
-        uint16_t* pVIndices;				// Pointer to the indices for this stage
-        uint32_t numVIndices;			// Number of indices in this stage
-        uint32_t* pLIndices;				// Pointer to the lighting indices
-        uint32_t numLIndices;			// Number of lighting indices
+        std::string name;     // sam: added for vulkan so we can load the actual texture when we need it
+        uint32_t tIndex;      // Which texture is active in this stage
+        uint32_t startIndex;  // Where to start the indices in the VBuffer
+        uint32_t numVerts;    // Number of vertices
+        uint16_t* pVIndices;  // Pointer to the indices for this stage
+        uint32_t numVIndices; // Number of indices in this stage
+        uint32_t* pLIndices;  // Pointer to the lighting indices
+        uint32_t numLIndices; // Number of lighting indices
     };
 
     // static object texture info
@@ -52,13 +52,13 @@ namespace ehb
 
     struct sBuildTexStage
     {
-        uint32_t tIndex;				// Which texture is active in this stage
-        std::vector< sVertex > verts;		// List of vertices for this stage
-        std::vector< uint16_t > vIndex;			// Vertex indices for this stage
-        std::vector< uint32_t > lIndex;		// Lighting indices back into the main vertex array
-        uint32_t numVerts;				// How many verts in list (size() is CPU intensive)
+        uint32_t tIndex;              // Which texture is active in this stage
+        std::vector<sVertex> verts;   // List of vertices for this stage
+        std::vector<uint16_t> vIndex; // Vertex indices for this stage
+        std::vector<uint32_t> lIndex; // Lighting indices back into the main vertex array
+        uint32_t numVerts;            // How many verts in list (size() is CPU intensive)
     };
-}
+} // namespace ehb
 
 namespace ehb
 {
@@ -69,7 +69,6 @@ namespace ehb
     {
 
     public:
-
         RenderingStaticObject(sVertex* vertices, int32_t numVertices, uint16_t* indices, int32_t numIndices, uint32_t* textureTriCount, TexList& textureList);
         RenderingStaticObject(vsg::ref_ptr<const vsg::Options> options, sVertex* pVertices, int32_t numVertices, int32_t numTriangles, TexStageList& stageList);
 
@@ -88,11 +87,9 @@ namespace ehb
         vsg::ref_ptr<vsg::Group> createOrShareBuildCommands();
 
     private:
-
         void organizeInformation(sVertex* verts, uint16_t* indices, uint32_t* textureTriCount);
 
     private:
-
         vsg::ref_ptr<const vsg::Options> options;
 
         int32_t m_numVertices;
@@ -138,7 +135,7 @@ namespace ehb
 
     inline void RenderingStaticObject::organizeInformation(sVertex* verts, uint16_t* indices, uint32_t* textureTriCount)
     {
-        std::list< sBuildTexStage > texStageList;
+        std::list<sBuildTexStage> texStageList;
 
         // Build the lists
         uint32_t texCount = 0;
@@ -147,12 +144,12 @@ namespace ehb
         for (TexList::iterator i = m_texlist.begin(); i != m_texlist.end(); ++i, ++texCount)
         {
             // Build the stage
-            sBuildTexStage	newStage;
+            sBuildTexStage newStage;
 
             // Fill in data we can get quickly
             newStage.tIndex = texCount;
 
-            std::set< uint16_t > UniqueVerts;
+            std::set<uint16_t> UniqueVerts;
             uint32_t n;
             for (n = 0; n < (textureTriCount[texCount] * 3); ++n)
             {
@@ -162,12 +159,12 @@ namespace ehb
             indexOffset += n;
 
             uint16_t nIndex = 0;
-            for (std::set< uint16_t >::iterator v = UniqueVerts.begin(); v != UniqueVerts.end(); ++v, ++nIndex)
+            for (std::set<uint16_t>::iterator v = UniqueVerts.begin(); v != UniqueVerts.end(); ++v, ++nIndex)
             {
                 newStage.verts.push_back(verts[(*v)]);
                 newStage.lIndex.push_back((*v));
 
-                for (std::vector< uint16_t >::iterator x = newStage.vIndex.begin(); x != newStage.vIndex.end(); ++x)
+                for (std::vector<uint16_t>::iterator x = newStage.vIndex.begin(); x != newStage.vIndex.end(); ++x)
                 {
                     if ((*x) == (*v))
                     {
@@ -190,7 +187,7 @@ namespace ehb
         sVertex* plVertices = m_pVertices;
 
         uint32_t currentIndex = 0;
-        std::list< sBuildTexStage >::iterator o;
+        std::list<sBuildTexStage>::iterator o;
         for (o = texStageList.begin(); o != texStageList.end(); ++o)
         {
             // Create a new sTexStage for this stage
@@ -206,7 +203,7 @@ namespace ehb
             // Fill in the indices for the lighting info
             newTexStage.numLIndices = static_cast<uint32_t>((*o).lIndex.size());
             newTexStage.pLIndices = new uint32_t[newTexStage.numLIndices];
-            for (std::vector< uint32_t >::iterator d = (*o).lIndex.begin(); d != (*o).lIndex.end(); ++d, ++index)
+            for (std::vector<uint32_t>::iterator d = (*o).lIndex.begin(); d != (*o).lIndex.end(); ++d, ++index)
             {
                 newTexStage.pLIndices[index] = (*d);
             }
@@ -215,13 +212,13 @@ namespace ehb
             newTexStage.numVIndices = static_cast<uint32_t>((*o).vIndex.size());
             newTexStage.pVIndices = new uint16_t[newTexStage.numVIndices];
             index = 0;
-            for (std::vector< uint16_t >::iterator w = (*o).vIndex.begin(); w != (*o).vIndex.end(); ++w, ++index)
+            for (std::vector<uint16_t>::iterator w = (*o).vIndex.begin(); w != (*o).vIndex.end(); ++w, ++index)
             {
                 newTexStage.pVIndices[index] = (*w);
             }
 
             // Fill in the vertices
-            for (std::vector< sVertex >::iterator v = (*o).verts.begin(); v != (*o).verts.end(); ++v, ++plVertices, ++currentIndex)
+            for (std::vector<sVertex>::iterator v = (*o).verts.begin(); v != (*o).verts.end(); ++v, ++plVertices, ++currentIndex)
             {
                 (*plVertices) = (*v);
             }
@@ -230,4 +227,4 @@ namespace ehb
             m_TexStageList.push_back(newTexStage);
         }
     }
-}
+} // namespace ehb

@@ -7,10 +7,10 @@
 #include <vsg/commands/Commands.h>
 #include <vsg/commands/DrawIndexed.h>
 #include <vsg/io/read.h>
+#include <vsg/state/BindDescriptorSet.h>
 #include <vsg/state/DescriptorImage.h>
 #include <vsg/state/DescriptorSet.h>
 #include <vsg/state/PipelineLayout.h>
-#include <vsg/state/BindDescriptorSet.h>
 
 #include <spdlog/spdlog.h>
 

@@ -1,15 +1,14 @@
 
 #pragma once
 
-#include <string>
 #include <cstdint>
+#include <string>
 
 namespace ehb
 {
     class DatabaseGuid
     {
     public:
-
         DatabaseGuid();
         explicit DatabaseGuid(const char* str);
         explicit DatabaseGuid(uint32_t guid);
@@ -23,13 +22,12 @@ namespace ehb
         bool fromString(const char* str);
 
     private:
-
         uint32_t& rawValue() { return (*(uint32_t*)_guid); }
         const uint32_t& rawValue() const { return (*(const uint32_t*)_guid); }
 
-        friend bool operator == (DatabaseGuid const& guid0, DatabaseGuid const& guid1);
-        friend bool operator != (DatabaseGuid const& guid0, DatabaseGuid const& guid1);
-        friend bool operator < (DatabaseGuid const& guid0, DatabaseGuid const& guid1);
+        friend bool operator==(DatabaseGuid const& guid0, DatabaseGuid const& guid1);
+        friend bool operator!=(DatabaseGuid const& guid0, DatabaseGuid const& guid1);
+        friend bool operator<(DatabaseGuid const& guid0, DatabaseGuid const& guid1);
 
         uint8_t _guid[4];
     };
@@ -51,7 +49,7 @@ namespace ehb
 
     inline uint32_t DatabaseGuid::value() const
     {
-        return((_guid[0] << 24) + (_guid[1] << 16) + (_guid[2] << 8) + _guid[3]);
+        return ((_guid[0] << 24) + (_guid[1] << 16) + (_guid[2] << 8) + _guid[3]);
     }
 
     inline void DatabaseGuid::setValue(uint32_t guid)
@@ -79,4 +77,4 @@ namespace ehb
     }
 
     extern const DatabaseGuid UNDEFINED_GUID;
-}
+} // namespace ehb

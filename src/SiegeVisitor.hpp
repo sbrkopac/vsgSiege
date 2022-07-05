@@ -14,7 +14,6 @@ namespace ehb
     {
 
     public:
-
         using MatrixStack = std::vector<vsg::dmat4>;
 
         // cast checks from vsg to siege types

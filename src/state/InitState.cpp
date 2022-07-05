@@ -60,7 +60,7 @@ namespace ehb
             options->setObject("SiegeNodeGraphicsPipeline", readerWriterSNO->createOrShareGraphicsPipeline());
             options->setObject("SiegeNodeLayout", readerWriterSNO->createOrShareGraphicsPipeline()->pipeline->layout);
 
-            options->readerWriters = { readerWriterRAW, readerWriterSNO, readerWriterASP, readerWriterSiegeNodeList, readerWriterRegion };
+            options->readerWriters = {readerWriterRAW, readerWriterSNO, readerWriterASP, readerWriterSiegeNodeList, readerWriterRegion};
 
             options->findFileCallback = &findFileCallback;
 

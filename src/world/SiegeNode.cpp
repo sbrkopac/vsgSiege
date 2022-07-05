@@ -26,37 +26,11 @@ namespace ehb
             return;
         }
 
-        const vsg::dmat4 *m1 = nullptr, *m2 = nullptr;
+        auto dTargetDoor = targetMesh->doorById(targetDoor);
+        auto &m1 = dTargetDoor->transform();
 
-        for (const auto& entry : targetMesh->doorXform)
-        {
-            if (entry.first == targetDoor)
-            {
-                m1 = &entry.second;
-                break;
-            }
-        }
-
-        if (!m1)
-        {
-            log->error("couldn't find targetDoor {}", targetDoor);
-            return;
-        }
-
-        for (const auto& entry : connectMesh->doorXform)
-        {
-            if (entry.first == connectDoor)
-            {
-                m2 = &entry.second;
-                break;
-            }
-        }
-
-        if (!m2)
-        {
-            log->error("couldn't find connectDoor {}", connectDoor);
-            return;
-        }
+        auto dConnectDoor = connectMesh->doorById(connectDoor);
+        auto &m2 = dConnectDoor->transform();
 
         // log->info("Supporting information found for SiegeNode::Connect - attempting connection of doors {} to {}", connectDoor, targetDoor);
 
@@ -66,7 +40,7 @@ namespace ehb
          * we're currently placing the center of connectNode at the location
          * of its door and will be connecting this to door 1
          */
-        vsg::dmat4 xform = vsg::inverse(*m2);
+        vsg::dmat4 xform = vsg::inverse(m2);
 
         static auto oneEightyRotate = vsg::dquat(0.00000000000000000, 1.00000000000000000, 0.0, 6.1232339957367660e-17);
 
@@ -74,7 +48,7 @@ namespace ehb
         xform = vsg::rotate(oneEightyRotate) * xform;
 
         // now transform by the first door...
-        xform = (*m1) * xform;
+        xform = (m1) * xform;
 
         // and adjust for the node we're connecting to
         xform = targetNode->matrix * xform;
@@ -101,42 +75,16 @@ namespace ehb
             return;
         }
 
-        const vsg::dmat4 *m1 = nullptr, *m2 = nullptr;
+        auto dTargetDoor = targetMesh->doorById(targetDoor);
+        auto& m1 = dTargetDoor->transform();
 
-        for (const auto& entry : targetMesh->doorXform)
-        {
-            if (entry.first == targetDoor)
-            {
-                m1 = &entry.second;
-                break;
-            }
-        }
-
-        if (!m1)
-        {
-            log->error("couldn't find targetDoor {}", targetDoor);
-            return;
-        }
-
-        for (const auto& entry : connectMesh->doorXform)
-        {
-            if (entry.first == connectDoor)
-            {
-                m2 = &entry.second;
-                break;
-            }
-        }
-
-        if (!m2)
-        {
-            log->error("couldn't find connectDoor {}", connectDoor);
-            return;
-        }
+        auto dConnectDoor = connectMesh->doorById(connectDoor);
+        auto& m2 = dConnectDoor->transform();
 
         // log->info("Supporting information found for SiegeNode::Connect - attempting connection of doors {} to {}", connectDoor, targetDoor);
 
-        auto t1 = targetRegion->matrix * targetNode->matrix * (*m1);
-        auto t2 = connectNode->matrix * (*m2);
+        auto t1 = targetRegion->matrix * targetNode->matrix * (m1);
+        auto t2 = connectNode->matrix * (m2);
 
         /*
          * lets start at the location of the destination door
@@ -156,5 +104,36 @@ namespace ehb
 
         // "Hold on to your butts." - Ray Arnold
         connectRegion->matrix = xform;
+    }
+
+    SiegeMeshDoor* SiegeNodeMesh::doorByIndex(uint32_t index) const
+    {
+        uint32_t currIndex = 0;
+        for (auto d = doorList.begin(); d != doorList.end(); ++d, ++currIndex)
+        {
+            assert((*d));
+
+            if (index == currIndex)
+            {
+                return d->get();
+            }
+        }
+
+        return nullptr;
+    }
+
+    SiegeMeshDoor* SiegeNodeMesh::doorById(uint32_t id) const
+    {
+        for (auto d = doorList.begin(); d != doorList.end(); ++d)
+        {
+            assert((*d));
+
+            if (id == (*d)->id())
+            {
+                return d->get();
+            }
+        }
+
+        return nullptr;
     }
 } // namespace ehb

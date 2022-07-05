@@ -161,22 +161,11 @@ namespace ehb
              * dungeon siege node transformation matrices ARE compatible so no funky
              * modifications are required here
              */
-            vsg::dmat4 xform;
+            vsg::mat3 orient{ a00, a01, a02,
+                              a10, a11, a12,
+                              a20, a21, a22 };
 
-            xform(0, 0) = a00;
-            xform(0, 1) = a01;
-            xform(0, 2) = a02;
-            xform(1, 0) = a10;
-            xform(1, 1) = a11;
-            xform(1, 2) = a12;
-            xform(2, 0) = a20;
-            xform(2, 1) = a21;
-            xform(2, 2) = a22;
-            xform(3, 0) = pos.x;
-            xform(3, 1) = pos.y;
-            xform(3, 2) = pos.z;
-
-            group->doorXform.emplace_back(id, std::move(xform));
+            group->doorList.emplace_back(std::make_unique<SiegeMeshDoor>(id, pos, orient));
         }
 
         // read spot data

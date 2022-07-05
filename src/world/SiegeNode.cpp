@@ -8,12 +8,12 @@
 
 namespace ehb
 {
-    void SiegeNodeMesh::connect(const vsg::MatrixTransform* targetNode, uint32_t targetDoor, vsg::MatrixTransform* connectNode, uint32_t connectDoor)
+    void SiegeNode::connect(const vsg::MatrixTransform* targetNode, uint32_t targetDoor, vsg::MatrixTransform* connectNode, uint32_t connectDoor)
     {
         auto log = spdlog::get("log");
 
-        const auto targetMesh = targetNode->children[0].cast<SiegeNodeMesh>();
-        const auto connectMesh = connectNode->children[0].cast<SiegeNodeMesh>();
+        const auto targetMesh = targetNode->children[0].cast<SiegeNode>();
+        const auto connectMesh = connectNode->children[0].cast<SiegeNode>();
 
         if (!targetMesh)
         {
@@ -57,12 +57,12 @@ namespace ehb
         connectNode->matrix = xform;
     }
 
-    void SiegeNodeMesh::connect(const vsg::MatrixTransform* targetRegion, vsg::MatrixTransform* targetNode, uint32_t targetDoor, vsg::MatrixTransform* connectRegion, const vsg::MatrixTransform* connectNode, uint32_t connectDoor)
+    void SiegeNode::connect(const vsg::MatrixTransform* targetRegion, vsg::MatrixTransform* targetNode, uint32_t targetDoor, vsg::MatrixTransform* connectRegion, const vsg::MatrixTransform* connectNode, uint32_t connectDoor)
     {
         auto log = spdlog::get("log");
 
-        const auto targetMesh = targetNode->children[0].cast<SiegeNodeMesh>();
-        const auto connectMesh = connectNode->children[0].cast<SiegeNodeMesh>();
+        const auto targetMesh = targetNode->children[0].cast<SiegeNode>();
+        const auto connectMesh = connectNode->children[0].cast<SiegeNode>();
 
         if (!targetMesh)
         {

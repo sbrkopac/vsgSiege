@@ -94,7 +94,7 @@ namespace ehb
 
                 if (meshFileName != meshGuid)
                 {
-                    if (auto mesh = vsg::read_cast<SiegeNodeMesh>(meshFileName, options); mesh != nullptr)
+                    if (auto mesh = vsg::read_cast<SiegeNode>(meshFileName, options); mesh != nullptr)
                     {
                         options->sharedObjects->share(mesh);
 
@@ -137,7 +137,7 @@ namespace ehb
                     {
                         auto connectNode = nodeMap[entry->second.farGuid];
 
-                        SiegeNodeMesh::connect(targetNode, entry->second.id, connectNode, entry->second.farDoor);
+                        SiegeNode::connect(targetNode, entry->second.id, connectNode, entry->second.farDoor);
 
                         if (completeSet.count(entry->second.farGuid) == 0) { func(entry->second.farGuid); }
                     }

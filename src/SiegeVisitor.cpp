@@ -15,7 +15,7 @@ namespace ehb
 
             return true;
         }
-        else if (auto sno = group.cast<SiegeNodeMesh>())
+        else if (auto sno = group.cast<SiegeNode>())
         {
             apply(*sno);
 

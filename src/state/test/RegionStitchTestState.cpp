@@ -123,7 +123,7 @@ namespace ehb
             if (region2Xform == nullptr || node1Xform == nullptr || node2Xform == nullptr) { log->critical("target region or stitched nodes are null - you're hosed"); }
 
             // Hold onto ur butts.
-            SiegeNodeMesh::connect(targetRegionTransform, node1Xform, stitch.door1, region2Xform, node2Xform, stitch.door2);
+            SiegeNode::connect(targetRegionTransform, node1Xform, stitch.door1, region2Xform, node2Xform, stitch.door2);
 
             scene3d.addChild(region2Xform);
         }

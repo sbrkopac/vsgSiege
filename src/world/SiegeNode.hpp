@@ -21,7 +21,7 @@ namespace ehb
 
 namespace ehb
 {
-    class SiegeNodeMesh final : public vsg::Inherit<vsg::Group, SiegeNodeMesh>
+    class SiegeNode final : public vsg::Inherit<vsg::Group, SiegeNode>
     {
         friend class ReaderWriterSNO;
 
@@ -29,7 +29,7 @@ namespace ehb
 
         using SiegeMeshDoorList = std::list<std::unique_ptr<SiegeMeshDoor>>;
 
-        explicit SiegeNodeMesh() = default;
+        explicit SiegeNode() = default;
 
         static void connect(const vsg::MatrixTransform* targetNode, uint32_t targetDoor, vsg::MatrixTransform* connectNode, uint32_t connectDoor);
 
@@ -38,7 +38,7 @@ namespace ehb
         SiegeMesh* mesh() { return _mesh; }
 
     protected:
-        virtual ~SiegeNodeMesh() = default;
+        virtual ~SiegeNode() = default;
 
     private:
 

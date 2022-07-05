@@ -133,7 +133,7 @@ namespace ehb
                     log->info("stitching region 0x{:x} to region 0x{:x}", region2Guid, guid);
 
                     // Hold onto ur butts.
-                    SiegeNodeMesh::connect(targetRegion, node1Xform, stitch.door1, region2Xform, node2Xform, stitch.door2);
+                    SiegeNode::connect(targetRegion, node1Xform, stitch.door1, region2Xform, node2Xform, stitch.door2);
 
                     scene3d.addChild(region2Xform);
 

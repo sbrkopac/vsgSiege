@@ -108,7 +108,7 @@ namespace ehb
         if (header.m_id != SNO_MAGIC) return {};
 
         // Construct our vsg::Group for the graph
-        vsg::ref_ptr<SiegeNodeMesh> group = SiegeNodeMesh::create();
+        vsg::ref_ptr<SiegeNode> group = SiegeNode::create();
 
         group->_mesh = new SiegeMesh();
         group->_mesh->load(reader, header, options);

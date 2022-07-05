@@ -87,12 +87,12 @@ namespace ehb
             return bindGraphicsPipeline;
         }
 
-        void apply(SiegeNodeMesh& mesh) override
+        void apply(SiegeNode& mesh) override
         {
             auto log = spdlog::get("log");
             if (auto renderObject = mesh.mesh()->renderObject())
             {
-                log->info("apply(SiegeNodeMesh&)");
+                log->info("apply(SiegeNode&)");
 
                 sVertex norm[2];
                 for (int32_t i = 0; i < renderObject->numVertices(); ++i)
@@ -137,7 +137,7 @@ namespace ehb
 
         TimePoint start = Timer::now();
 
-        if (auto sno = vsg::read_cast<SiegeNodeMesh>(siegeNode, options); sno != nullptr)
+        if (auto sno = vsg::read_cast<SiegeNode>(siegeNode, options); sno != nullptr)
         {
             vsg::ref_ptr<vsg::BindGraphicsPipeline> pipeline(options->getObject<vsg::BindGraphicsPipeline>("SiegeNodeGraphicsPipeline"));
 
@@ -151,7 +151,7 @@ namespace ehb
             t1->addChild(sno);
             t2->addChild(sno);
 
-            SiegeNodeMesh::connect(t1, 2, t2, 1);
+            SiegeNode::connect(t1, 2, t2, 1);
 
             scene3d.addChild(t1);
             scene3d.addChild(t2);

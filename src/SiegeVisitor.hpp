@@ -7,7 +7,7 @@
 namespace ehb
 {
     class Region;
-    class SiegeNodeMesh;
+    class SiegeNode;
     class Aspect;
 
     class SiegeVisitorBase : public vsg::Inherit<vsg::Visitor, SiegeVisitorBase>
@@ -31,7 +31,7 @@ namespace ehb
 
         // custom types
         virtual void apply(Region& region) {}
-        virtual void apply(SiegeNodeMesh& node) {}
+        virtual void apply(SiegeNode& node) {}
         virtual void apply(Aspect& aspect) {}
     };
 } // namespace ehb

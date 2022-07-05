@@ -118,7 +118,7 @@ namespace ehb
             matrixStack.pop_back();
         }
 
-        void apply(SiegeNodeMesh& mesh) override
+        void apply(SiegeNode& mesh) override
         {
             auto log = spdlog::get("log");
             if (auto renderObject = mesh.mesh()->renderObject())
@@ -169,7 +169,7 @@ namespace ehb
             object.traverse(*this);
         }
 
-        virtual void apply(SiegeNodeMesh& mesh) override
+        virtual void apply(SiegeNode& mesh) override
         {
             count++;
         }

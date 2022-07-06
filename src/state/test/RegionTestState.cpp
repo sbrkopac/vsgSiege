@@ -183,6 +183,7 @@ namespace ehb
         log->info("Entered Region Test State");
 
         vsg::StateGroup& scene3d = *systems.scene3d;
+        auto &worldMap = *systems.worldMap;
         auto options = systems.options;
 
         static std::string region = "town_center";

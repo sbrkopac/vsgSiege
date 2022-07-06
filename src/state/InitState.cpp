@@ -49,6 +49,8 @@ namespace ehb
         {
             namingKeyMap.init(fileSys);
 
+            systems.worldMap = std::make_unique<WorldMap>(fileSys);
+
             options->setObject("NamingKeyMap", &namingKeyMap);
 
             // setup the node database for our mesh guid to filename mappings

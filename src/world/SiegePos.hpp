@@ -54,5 +54,4 @@ namespace ehb
         DatabaseGuid node;
     };
 
-    inline SiegePos& _ToSiegePosRef(int32_t siegePosRef) { return (*(SiegePos*)(siegePosRef)); }
 } // namespace ehb

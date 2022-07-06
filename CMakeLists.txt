@@ -83,6 +83,7 @@ set (SOURCES
     src/gas/FuelScanner.cpp
 
     # world
+    src/world/WorldMap.cpp
     src/world/WorldMapData.cpp
     src/world/SiegeMesh.cpp
     src/world/SiegeNode.cpp

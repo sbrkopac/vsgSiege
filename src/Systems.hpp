@@ -8,6 +8,7 @@
 
 #include "state/GameStateMgr.hpp"
 #include "world/MeshDatabase.hpp"
+#include "world/WorldMap.hpp"
 #include "world/WorldMapData.hpp"
 
 #include <vsg/io/Options.h>
@@ -35,6 +36,7 @@ namespace ehb
 
         vsg::ref_ptr<NamingKeyMap> namingKeyMap = NamingKeyMap::create();
         vsg::ref_ptr<MeshDatabase> meshDatabase = MeshDatabase::create();
+        std::unique_ptr<WorldMap> worldMap; // requires filesystem so create in InitState
         WorldMapDataCache worldMapData;
 
         //! created in Game.cpp

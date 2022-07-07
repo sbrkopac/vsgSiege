@@ -186,6 +186,14 @@ namespace ehb
         auto &worldMap = *systems.worldMap;
         auto options = systems.options;
 
+        { // just some quick worldmap tests while building
+
+            auto& worldMap = systems.worldMap;
+
+            worldMap->Init("multiplayer_world");
+            worldMap->RestrictStreamingToRegion(0xD5A3ACD9);
+        }
+
         static std::string region = "town_center";
         static std::string regionpath = "/world/maps/multiplayer_world/regions/" + region + ".region"; // extension for the loader
 

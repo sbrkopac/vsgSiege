@@ -91,6 +91,8 @@ namespace ehb
 		std::string		MakeNodeAddress(database_guid guid) const;
 
 		void RestrictStreamingToRegion(RegionId id) { m_ClampingRegionGUID = id; }
+		void UnrestrictStreaming() { RestrictStreamingToRegion(0); }
+		bool IsStreamingRestricted() { return m_ClampingRegionGUID != 0; }
 
 	private:
 
